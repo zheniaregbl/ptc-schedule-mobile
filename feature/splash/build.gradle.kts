@@ -38,8 +38,22 @@ kotlin {
             api(compose.ui)
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
+
+            api(libs.compottie)
+            api(libs.compottie.resources)
+
+            api(libs.voyager.navigator)
+            api(libs.voyager.transitions)
+
+            api(projects.core)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.syndicate.ptkscheduleapp.feature.splash.resources"
+    generateResClass = auto
 }
 
 android {
