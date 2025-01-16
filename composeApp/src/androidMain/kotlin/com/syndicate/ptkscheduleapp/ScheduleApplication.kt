@@ -1,13 +1,18 @@
 package com.syndicate.ptkscheduleapp
 
-import androidx.compose.ui.window.ComposeUIViewController
+import android.app.Application
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import com.syndicate.ptkscheduleapp.di.initKoin
 import com.syndicate.ptkscheduleapp.navigation.featureSearchModule
+import org.koin.android.ext.koin.androidContext
 
-fun MainViewController() = ComposeUIViewController(
-    configure = {
+class ScheduleApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+
         ScreenRegistry { featureSearchModule() }
-        initKoin()
+
+        initKoin(config = { androidContext(this@ScheduleApplication) })
     }
-) { App() }
+}

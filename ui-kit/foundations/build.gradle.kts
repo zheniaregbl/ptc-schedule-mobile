@@ -43,7 +43,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.syndicate.ptkscheduleapp.ui-kit.foundations"
+    namespace = "com.syndicate.ptkscheduleapp.uiKit.foundations"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

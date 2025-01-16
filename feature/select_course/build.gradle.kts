@@ -38,6 +38,12 @@ kotlin {
             api(compose.ui)
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
+
+            api(libs.voyager.navigator)
+            api(libs.voyager.transitions)
+
+            api(projects.core)
+            api(projects.uiKit.foundations)
         }
     }
 }
