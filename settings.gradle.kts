@@ -31,6 +31,7 @@ dependencyResolutionManagement {
 include(":composeApp")
 include(":core")
 include(":navigation")
+include(":ui-kit:foundations")
 include(":feature:schedule")
 include(":feature:select_course")
 include(":feature:select_group")
