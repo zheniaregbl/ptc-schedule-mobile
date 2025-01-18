@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.internal.BackHandler
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
 import com.syndicate.ptkscheduleapp.feature.groups.resources.Res
@@ -53,6 +55,7 @@ class GroupScreen : Screen {
     }
 }
 
+@OptIn(InternalVoyagerApi::class)
 @Composable
 internal fun GroupScreenContent(
     modifier: Modifier = Modifier,
@@ -65,6 +68,15 @@ internal fun GroupScreenContent(
         initialPage = 0,
         pageCount = { 2 }
     )
+
+    BackHandler(enabled = pagerState.currentPage > 0) {
+        scope.launch {
+            pagerState.animateScrollToPage(
+                page = 0,
+                animationSpec = tween(400)
+            )
+        }
+    }
 
     Box(modifier = modifier) {
 
