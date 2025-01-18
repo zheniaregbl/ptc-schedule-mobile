@@ -1,5 +1,5 @@
 # PTC Schedule App
-The PTC NovGU mobile app: convenient schedule, information about classes.
+The PTC NovSU mobile app: convenient schedule, information about classes.
 
 >[!IMPORTANT]
 >**🚨 Notice: The app is still in development. 🚨**
@@ -34,3 +34,19 @@ If you have any questions about the license or would like to get permission to u
 - **Navigation**: [Voyager](https://voyager.adriel.cafe).
 - **Network**: [Ktor](https://ktor.io).
 - **Dependency Injection**: [Koin](https://insert-koin.io).
+
+### 👥 Syndicate (the project team)
+We are a small but passionate team working to create a user—friendly and modern timetable viewing app. Each of us contributes to make the project better:
+
+- Mobile Developer: [zheniaregbl](https://github.com/zheniaregbl).
+Responsible for the development and optimization of applications on Android and iOS using Kotlin Multiplatform and Compose Multiplatform. [Telegram](https://t.me/regbl)
+
+- Backend Developer: [Alexander](https://github.com/Prodix).
+Develops the backend and API for processing schedule data and Telegram bot. [Telegram](https://t.me/Prodix)
+
+- Designer: [Aleksey Andreev](https://github.com/yungplane).
+Creates a user-friendly and modern interface, and monitors compliance with UX/UI practices. [Telegram](https://t.me/yung_plane)
+
+- Tester: [ruha24](https://github.com/ruha24).
+Checks the application for errors and ensures high quality of the product. [Telegram](https://t.me/ruha_42)
+
