@@ -42,7 +42,10 @@ internal fun GroupSection(
             contentAlignment = Alignment.Center,
             onIdle = {},
             onLoading = {
-                CircularProgressIndicator(color = MainBlue)
+                CircleLoading(
+                    size = 60.dp,
+                    color = Color(0xFF4B71FF)
+                )
             },
             onError = {},
             onSuccess = { screenState ->

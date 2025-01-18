@@ -41,6 +41,8 @@ internal class GroupViewModel(
 
         _state.update { it.copy(isLoading = true) }
 
+        delay(2000)
+
         groupRepository.getGroupList()
             .suspendOnSuccess {
                 val groupList = when (_state.value.selectedCourseIndex) {
