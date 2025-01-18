@@ -20,7 +20,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "SelectGroup"
+            baseName = "Groups"
             isStatic = true
         }
     }
@@ -38,12 +38,18 @@ kotlin {
             api(compose.ui)
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
+
+            api(libs.voyager.navigator)
+            api(libs.voyager.transitions)
+
+            api(projects.core)
+            api(projects.uiKit.foundations)
         }
     }
 }
 
 android {
-    namespace = "com.syndicate.ptkscheduleapp.feature.select_group"
+    namespace = "com.syndicate.ptkscheduleapp.feature.groups"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

@@ -41,7 +41,7 @@ kotlin {
 
             api(libs.voyager.navigator)
 
-            api(projects.feature.selectCourse)
+            api(projects.feature.groups)
         }
     }
 }

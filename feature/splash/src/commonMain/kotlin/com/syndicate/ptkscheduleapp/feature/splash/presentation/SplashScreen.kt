@@ -42,7 +42,7 @@ class SplashScreen : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
-        val selectCourseScreen = rememberScreen(SharedScreen.SelectCourse)
+        val selectCourseScreen = rememberScreen(SharedScreen.GroupScreen)
 
         SplashScreenContent(
             modifier = Modifier

@@ -1,8 +1,8 @@
 package com.syndicate.ptkscheduleapp.navigation
 
 import cafe.adriel.voyager.core.registry.screenModule
-import com.syndicate.ptkscheduleapp.feature.select_course.presentation.SelectCourseScreen
+import com.syndicate.ptkscheduleapp.feature.groups.presentation.GroupScreen
 
 val featureSearchModule = screenModule {
-    register<SharedScreen.SelectCourse> { SelectCourseScreen() }
+    register<SharedScreen.GroupScreen> { GroupScreen() }
 }

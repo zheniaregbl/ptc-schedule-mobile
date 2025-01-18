@@ -3,5 +3,5 @@ package com.syndicate.ptkscheduleapp.navigation
 import cafe.adriel.voyager.core.registry.ScreenProvider
 
 sealed class SharedScreen : ScreenProvider {
-    data object SelectCourse : SharedScreen()
+    data object GroupScreen : SharedScreen()
 }
