@@ -1,11 +1,36 @@
 package com.syndicate.ptkscheduleapp.feature.groups.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
+import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
+import com.syndicate.ptkscheduleapp.feature.groups.resources.Res
+import com.syndicate.ptkscheduleapp.feature.groups.resources.back_svg
+import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
+import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 
 class GroupScreen : Screen {
 
@@ -24,7 +49,86 @@ internal fun GroupScreenContent(
     modifier: Modifier = Modifier
 ) {
 
+    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { 2 }
+    )
+
     Box(modifier = modifier) {
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp)
+                .padding(horizontal = 20.dp)
+        ) {
+
+            AnimatedVisibility(
+                visible = pagerState.currentPage > 0,
+                enter = fadeIn(animationSpec = tween(200)),
+                exit = fadeOut(animationSpec = tween(200))
+            ) {
+
+                Image(
+                    modifier = Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = {
+                                scope.launch {
+                                    if (pagerState.currentPage != 0)
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                }
+                            }
+                        ),
+                    painter = painterResource(Res.drawable.back_svg),
+                    contentDescription = null
+                )
+            }
+        }
+
+        HorizontalPager(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 100.dp
+                ),
+            state = pagerState,
+            verticalAlignment = Alignment.CenterVertically,
+            userScrollEnabled = false
+        ) { page ->
+
+            when (page) {
+
+                0 -> {
+                    CourseSection(modifier = Modifier.fillMaxSize())
+                }
+
+                1 -> {
+                    GroupSection(modifier = Modifier.fillMaxSize())
+                }
+            }
+        }
+
+        AnimatedButton(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 40.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp),
+            text = "Далее",
+            colors = ZephyrButtonColor().copy(
+                inactiveColor = Color(0xFF4B71FF),
+                pressedColor = Color(0xFF95ACFF)
+            ),
+            onClick = {
+                scope.launch {
+                    if (pagerState.currentPage != pagerState.pageCount - 1)
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                }
+            }
+        )
     }
 }

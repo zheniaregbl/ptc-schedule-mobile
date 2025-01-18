@@ -48,6 +48,12 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.syndicate.ptkscheduleapp.feature.groups.resources"
+    generateResClass = auto
+}
+
 android {
     namespace = "com.syndicate.ptkscheduleapp.feature.groups"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

@@ -5,8 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -28,23 +30,35 @@ internal fun CourseSection(
     onCourseClick: (Int) -> Unit = { }
 ) {
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        courseList.forEachIndexed { index, label ->
+    Box(modifier = modifier) {
 
-            CourseItem(
-                modifier = Modifier
-                    .height(30.dp)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onCourseClick(index) },
-                label = label,
-                isSelected = index == courseProvider(),
-                onClick = { onCourseClick(index) }
-            )
+        Text(
+            modifier = Modifier.align(Alignment.TopCenter),
+            text = "Выберите курс",
+            style = LocalTextStyle.current,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 30.sp,
+            color = Color.Black
+        )
+
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            courseList.forEachIndexed { index, label ->
+
+                CourseItem(
+                    modifier = Modifier
+                        .height(30.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onCourseClick(index) },
+                    label = label,
+                    isSelected = index == courseProvider(),
+                    onClick = { onCourseClick(index) }
+                )
+            }
         }
     }
 }
