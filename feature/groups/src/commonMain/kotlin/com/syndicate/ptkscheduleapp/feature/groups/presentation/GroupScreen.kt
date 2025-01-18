@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
@@ -31,22 +33,31 @@ import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedBu
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 class GroupScreen : Screen {
 
     @Composable
     override fun Content() {
+
+        val viewModel = koinViewModel<GroupViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
         GroupScreenContent(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding()
+                .systemBarsPadding(),
+            state = state,
+            onAction = { action -> viewModel.onAction(action) }
         )
     }
 }
 
 @Composable
 internal fun GroupScreenContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: GroupState,
+    onAction: (GroupAction) -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
@@ -78,7 +89,10 @@ internal fun GroupScreenContent(
                             onClick = {
                                 scope.launch {
                                     if (pagerState.currentPage != 0)
-                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                        pagerState.animateScrollToPage(
+                                            page = pagerState.currentPage - 1,
+                                            animationSpec = tween(400)
+                                        )
                                 }
                             }
                         ),
@@ -91,10 +105,7 @@ internal fun GroupScreenContent(
         HorizontalPager(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 100.dp
-                ),
+                .padding(vertical = 100.dp),
             state = pagerState,
             verticalAlignment = Alignment.CenterVertically,
             userScrollEnabled = false
@@ -103,11 +114,20 @@ internal fun GroupScreenContent(
             when (page) {
 
                 0 -> {
-                    CourseSection(modifier = Modifier.fillMaxSize())
+                    CourseSection(
+                        modifier = Modifier.fillMaxSize(),
+                        courseProvider = { state.selectedCourseIndex },
+                        onCourseClick = { courseIndex ->
+                            onAction(GroupAction.OnChangeCourse(courseIndex))
+                        }
+                    )
                 }
 
                 1 -> {
-                    GroupSection(modifier = Modifier.fillMaxSize())
+                    GroupSection(
+                        modifier = Modifier.fillMaxSize(),
+                        state = state
+                    )
                 }
             }
         }
@@ -124,9 +144,17 @@ internal fun GroupScreenContent(
                 pressedColor = Color(0xFF95ACFF)
             ),
             onClick = {
+
+                when {
+                    pagerState.currentPage == 0 -> onAction(GroupAction.GetGroupList)
+                }
+
                 scope.launch {
                     if (pagerState.currentPage != pagerState.pageCount - 1)
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        pagerState.animateScrollToPage(
+                            page = pagerState.currentPage + 1,
+                            animationSpec = tween(400)
+                        )
                 }
             }
         )

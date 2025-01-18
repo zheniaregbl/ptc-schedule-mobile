@@ -46,6 +46,7 @@ kotlin {
             implementation(projects.core)
             implementation(projects.navigation)
             implementation(projects.feature.splash)
+            implementation(projects.feature.groups)
         }
         androidMain.dependencies {
             implementation(compose.preview)

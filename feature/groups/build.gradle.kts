@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -32,6 +33,9 @@ kotlin {
             api(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            api(libs.androidx.lifecycle.viewmodel)
+            api(libs.androidx.lifecycle.runtime.compose)
+
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)
@@ -41,6 +45,17 @@ kotlin {
 
             api(libs.voyager.navigator)
             api(libs.voyager.transitions)
+
+            api(libs.kotlinx.serialization.json)
+
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
+
+            api(libs.bundles.ktor)
+
+            api(libs.sandwich)
+            api(libs.sandwich.ktor)
 
             api(projects.core)
             api(projects.uiKit.foundations)
