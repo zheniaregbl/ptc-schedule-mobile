@@ -1,6 +1,8 @@
 # PTC Schedule App
 The PTC NovSU mobile app: convenient schedule, information about classes.
 
+[Readme on Russian](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/ru-README.md)
+
 >[!IMPORTANT]
 >**🚨 Notice: The app is still in development. 🚨**
 >
