@@ -32,14 +32,45 @@ kotlin {
             api(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            api(libs.androidx.lifecycle.viewmodel)
+            api(libs.androidx.lifecycle.runtime.compose)
+
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)
+            api(compose.material)
             api(compose.ui)
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
+
+            api(libs.shimmer)
+
+            api(libs.voyager.navigator)
+            api(libs.voyager.transitions)
+
+            api(libs.kotlinx.serialization.json)
+
+            api(libs.kotlinx.datetime)
+
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
+
+            api(libs.bundles.ktor)
+
+            api(libs.sandwich)
+            api(libs.sandwich.ktor)
+
+            api(projects.core)
+            api(projects.uiKit.foundations)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.syndicate.ptkscheduleapp.feature.schedule.resources"
+    generateResClass = auto
 }
 
 android {

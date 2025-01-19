@@ -39,6 +39,8 @@ kotlin {
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
 
+            api(libs.kotlinx.datetime)
+
             api(libs.koin.core)
 
             api(libs.bundles.ktor)

@@ -11,8 +11,6 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        setContent {
-            App()
-        }
+        setContent { App() }
     }
 }
