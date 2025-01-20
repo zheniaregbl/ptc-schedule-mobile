@@ -34,6 +34,8 @@ internal class GroupViewModel(
 
             is GroupAction.OnChangeCourse ->
                 _state.update { it.copy(selectedCourseIndex = action.course) }
+
+            is GroupAction.OnSelectGroup -> {}
         }
     }
 

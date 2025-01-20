@@ -25,10 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.internal.BackHandler
+import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
+import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.rememberPickerState
 import com.syndicate.ptkscheduleapp.feature.groups.resources.Res
 import com.syndicate.ptkscheduleapp.feature.groups.resources.back_svg
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
@@ -42,6 +47,9 @@ class GroupScreen : Screen {
     @Composable
     override fun Content() {
 
+        val navigator = LocalNavigator.currentOrThrow
+        val scheduleScreen = rememberScreen(SharedScreen.ScheduleScreen)
+
         val viewModel = koinViewModel<GroupViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -50,7 +58,13 @@ class GroupScreen : Screen {
                 .fillMaxSize()
                 .systemBarsPadding(),
             state = state,
-            onAction = { action -> viewModel.onAction(action) }
+            onAction = { action ->
+                viewModel.onAction(action)
+                when (action) {
+                    is GroupAction.OnSelectGroup -> navigator.replace(scheduleScreen)
+                    else -> Unit
+                }
+            }
         )
     }
 }
@@ -68,6 +82,8 @@ internal fun GroupScreenContent(
         initialPage = 0,
         pageCount = { 2 }
     )
+
+    val groupPickerState = rememberPickerState()
 
     BackHandler(enabled = pagerState.currentPage > 0) {
         scope.launch {
@@ -138,7 +154,8 @@ internal fun GroupScreenContent(
                 1 -> {
                     GroupSection(
                         modifier = Modifier.fillMaxSize(),
-                        state = state
+                        state = state,
+                        groupPickerState = groupPickerState
                     )
                 }
             }
@@ -157,16 +174,20 @@ internal fun GroupScreenContent(
             ),
             onClick = {
 
-                when {
-                    pagerState.currentPage == 0 -> onAction(GroupAction.GetGroupList)
-                }
+                if (!pagerState.isScrollInProgress) {
 
-                scope.launch {
-                    if (pagerState.currentPage != pagerState.pageCount - 1)
-                        pagerState.animateScrollToPage(
-                            page = pagerState.currentPage + 1,
-                            animationSpec = tween(400)
-                        )
+                    when {
+                        pagerState.currentPage == 0 -> onAction(GroupAction.GetGroupList)
+                        else -> onAction(GroupAction.OnSelectGroup(groupPickerState.selectedItem))
+                    }
+
+                    scope.launch {
+                        if (pagerState.currentPage != pagerState.pageCount - 1)
+                            pagerState.animateScrollToPage(
+                                page = pagerState.currentPage + 1,
+                                animationSpec = tween(400)
+                            )
+                    }
                 }
             }
         )
