@@ -30,7 +30,6 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 include(":core")
-include(":navigation")
 include(":ui-kit:foundations")
 include(":feature:schedule")
 include(":feature:groups")

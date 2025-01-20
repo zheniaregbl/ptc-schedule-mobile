@@ -46,7 +46,6 @@ kotlin {
             api(libs.voyager.transitions)
 
             api(projects.core)
-            api(projects.navigation)
         }
     }
 }

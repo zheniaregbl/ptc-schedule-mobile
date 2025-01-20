@@ -41,6 +41,8 @@ kotlin {
 
             api(libs.kotlinx.datetime)
 
+            api(libs.voyager.navigator)
+
             api(libs.koin.core)
 
             api(libs.bundles.ktor)

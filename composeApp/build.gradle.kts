@@ -44,9 +44,9 @@ kotlin {
             implementation(libs.koin.compose)
 
             implementation(projects.core)
-            implementation(projects.navigation)
             implementation(projects.feature.splash)
             implementation(projects.feature.groups)
+            implementation(projects.feature.schedule)
         }
         androidMain.dependencies {
             implementation(compose.preview)

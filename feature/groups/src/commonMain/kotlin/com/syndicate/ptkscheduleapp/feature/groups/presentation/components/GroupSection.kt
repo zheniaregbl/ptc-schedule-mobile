@@ -19,10 +19,9 @@ import com.syndicate.ptkscheduleapp.feature.groups.presentation.GroupState
 @Composable
 internal fun GroupSection(
     modifier: Modifier = Modifier,
-    state: GroupState
+    state: GroupState,
+    groupPickerState: PickerState
 ) {
-
-    val groupPickerState = rememberPickerState()
 
     Box(modifier = modifier) {
 

@@ -26,9 +26,9 @@ import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.theme.MainBlue
 import com.syndicate.ptkscheduleapp.feature.splash.resources.Res
-import com.syndicate.ptkscheduleapp.navigation.SharedScreen
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
@@ -42,13 +42,13 @@ class SplashScreen : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
-        val selectCourseScreen = rememberScreen(SharedScreen.GroupScreen)
+        val groupScreen = rememberScreen(SharedScreen.GroupScreen)
 
         SplashScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
-            onLaunchApp = { navigator.replace(selectCourseScreen) }
+            onLaunchApp = { navigator.replace(groupScreen) }
         )
     }
 }
