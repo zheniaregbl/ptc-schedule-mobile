@@ -2,10 +2,10 @@ package com.syndicate.ptkscheduleapp.feature.groups.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
-import com.skydoves.sandwich.suspendOnFailure
-import com.skydoves.sandwich.suspendOnSuccess
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onFailure
+import com.skydoves.sandwich.onSuccess
 import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +46,7 @@ internal class GroupViewModel(
         delay(2000)
 
         groupRepository.getGroupList()
-            .suspendOnSuccess {
+            .onSuccess {
                 val groupList = when (_state.value.selectedCourseIndex) {
                     0 -> data.firstCourse
                     1 -> data.secondCourse
@@ -58,8 +58,8 @@ internal class GroupViewModel(
                     groupList = groupList
                 ) }
             }
-            .suspendOnError { println("ERROR") }
-            .suspendOnFailure { println("FAILURE") }
-            .suspendOnException { println("EXCEPTION") }
+            .onError { println("ERROR") }
+            .onFailure { println("FAILURE") }
+            .onException { println("EXCEPTION") }
     }
 }

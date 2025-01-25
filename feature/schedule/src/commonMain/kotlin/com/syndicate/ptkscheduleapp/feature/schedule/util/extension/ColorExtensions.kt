@@ -1,7 +1,7 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.util.extension
 
 import androidx.compose.ui.graphics.Color
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.HslColor
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.HslColor
 import kotlin.math.max
 import kotlin.math.min
 

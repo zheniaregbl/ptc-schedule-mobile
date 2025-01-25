@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.HslColor
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.PairItem
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.HslColor
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.replacement_svg
 import org.jetbrains.compose.resources.painterResource

@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.domain
+package com.syndicate.ptkscheduleapp.feature.schedule.domain.model
 
 import com.syndicate.ptkscheduleapp.feature.schedule.util.randomHsl
 

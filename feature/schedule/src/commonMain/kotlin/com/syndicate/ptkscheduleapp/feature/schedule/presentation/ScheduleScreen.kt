@@ -8,11 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import org.koin.compose.viewmodel.koinViewModel
 
 internal class ScheduleScreen : Screen {
 
     @Composable
     override fun Content() {
+
+        val viewModel = koinViewModel<ScheduleViewModel>()
+
         ScheduleScreenContent(
             modifier = Modifier
                 .fillMaxSize()

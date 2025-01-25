@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.domain
+package com.syndicate.ptkscheduleapp.feature.schedule.domain.model
 
 internal data class HslColor(
     val hue: Float,
