@@ -10,7 +10,7 @@ internal class KtorRemoteGroupDataSource(
 ): RemoteGroupDataSource {
     override suspend fun getGroupList(): ApiResponse<AllGroupsDTO> {
         return httpClient.getApiResponse(
-            urlString = "http://80.85.243.65:5001/api/settings/groups/get"
+            urlString = "settings/groups/get"
         )
     }
 }
