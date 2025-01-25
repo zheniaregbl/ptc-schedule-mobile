@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.build.config)
 }
 
 kotlin {
@@ -48,6 +50,18 @@ kotlin {
             api(libs.bundles.ktor)
         }
     }
+}
+
+val localProperties = project.rootProject.file("local.properties")
+val properties = Properties()
+if (localProperties.exists()) {
+    properties.load(localProperties.inputStream())
+}
+
+val baseUrl = properties.getProperty("BASE_URL") ?: ""
+
+buildConfig {
+    buildConfigField("BASE_URL", baseUrl)
 }
 
 android {
