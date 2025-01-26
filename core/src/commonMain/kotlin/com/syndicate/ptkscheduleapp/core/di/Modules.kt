@@ -9,6 +9,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
@@ -38,6 +39,7 @@ val networkModule = module {
                 host = BuildConfig.BASE_URL
                 url {
                     protocol = URLProtocol.HTTP
+                    path("api/v2/")
                 }
                 contentType(ContentType.Application.Json)
             }
