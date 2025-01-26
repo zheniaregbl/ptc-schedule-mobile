@@ -45,17 +45,11 @@ internal class GroupViewModel(
 
         delay(2000)
 
-        groupRepository.getGroupList()
+        groupRepository.getGroupList(_state.value.selectedCourseIndex + 1)
             .onSuccess {
-                val groupList = when (_state.value.selectedCourseIndex) {
-                    0 -> data.firstCourse
-                    1 -> data.secondCourse
-                    2 -> data.thirdCourse
-                    else -> data.fourthCourse
-                }
                 _state.update { it.copy(
                     isLoading = false,
-                    groupList = groupList
+                    groupList = data
                 ) }
             }
             .onError { println("ERROR") }
