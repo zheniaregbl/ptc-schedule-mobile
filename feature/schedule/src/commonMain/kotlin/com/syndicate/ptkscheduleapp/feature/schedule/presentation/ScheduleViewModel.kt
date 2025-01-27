@@ -10,5 +10,11 @@ internal class ScheduleViewModel(
 ): ViewModel() {
 
 
-    init { viewModelScope.launch { scheduleRepository.getSchedule("1991") } }
+    init {
+        viewModelScope.launch {
+            scheduleRepository.getScheduleInfo()
+            scheduleRepository.getReplacement("1991")
+            scheduleRepository.getSchedule("1991")
+        }
+    }
 }

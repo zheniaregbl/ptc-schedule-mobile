@@ -40,7 +40,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
-import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.rememberPickerState

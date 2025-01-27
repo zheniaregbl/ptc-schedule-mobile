@@ -17,7 +17,7 @@ internal class DefaultScheduleRepository(
     override suspend fun getSchedule(group: String): ApiResponse<List<PairItem>> {
         return remoteScheduleDataSource
             .getSchedule(group)
-            .suspendMapSuccess { listPair.map { it.toModel() } }
+            .suspendMapSuccess { listPair!!.map { it.toModel() } }
     }
 
     override suspend fun getReplacement(
@@ -27,12 +27,12 @@ internal class DefaultScheduleRepository(
     ): ApiResponse<List<ReplacementItem>> {
         return remoteScheduleDataSource
             .getReplacement(dateStart, dateEnd)
-            .suspendMapSuccess { ScheduleUtil.getReplacementFromJson(this, group) }
+            .suspendMapSuccess { ScheduleUtil.getReplacementFromJson(replacements!!, group) }
     }
 
     override suspend fun getScheduleInfo(): ApiResponse<ScheduleInfo> {
         return remoteScheduleDataSource
             .getScheduleInfo()
-            .suspendMapSuccess { toModel() }
+            .suspendMapSuccess { scheduleInfoDTO!!.toModel() }
     }
 }

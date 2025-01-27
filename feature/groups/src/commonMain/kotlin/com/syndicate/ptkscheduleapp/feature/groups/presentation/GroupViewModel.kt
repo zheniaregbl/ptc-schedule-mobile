@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.skydoves.sandwich.ktor.statusCode
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onFailure
 import com.skydoves.sandwich.onSuccess
 import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
 import kotlinx.coroutines.delay
