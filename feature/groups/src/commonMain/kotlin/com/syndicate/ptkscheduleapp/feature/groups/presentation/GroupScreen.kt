@@ -15,11 +15,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -31,6 +39,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
+import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
+import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.rememberPickerState
@@ -82,8 +92,43 @@ internal fun GroupScreenContent(
         initialPage = 0,
         pageCount = { 2 }
     )
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val groupPickerState = rememberPickerState()
+
+    LaunchedEffect(state.toUiState()) {
+        if (state.toUiState() is GroupScreenState.Error) {
+
+            scope.launch {
+
+                val result = snackbarHostState.showSnackbar(
+                    message = state.errorMessage!!,
+                    actionLabel = "Повторить",
+                    duration = SnackbarDuration.Indefinite
+                )
+
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        if (pagerState.currentPage != 0)
+                            onAction(GroupAction.GetGroupList)
+                    }
+                    SnackbarResult.Dismissed -> {
+                        onAction(GroupAction.HideErrorMessage)
+                        pagerState.animateScrollToPage(
+                            page = 0,
+                            animationSpec = tween(400)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.targetPage }.collect { page ->
+            if (page == 0)
+                snackbarHostState.currentSnackbarData?.dismiss()
+        }
+    }
 
     BackHandler(enabled = pagerState.currentPage > 0) {
         scope.launch {
@@ -163,7 +208,7 @@ internal fun GroupScreenContent(
 
         AnimatedButton(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .align(BottomCenter)
                 .padding(bottom = 40.dp)
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp),
@@ -191,5 +236,19 @@ internal fun GroupScreenContent(
                 }
             }
         )
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(BottomCenter)
+                .padding(bottom = 90.dp)
+        ) { data ->
+            CountdownSnackbar(
+                snackbarData = data,
+                shape = RoundedCornerShape(8.dp),
+                containerColor = Color(0xFFFE5656),
+                actionColor = Color.White
+            )
+        }
     }
 }

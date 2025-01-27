@@ -66,6 +66,7 @@ internal data class GroupState(
 
     fun toUiState(): GroupScreenState {
         return if (isLoading) GroupScreenState.Loading
+        else if (errorMessage != null) GroupScreenState.Error(errorMessage)
         else GroupScreenState.Success(groupList)
     }
 }

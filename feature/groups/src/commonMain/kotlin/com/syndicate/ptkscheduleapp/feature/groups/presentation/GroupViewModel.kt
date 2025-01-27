@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp.feature.groups.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.skydoves.sandwich.ktor.statusCode
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onFailure
@@ -36,6 +37,9 @@ internal class GroupViewModel(
                 _state.update { it.copy(selectedCourseIndex = action.course) }
 
             is GroupAction.OnSelectGroup -> {}
+
+            GroupAction.HideErrorMessage ->
+                _state.update { it.copy(errorMessage = null) }
         }
     }
 
@@ -52,8 +56,19 @@ internal class GroupViewModel(
                     groupList = data
                 ) }
             }
-            .onError { println("ERROR") }
-            .onFailure { println("FAILURE") }
-            .onException { println("EXCEPTION") }
+            .onError {
+                _state.update { it.copy(
+                    isLoading = false,
+                    errorMessage = "Ошибка ${statusCode.code} при получении групп",
+                    groupList = emptyList()
+                ) }
+            }
+            .onException {
+                _state.update { it.copy(
+                    isLoading = false,
+                    errorMessage = "Ошибка при попытке получения групп",
+                    groupList = emptyList()
+                ) }
+            }
     }
 }
