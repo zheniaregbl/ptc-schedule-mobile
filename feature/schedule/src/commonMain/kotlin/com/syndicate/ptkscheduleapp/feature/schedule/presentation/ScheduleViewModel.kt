@@ -2,19 +2,178 @@ package com.syndicate.ptkscheduleapp.feature.schedule.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 
 internal class ScheduleViewModel(
     private val scheduleRepository: ScheduleRepository
-): ViewModel() {
+) : ViewModel() {
 
+    private val _state = MutableStateFlow(ScheduleState())
+    val state = _state
+        .onStart { onAction(ScheduleAction.UpdateScheduleInfo) }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            _state.value
+        )
 
-    init {
-        viewModelScope.launch {
-            scheduleRepository.getScheduleInfo()
-            scheduleRepository.getReplacement("1991")
-            scheduleRepository.getSchedule("1991")
+    private val _initWeekType = MutableStateFlow(false)
+
+    fun onAction(action: ScheduleAction) {
+
+        when (action) {
+
+            is ScheduleAction.ChangeSchedulePage ->
+                _state.update { it.copy(selectedSchedulePage = action.page) }
+
+            is ScheduleAction.ChangeSelectedDate ->
+                _state.update { it.copy(selectedDate = action.date) }
+
+            ScheduleAction.RefreshSchedule -> viewModelScope.launch { refreshSchedule() }
+
+            is ScheduleAction.UpdateDailyWeekState -> {
+
+                val weekNumber = ScheduleUtil
+                    .getCurrentWeek(weeks, action.currentDate)
+
+                _state.update {
+                    it.copy(
+                        selectedDateWeekType = if (weekNumber % 2 == currentWeekNumber % 2)
+                            _initWeekType.value else !_initWeekType.value
+                    )
+                }
+            }
+
+            ScheduleAction.UpdateScheduleInfo -> {
+                viewModelScope.launch {
+                    refreshSchedule()
+                }
+            }
         }
+    }
+
+    private suspend fun refreshSchedule() {
+        getScheduleInfo()
+        getReplacement()
+        getSchedule()
+    }
+
+    private suspend fun getScheduleInfo() {
+
+        _state.update { it.copy(isLoading = true) }
+
+        scheduleRepository
+            .getScheduleInfo()
+            .onSuccess {
+
+                if (_state.value.scheduleInfo.isUpperWeek == null) {
+                    _initWeekType.update { data.isUpperWeek!! }
+                    _state.update { it.copy(selectedDateWeekType = data.isUpperWeek!!) }
+                } else {
+
+                    val startWeekType = ScheduleUtil
+                        .getCurrentTypeWeek(data.isUpperWeek!!, currentWeekNumber, 0)
+                    val currentWeekType = if (_state.value.selectedSchedulePage / 7 % 2 == 0)
+                        startWeekType else !startWeekType
+
+                    _state.update { it.copy(selectedDateWeekType = currentWeekType) }
+                }
+
+                _state.update { it.copy(scheduleInfo = data) }
+            }
+            .onError {
+                _state.update {
+                    it.copy(
+                        errorMessage = "Ошибка при получении расписания"
+                    )
+                }
+            }
+            .onException {
+                _state.update {
+                    it.copy(
+                        errorMessage = "Ошибка при запросе расписания"
+                    )
+                }
+            }
+    }
+
+    private suspend fun getReplacement() {
+
+        scheduleRepository
+            .getReplacement("1991")
+            .onSuccess {
+                _state.update { it.copy(replacement = data) }
+            }
+            .onError {
+                _state.update {
+                    it.copy(
+                        errorMessage = "Ошибка при получении замен"
+                    )
+                }
+            }
+            .onException {
+                _state.update {
+                    it.copy(
+                        errorMessage = "Ошибка при запросе замен"
+                    )
+                }
+            }
+    }
+
+    private suspend fun getSchedule() {
+
+        scheduleRepository
+            .getSchedule("1991")
+            .onSuccess {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        schedule = ScheduleUtil
+                            .getWeekSchedule(data)
+                    )
+                }
+            }
+            .onError {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = "Ошибка при получении расписания"
+                    )
+                }
+            }
+            .onException {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = "Ошибка при запросе расписания"
+                    )
+                }
+            }
+    }
+
+    companion object {
+
+        val weeks = ScheduleUtil.getWeeksFromStartDate(
+            LocalDate(Clock.System.nowDate().year, Month.JANUARY, 1),
+            78
+        )
+        val currentWeekNumber = ScheduleUtil.getCurrentWeek(
+            weeks,
+            Clock.System.nowDate()
+        )
     }
 }

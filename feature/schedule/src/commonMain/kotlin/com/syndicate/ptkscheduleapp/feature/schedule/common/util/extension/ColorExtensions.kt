@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.util.extension
+package com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension
 
 import androidx.compose.ui.graphics.Color
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.HslColor

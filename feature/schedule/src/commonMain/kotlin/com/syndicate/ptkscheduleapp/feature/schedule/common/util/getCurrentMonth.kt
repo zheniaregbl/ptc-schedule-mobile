@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.util
+package com.syndicate.ptkscheduleapp.feature.schedule.common.util
 
 import kotlinx.datetime.LocalDate
 

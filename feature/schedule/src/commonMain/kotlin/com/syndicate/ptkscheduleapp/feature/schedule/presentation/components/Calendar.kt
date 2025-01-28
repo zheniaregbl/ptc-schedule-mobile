@@ -13,8 +13,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.syndicate.ptkscheduleapp.feature.schedule.util.getStringByMonth
-import com.syndicate.ptkscheduleapp.feature.schedule.util.getWeeksFromMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getWeeksFromMonth
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 
@@ -22,7 +22,7 @@ import kotlinx.datetime.Month
 internal fun Calendar(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    selectedDate: State<LocalDate>,
+    selectedDate: () -> LocalDate,
     months: MutableState<List<List<LocalDate>>>,
     monthValue: MutableState<Month>,
     pagerMonthStateSaved: MutableState<Int>,
@@ -71,7 +71,7 @@ internal fun Calendar(
                         modifier = Modifier
                             .fillMaxWidth(),
                         week = week,
-                        selectedDate = selectedDate.value,
+                        selectedDate = selectedDate(),
                         onChangeDate = onChangeDate
                     )
                 }

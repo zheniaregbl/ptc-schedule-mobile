@@ -1,6 +1,6 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.domain.model
 
-import com.syndicate.ptkscheduleapp.feature.schedule.util.randomHsl
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.randomHsl
 
 internal data class PairItem(
     val dayOfWeek: String = "Понедельник",

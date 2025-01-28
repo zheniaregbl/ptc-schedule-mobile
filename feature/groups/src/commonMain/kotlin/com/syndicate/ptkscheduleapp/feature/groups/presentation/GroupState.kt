@@ -59,9 +59,9 @@ internal fun GroupScreenState.DisplayResult(
 
 internal data class GroupState(
     val isLoading: Boolean = false,
+    val errorMessage: String? = null,
     val groupList: List<String> = listOf("-", "-", "-", "-", "-", "-"),
-    val selectedCourseIndex: Int = 0,
-    val errorMessage: String? = null
+    val selectedCourseIndex: Int = 0
 ) {
 
     fun toUiState(): GroupScreenState {

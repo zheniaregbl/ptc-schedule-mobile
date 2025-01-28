@@ -27,14 +27,14 @@ val networkModule = module {
                     }
                 )
             }
-            install(Logging) {
+            /*install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
                         println(message)
                     }
                 }
                 level = LogLevel.ALL
-            }
+            }*/
             defaultRequest {
                 host = BuildConfig.BASE_URL
                 url {

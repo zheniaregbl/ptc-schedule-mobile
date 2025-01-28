@@ -10,14 +10,13 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.syndicate.ptkscheduleapp.feature.schedule.util.getStringByMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMonth
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 
@@ -25,7 +24,7 @@ import kotlinx.datetime.Month
 internal fun WeekPanel(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    selectedDate: State<LocalDate>,
+    selectedDateProvider: () -> LocalDate,
     weeks: MutableState<List<List<LocalDate>>>,
     monthValue: MutableState<Month>,
     pagerWeekStateSaved: MutableState<Int>,
@@ -39,21 +38,21 @@ internal fun WeekPanel(
         // TODO : Sync panels
     }
 
-    LaunchedEffect(pagerState, selectedDate.value) {
+    LaunchedEffect(pagerState, selectedDateProvider()) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
 
             pagerWeekStateSaved.value = page
 
             val weekDates = weeks.value[page]
 
-            if (selectedDate.value !in weekDates) {
+            if (selectedDateProvider() !in weekDates) {
                 monthText.value = getStringByMonth(weekDates[3].month)
                 monthValue.value = weekDates[3].month
                 yearText.value = weekDates[3].year
             } else {
-                monthText.value = getStringByMonth(selectedDate.value.month)
-                monthValue.value = selectedDate.value.month
-                yearText.value = selectedDate.value.year
+                monthText.value = getStringByMonth(selectedDateProvider().month)
+                monthValue.value = selectedDateProvider().month
+                yearText.value = selectedDateProvider().year
             }
         }
     }
@@ -78,7 +77,7 @@ internal fun WeekPanel(
             ) {
                 weekDates.forEach { date ->
                     DayItem(
-                        selected = date == selectedDate.value,
+                        selected = date == selectedDateProvider(),
                         value = date,
                         onChangeDate = onChangeDate
                     )

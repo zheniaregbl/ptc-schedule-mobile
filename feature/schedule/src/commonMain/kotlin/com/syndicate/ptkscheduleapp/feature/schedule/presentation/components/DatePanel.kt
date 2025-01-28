@@ -50,12 +50,14 @@ import com.syndicate.ptkscheduleapp.core.presentation.components.AutoResizeText
 import com.syndicate.ptkscheduleapp.core.presentation.components.FontSizeRange
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.calendar_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.expand_arrow_svg
-import com.syndicate.ptkscheduleapp.feature.schedule.util.getCurrentMonth
-import com.syndicate.ptkscheduleapp.feature.schedule.util.getMonthsFromWeeks
-import com.syndicate.ptkscheduleapp.feature.schedule.util.getStringByMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getCurrentMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getMonthsFromWeeks
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -72,9 +74,7 @@ internal fun DatePanel(
     modifier: Modifier = Modifier,
     panelState: MutableState<PanelState> = mutableStateOf(PanelState.WeekPanel),
     weekPanelPagerState: PagerState,
-    selectedDate: State<LocalDate>,
-    selectedDateWeekType: State<Boolean>,
-    currentGroupNumber: String,
+    state: State<ScheduleState>,
     weeks: MutableState<List<List<LocalDate>>>,
     pagerWeekStateSaved: MutableState<Int> = mutableIntStateOf(0),
     weekPanelPageSize: MutableState<IntSize>,
@@ -99,8 +99,16 @@ internal fun DatePanel(
     )
 
     val monthValue = remember { mutableStateOf(currentLocalDate.month) }
-    val monthText = remember { mutableStateOf(getStringByMonth(selectedDate.value.month)) }
-    val yearText = remember { mutableIntStateOf(selectedDate.value.year) }
+    val monthText = remember {
+        mutableStateOf(
+            getStringByMonth(state.value.selectedDate.month)
+        )
+    }
+    val yearText = remember {
+        mutableIntStateOf(
+            state.value.selectedDate.year
+        )
+    }
 
     val colorBorder = Color.Black.copy(alpha = .3f)
 
@@ -203,7 +211,7 @@ internal fun DatePanel(
                 ) {
 
                     Text(
-                        text = if (selectedDateWeekType.value) "Верхняя неделя"
+                        text = if (state.value.selectedDateWeekType) "Верхняя неделя"
                         else "Нижняя неделя",
                         style = LocalTextStyle.current,
                         fontSize = 15.sp,
@@ -212,7 +220,7 @@ internal fun DatePanel(
                     )
 
                     Text(
-                        text = "Группа: $currentGroupNumber",
+                        text = "Группа: ${state.value.currentGroupNumber}",
                         style = LocalTextStyle.current,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -247,7 +255,7 @@ internal fun DatePanel(
                     ) {
 
                         DateButton(
-                            selectedDate = selectedDate,
+                            selectedDateProvider = { state.value.selectedDate },
                             onClick = { onChangeDate(currentLocalDate) }
                         )
 
@@ -302,7 +310,7 @@ internal fun DatePanel(
                                 bottom = 12.dp
                             ),
                         pagerState = weekPanelPagerState,
-                        selectedDate = selectedDate,
+                        selectedDateProvider = { state.value.selectedDate },
                         weeks = weeks,
                         monthValue = monthValue,
                         pagerWeekStateSaved = pagerWeekStateSaved,
@@ -329,7 +337,7 @@ internal fun DatePanel(
                                     bottom = 12.dp
                                 ),
                             pagerState = calendarPagerState,
-                            selectedDate = selectedDate,
+                            selectedDate = { state.value.selectedDate },
                             months = months,
                             monthValue = monthValue,
                             pagerMonthStateSaved = pagerMonthStateSaved,
@@ -367,17 +375,14 @@ private fun ExpandedButton(
 
 @Composable
 fun DateButton(
-    selectedDate: State<LocalDate>,
+    selectedDateProvider: () -> LocalDate,
     onClick: () -> Unit
 ) {
 
-    val currentLocalDate = Clock.System
-        .now()
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
+    val currentLocalDate = Clock.System.nowDate()
 
     AnimatedVisibility(
-        visible = selectedDate.value != currentLocalDate,
+        visible = selectedDateProvider() != currentLocalDate,
         enter = fadeIn(),
         exit = fadeOut()
     ) {

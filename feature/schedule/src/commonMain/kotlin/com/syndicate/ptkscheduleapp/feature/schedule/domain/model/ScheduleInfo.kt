@@ -6,7 +6,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 internal data class ScheduleInfo(
-    val isUpperWeek: Boolean = true,
+    val isUpperWeek: Boolean? = null,
     val lastScheduleUpdateTime: LocalDateTime = Clock
         .System
         .now()
