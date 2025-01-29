@@ -329,7 +329,7 @@ internal fun DatePanel(
                                     bottom = 12.dp
                                 ),
                             pagerState = calendarPagerState,
-                            selectedDate = { state.value.selectedDate },
+                            selectedDateProvider = { state.value.selectedDate },
                             months = months,
                             monthValue = monthValue,
                             pagerMonthStateSaved = pagerMonthStateSaved,

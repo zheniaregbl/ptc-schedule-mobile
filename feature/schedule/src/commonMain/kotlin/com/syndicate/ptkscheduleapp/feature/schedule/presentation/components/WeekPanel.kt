@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.util.syncPanel
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 
@@ -34,9 +35,7 @@ internal fun WeekPanel(
     onChangeDate: (LocalDate) -> Unit = { }
 ) {
 
-    LaunchedEffect(Unit) {
-        // TODO : Sync panels
-    }
+    LaunchedEffect(Unit) { pagerState.scrollToPage(syncPanel(weeks.value, selectedDateProvider())) }
 
     LaunchedEffect(pagerState, selectedDateProvider()) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
