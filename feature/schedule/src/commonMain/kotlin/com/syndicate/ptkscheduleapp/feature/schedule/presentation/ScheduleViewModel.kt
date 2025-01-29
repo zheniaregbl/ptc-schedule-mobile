@@ -8,6 +8,7 @@ import com.skydoves.sandwich.onSuccess
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart

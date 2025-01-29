@@ -47,6 +47,9 @@ import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewMo
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PanelState
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ShimmerPairCard
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -96,6 +99,8 @@ internal fun ScheduleScreenContent(
     val scope = rememberCoroutineScope()
 
     val panelState = remember { mutableStateOf(PanelState.WeekPanel) }
+
+    val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 
     val weeks = remember {
         mutableStateOf(
@@ -163,9 +168,18 @@ internal fun ScheduleScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    item { Spacer(Modifier.height(160.dp)) }
+                    item { Spacer(Modifier.height(180.dp)) }
 
-                    item { Text("Loading") }
+                    items(4) { index ->
+
+                        ShimmerPairCard(shimmerInstance = shimmerInstance)
+
+                        if (index != 3)
+                            Spacer(
+                                modifier = Modifier
+                                    .height(14.dp)
+                            )
+                    }
                 }
             },
             onError = {},
