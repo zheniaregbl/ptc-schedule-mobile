@@ -19,10 +19,9 @@ import com.syndicate.ptkscheduleapp.core.presentation.components.AutoResizeText
 import com.syndicate.ptkscheduleapp.core.presentation.components.FontSizeRange
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @Composable
 internal fun DayItem(
@@ -31,10 +30,7 @@ internal fun DayItem(
     onChangeDate: (LocalDate) -> Unit
 ) {
 
-    val currentLocalDate = Clock.System
-        .now()
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
+    val currentLocalDate = Clock.System.nowDate()
 
     Box(
         modifier = Modifier
@@ -55,6 +51,8 @@ internal fun DayItem(
 
         AutoResizeText(
             text = value.dayOfMonth.toString(),
+            style = LocalTextStyle.current,
+            lineHeight = 15.sp,
             fontWeight = FontWeight.Medium,
             color = if (value == currentLocalDate) SelectedBlue
             else Color.Black,
@@ -64,13 +62,5 @@ internal fun DayItem(
                 max = 15.sp
             )
         )
-        /*Text(
-            text = value.dayOfMonth.toString(),
-            style = LocalTextStyle.current,
-            fontWeight = FontWeight.Medium,
-            fontSize = 15.sp,
-            color = if (value == currentLocalDate) SelectedBlue
-            else Color.Black
-        )*/
     }
 }

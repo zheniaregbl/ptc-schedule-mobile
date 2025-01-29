@@ -60,8 +60,6 @@ import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMont
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 
 internal enum class PanelState {
@@ -82,10 +80,7 @@ internal fun DatePanel(
     onHideCalendar: () -> Unit = { }
 ) {
 
-    val currentLocalDate = Clock.System
-        .now()
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
+    val currentLocalDate = Clock.System.nowDate()
 
     val months = remember { mutableStateOf(getMonthsFromWeeks(weeks.value)) }
 
@@ -119,7 +114,6 @@ internal fun DatePanel(
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -227,8 +221,6 @@ internal fun DatePanel(
                         color = Color.Black
                     )
                 }
-
-                Spacer(modifier = Modifier.height(4.dp))
 
                 Row(
                     modifier = Modifier

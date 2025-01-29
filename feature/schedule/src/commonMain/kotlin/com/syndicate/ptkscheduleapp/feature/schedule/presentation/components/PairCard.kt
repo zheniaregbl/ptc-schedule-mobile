@@ -158,18 +158,17 @@ internal fun PairInfo(
             color = if (isDark) Color.White else Color.Black
         )
 
-        Spacer(modifier = Modifier.height(3.dp))
-
         Text(
             text = if (pairItem.subject == ""
                 || pairItem.subject.lowercase() == "не будет") "Не будет" else pairItem.subject,
             style = LocalTextStyle.current,
+            lineHeight = 15.sp,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal,
             color = GrayText
         )
 
-        Spacer(modifier = Modifier.height(3.dp))
+        Spacer(Modifier.height(3.dp))
 
         if (pairItem.subject != ""
             && pairItem.subject.lowercase() != "не будет") {
@@ -185,6 +184,7 @@ internal fun PairInfo(
             Text(
                 text = text,
                 style = LocalTextStyle.current,
+                lineHeight = 15.sp,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
                 color = if (isDark) Color.White else Color.Black
@@ -192,9 +192,13 @@ internal fun PairInfo(
         }
 
         if (pairItem.subgroupNumber != 0) {
+
+            Spacer(Modifier.height(3.dp))
+
             Text(
                 text = "п/г ${pairItem.subgroupNumber}",
                 style = LocalTextStyle.current,
+                lineHeight = 15.sp,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
                 color = if (isDark) Color.White else Color.Black

@@ -224,12 +224,7 @@ internal fun ScheduleScreenContent(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
 
-                            item {
-                                Spacer(
-                                    modifier = Modifier
-                                        .height(170.dp)
-                                )
-                            }
+                            item { Spacer(modifier = Modifier.height(180.dp)) }
 
                             itemsIndexed(
                                 items = currentSchedule,
@@ -243,18 +238,11 @@ internal fun ScheduleScreenContent(
                                     PairCard(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .shadow(
-                                                elevation = 4.dp,
-                                                shape = RoundedCornerShape(10.dp),
-                                                clip = true,
-                                                spotColor = Color.Black.copy(alpha = 0.3f),
-                                                ambientColor = Color.Black.copy(alpha = 0.3f)
-                                            )
                                             .clip(RoundedCornerShape(10.dp))
                                             .background(color = FirstThemeBackground)
                                             .border(
                                                 width = 2.dp,
-                                                color = SecondThemeBackground,
+                                                color = Color.Black.copy(alpha = 0.1f),
                                                 shape = RoundedCornerShape(10.dp)
                                             ),
                                         pairList = pair,
@@ -266,18 +254,11 @@ internal fun ScheduleScreenContent(
                                     PairCard(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .shadow(
-                                                elevation = 4.dp,
-                                                shape = RoundedCornerShape(10.dp),
-                                                clip = true,
-                                                spotColor = Color.Black.copy(alpha = 0.3f),
-                                                ambientColor = Color.Black.copy(alpha = 0.3f)
-                                            )
                                             .clip(RoundedCornerShape(10.dp))
                                             .background(color = FirstThemeBackground)
                                             .border(
                                                 width = 2.dp,
-                                                color = SecondThemeBackground,
+                                                color = Color.Black.copy(alpha = 0.1f),
                                                 shape = RoundedCornerShape(10.dp)
                                             ),
                                         pair = pair.first(),
@@ -286,7 +267,7 @@ internal fun ScheduleScreenContent(
                                 }
 
                                 if (index != currentSchedule.lastIndex)
-                                    Spacer(modifier = Modifier.height(20.dp))
+                                    Spacer(modifier = Modifier.height(14.dp))
 
                             }
 
