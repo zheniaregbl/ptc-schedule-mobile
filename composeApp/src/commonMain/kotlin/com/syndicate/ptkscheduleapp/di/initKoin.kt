@@ -3,6 +3,7 @@ package com.syndicate.ptkscheduleapp.di
 import com.syndicate.ptkscheduleapp.core.di.networkModule
 import com.syndicate.ptkscheduleapp.feature.groups.di.featureGroupsModule
 import com.syndicate.ptkscheduleapp.feature.schedule.di.featureScheduleModule
+import com.syndicate.ptkscheduleapp.feature.splash.di.featureSplashModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -13,7 +14,12 @@ fun initKoin(
 ) {
     startKoin {
         config?.invoke(this)
-        modules(networkModule, featureGroupsModule, featureScheduleModule)
+        modules(
+            networkModule,
+            featureSplashModule,
+            featureGroupsModule,
+            featureScheduleModule
+        )
         modules(platformModules)
     }
 }

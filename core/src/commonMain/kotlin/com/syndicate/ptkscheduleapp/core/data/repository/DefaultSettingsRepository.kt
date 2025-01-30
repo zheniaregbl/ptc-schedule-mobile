@@ -19,7 +19,7 @@ class DefaultSettingsRepository(
     override val userGroup: Flow<String> = dataStore
         .data
         .map {
-            if (it[PreferencesKeys.userGroupKey].isNullOrBlank()) "1991"
+            if (it[PreferencesKeys.userGroupKey].isNullOrBlank()) ""
             else it[PreferencesKeys.userGroupKey]!!
         }
 

@@ -13,6 +13,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.koin.compose.viewmodel.koinViewModel
 
 class SplashScreen : Screen {
 
@@ -43,12 +45,19 @@ class SplashScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
         val groupScreen = rememberScreen(SharedScreen.GroupScreen)
+        val scheduleScreen = rememberScreen(SharedScreen.ScheduleScreen)
+
+        val viewModel = koinViewModel<LaunchViewModel>()
+        val selectedUserGroup by viewModel.selectedUserGroup.collectAsState()
 
         SplashScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
-            onLaunchApp = { navigator.replace(groupScreen) }
+            onLaunchApp = {
+                if (selectedUserGroup.isEmpty()) navigator.replace(groupScreen)
+                else navigator.replace(scheduleScreen)
+            }
         )
     }
 }

@@ -32,6 +32,9 @@ kotlin {
             api(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            api(libs.androidx.lifecycle.viewmodel)
+            api(libs.androidx.lifecycle.runtime.compose)
+
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)
@@ -44,6 +47,10 @@ kotlin {
 
             api(libs.voyager.navigator)
             api(libs.voyager.transitions)
+
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
 
             api(projects.core)
         }
