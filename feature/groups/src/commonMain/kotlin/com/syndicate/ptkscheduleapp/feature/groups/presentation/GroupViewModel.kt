@@ -6,6 +6,7 @@ import com.skydoves.sandwich.ktor.statusCode
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
+import com.syndicate.ptkscheduleapp.core.domain.repository.SettingsRepository
 import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class GroupViewModel(
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GroupState())
@@ -35,7 +37,8 @@ internal class GroupViewModel(
             is GroupAction.OnChangeCourse ->
                 _state.update { it.copy(selectedCourseIndex = action.course) }
 
-            is GroupAction.OnSelectGroup -> {}
+            is GroupAction.OnSelectGroup ->
+                selectGroup(action.group)
 
             GroupAction.HideErrorMessage ->
                 _state.update { it.copy(errorMessage = null) }
@@ -68,6 +71,21 @@ internal class GroupViewModel(
                     errorMessage = "Ошибка при попытке получения групп",
                     groupList = emptyList()
                 ) }
+            }
+    }
+
+    private fun selectGroup(group: String) = viewModelScope.launch {
+        _state.update { it.copy(isLoading = true) }
+        settingsRepository.setGroup(group)
+
+        settingsRepository.userGroup
+            .collect { userGroup ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        selectedGroup = userGroup
+                    )
+                }
             }
     }
 }

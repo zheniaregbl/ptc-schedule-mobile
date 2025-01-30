@@ -61,7 +61,8 @@ internal data class GroupState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val groupList: List<String> = listOf("-", "-", "-", "-", "-", "-"),
-    val selectedCourseIndex: Int = 0
+    val selectedCourseIndex: Int = 0,
+    val selectedGroup: String? = null
 ) {
 
     fun toUiState(): GroupScreenState {

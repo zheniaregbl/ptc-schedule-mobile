@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp
 
 import android.app.Application
 import cafe.adriel.voyager.core.registry.ScreenRegistry
+import com.syndicate.ptkscheduleapp.di.androidPlatformModules
 import com.syndicate.ptkscheduleapp.di.initKoin
 import com.syndicate.ptkscheduleapp.feature.groups.di.featureGroupsScreenModule
 import com.syndicate.ptkscheduleapp.feature.schedule.di.featureScheduleScreenModule
@@ -17,6 +18,9 @@ class ScheduleApplication : Application() {
             featureScheduleScreenModule()
         }
 
-        initKoin(config = { androidContext(this@ScheduleApplication) })
+        initKoin(
+            config = { androidContext(this@ScheduleApplication) },
+            platformModules = androidPlatformModules(this@ScheduleApplication)
+        )
     }
 }

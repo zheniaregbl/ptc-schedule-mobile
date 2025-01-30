@@ -62,6 +62,11 @@ class GroupScreen : Screen {
         val viewModel = koinViewModel<GroupViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
+        LaunchedEffect(state.selectedGroup) {
+            if (state.selectedGroup != null)
+                navigator.replace(scheduleScreen)
+        }
+
         GroupScreenContent(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,10 +74,6 @@ class GroupScreen : Screen {
             state = state,
             onAction = { action ->
                 viewModel.onAction(action)
-                when (action) {
-                    is GroupAction.OnSelectGroup -> navigator.replace(scheduleScreen)
-                    else -> Unit
-                }
             }
         )
     }
@@ -222,7 +223,10 @@ internal fun GroupScreenContent(
 
                     when {
                         pagerState.currentPage == 0 -> onAction(GroupAction.GetGroupList)
-                        else -> onAction(GroupAction.OnSelectGroup(groupPickerState.selectedItem))
+                        else -> {
+                            if (!state.isLoading)
+                                onAction(GroupAction.OnSelectGroup(groupPickerState.selectedItem))
+                        }
                     }
 
                     scope.launch {

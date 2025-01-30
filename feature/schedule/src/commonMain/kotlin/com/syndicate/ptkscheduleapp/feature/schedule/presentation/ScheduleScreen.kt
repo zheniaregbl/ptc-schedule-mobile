@@ -175,10 +175,7 @@ internal fun ScheduleScreenContent(
                         ShimmerPairCard(shimmerInstance = shimmerInstance)
 
                         if (index != 3)
-                            Spacer(
-                                modifier = Modifier
-                                    .height(14.dp)
-                            )
+                            Spacer(Modifier.height(14.dp))
                     }
                 }
             },

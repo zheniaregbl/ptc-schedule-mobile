@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
+import com.syndicate.ptkscheduleapp.core.domain.repository.SettingsRepository
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -20,17 +20,30 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 
 internal class ScheduleViewModel(
-    private val scheduleRepository: ScheduleRepository
+    private val scheduleRepository: ScheduleRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ScheduleState())
     val state = _state
-        .onStart { onAction(ScheduleAction.UpdateScheduleInfo) }
+        .onStart {
+            viewModelScope.launch {
+                getScheduleInfo()
+                getReplacement()
+                getSchedule()
+            }
+        }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(),
+            SharingStarted.WhileSubscribed(10_000L),
             _state.value
         )
+
+    init {
+        viewModelScope.launch {
+            getUserGroup()
+        }
+    }
 
     private val _initWeekType = MutableStateFlow(false)
 
@@ -44,7 +57,11 @@ internal class ScheduleViewModel(
             is ScheduleAction.ChangeSelectedDate ->
                 _state.update { it.copy(selectedDate = action.date) }
 
-            ScheduleAction.RefreshSchedule -> viewModelScope.launch { refreshSchedule() }
+            ScheduleAction.RefreshSchedule -> viewModelScope.launch {
+                getScheduleInfo()
+                getReplacement()
+                getSchedule()
+            }
 
             is ScheduleAction.UpdateDailyWeekState -> {
 
@@ -61,16 +78,19 @@ internal class ScheduleViewModel(
 
             ScheduleAction.UpdateScheduleInfo -> {
                 viewModelScope.launch {
-                    refreshSchedule()
+                    getScheduleInfo()
+                    getReplacement()
+                    getSchedule()
                 }
             }
         }
     }
 
-    private suspend fun refreshSchedule() {
-        getScheduleInfo()
-        getReplacement()
-        getSchedule()
+    private suspend fun getUserGroup() {
+        settingsRepository.userGroup
+            .collect { group ->
+                _state.update { it.copy(currentGroupNumber = group) }
+            }
     }
 
     private suspend fun getScheduleInfo() {
@@ -115,7 +135,7 @@ internal class ScheduleViewModel(
     private suspend fun getReplacement() {
 
         scheduleRepository
-            .getReplacement("1991")
+            .getReplacement(_state.value.currentGroupNumber)
             .onSuccess {
                 _state.update { it.copy(replacement = data) }
             }
@@ -138,7 +158,7 @@ internal class ScheduleViewModel(
     private suspend fun getSchedule() {
 
         scheduleRepository
-            .getSchedule("1991")
+            .getSchedule(_state.value.currentGroupNumber)
             .onSuccess {
                 _state.update {
                     it.copy(

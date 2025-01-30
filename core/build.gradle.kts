@@ -41,6 +41,9 @@ kotlin {
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
 
+            api(libs.datastore)
+            api(libs.datastore.preferences)
+
             api(libs.kotlinx.datetime)
 
             api(libs.voyager.navigator)
