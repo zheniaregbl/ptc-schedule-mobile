@@ -1,5 +1,7 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.common.util
 
+import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.PairDTO
+import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ReplacementItem
 import kotlinx.datetime.DateTimeUnit
@@ -8,12 +10,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.boolean
-import kotlinx.serialization.json.int
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 
 internal object ScheduleUtil {
 
@@ -165,6 +166,8 @@ internal object ScheduleUtil {
             year()
         }
 
+        val parser = Json { ignoreUnknownKeys = true }
+
         listDate.forEach { date ->
 
             var dailyReplacementList = ArrayList<List<PairItem>>()
@@ -172,48 +175,40 @@ internal object ScheduleUtil {
             var lastPairNumber = 0
 
             try {
-                val dailyReplacementJson = jsonReplacement[date]?.jsonObject?.get(group)?.jsonArray
 
-                if (dailyReplacementJson != null) {
-                    for (jsonElement in dailyReplacementJson) {
-                        val replacementItemJson = jsonElement.jsonObject
-                        val pairItem = PairItem(
-                            dayOfWeek = replacementItemJson["dayOfWeek"]?.jsonPrimitive?.content ?: "",
-                            isUpper = replacementItemJson["isUpper"]?.jsonPrimitive?.boolean ?: false,
-                            pairNumber = replacementItemJson["pairNumber"]?.jsonPrimitive?.int ?: -1,
-                            subject = replacementItemJson["subject"]?.jsonPrimitive?.content ?: "",
-                            place = replacementItemJson["place"]?.jsonPrimitive?.content ?: "",
-                            room = replacementItemJson["cabinet"]?.jsonPrimitive?.content ?: "",
-                            teacher = replacementItemJson["teacher"]?.jsonPrimitive?.content ?: "",
-                            subgroupNumber = replacementItemJson["subgroupNumber"]?.jsonPrimitive?.int ?: -1,
-                            time = replacementItemJson["time"]?.jsonPrimitive?.content ?: "",
-                        )
+                val dailyReplacementJson = jsonReplacement[date]!!.jsonObject[group]!!.jsonArray
 
-                        if (pairItem.pairNumber == -1) {
-                            dailyReplacementList.add(listOf(pairItem))
-                            continue
-                        }
+                for (jsonElement in dailyReplacementJson) {
 
-                        if (lastPairNumber == 0) {
-                            lastPairNumber = pairItem.pairNumber
-                        }
+                    val pairItem = parser
+                        .decodeFromJsonElement<PairDTO>(jsonElement)
+                        .toModel()
 
-                        if (lastPairNumber != pairItem.pairNumber) {
-                            dailyReplacementList.add(pairReplacement)
-                            lastPairNumber = pairItem.pairNumber
-                            pairReplacement = ArrayList()
-                        }
+                    if (pairItem.pairNumber == -1) {
+                        dailyReplacementList.add(listOf(pairItem))
+                        continue
+                    }
 
+                    if (lastPairNumber == 0) {
                         lastPairNumber = pairItem.pairNumber
-                        pairReplacement.add(pairItem)
                     }
 
-                    if (pairReplacement.isNotEmpty()) {
+                    if (lastPairNumber != pairItem.pairNumber) {
                         dailyReplacementList.add(pairReplacement)
+                        lastPairNumber = pairItem.pairNumber
+                        pairReplacement = ArrayList()
                     }
-                }
-            } catch (_: Exception) {
 
+                    lastPairNumber = pairItem.pairNumber
+                    pairReplacement.add(pairItem)
+                }
+
+                if (pairReplacement.isNotEmpty()) {
+                    dailyReplacementList.add(pairReplacement)
+                }
+
+            } catch (e: Exception) {
+                println(e)
             }
 
             if (dailyReplacementList.isNotEmpty()) {

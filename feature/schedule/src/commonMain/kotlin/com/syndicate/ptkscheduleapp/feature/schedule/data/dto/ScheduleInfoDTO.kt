@@ -9,7 +9,7 @@ internal data class ScheduleInfoDTO(
     @SerialName("weekIsUpper") val isUpperWeek: Boolean,
     @SerialName("lastScheduleUpdateTime") private val _lastScheduleUpdateTime: String,
     @SerialName("lastReplacementUpdateTime") private val _lastReplacementUpdateTime: String,
-    @SerialName("groups_Info") val groupInfo: List<GroupScheduleUpdateInfoDTO>
+    @SerialName("groupsInfo") val groupInfo: List<GroupScheduleUpdateInfoDTO>
 ) {
 
     val lastScheduleUpdateTime: LocalDateTime
