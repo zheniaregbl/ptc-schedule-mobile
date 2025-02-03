@@ -141,7 +141,7 @@ fun AnimatedButton(
             .graphicsLayer(scaleX = scale.value, scaleY = scale.value)
             .clickable(
                 enabled = enabled,
-                onClick = { } ,
+                onClick = onClick,
                 onClickLabel = "Animated button",
                 indication = null,
                 interactionSource = interactionSource
