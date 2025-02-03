@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
 import com.syndicate.ptkscheduleapp.core.domain.repository.SettingsRepository
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -39,13 +43,12 @@ internal class ScheduleViewModel(
             _state.value
         )
 
-    init {
-        viewModelScope.launch {
-            getUserGroup()
-        }
-    }
+    private val _errorMessage = MutableSharedFlow<String?>()
+    val errorMessage = _errorMessage.asSharedFlow()
 
     private val _initWeekType = MutableStateFlow(false)
+
+    init { getUserGroup() }
 
     fun onAction(action: ScheduleAction) {
 
@@ -56,12 +59,6 @@ internal class ScheduleViewModel(
 
             is ScheduleAction.ChangeSelectedDate ->
                 _state.update { it.copy(selectedDate = action.date) }
-
-            ScheduleAction.RefreshSchedule -> viewModelScope.launch {
-                getScheduleInfo()
-                getReplacement()
-                getSchedule()
-            }
 
             is ScheduleAction.UpdateDailyWeekState -> {
 
@@ -78,6 +75,7 @@ internal class ScheduleViewModel(
 
             ScheduleAction.UpdateScheduleInfo -> {
                 viewModelScope.launch {
+                    _errorMessage.emit(null)
                     getScheduleInfo()
                     getReplacement()
                     getSchedule()
@@ -86,7 +84,7 @@ internal class ScheduleViewModel(
         }
     }
 
-    private suspend fun getUserGroup() {
+    private fun getUserGroup() = viewModelScope.launch {
         settingsRepository.userGroup
             .collect { group ->
                 _state.update { it.copy(currentGroupNumber = group) }
@@ -100,7 +98,6 @@ internal class ScheduleViewModel(
         scheduleRepository
             .getScheduleInfo()
             .onSuccess {
-
                 if (_state.value.scheduleInfo.isUpperWeek == null) {
                     _initWeekType.update { data.isUpperWeek!! }
                     _state.update { it.copy(selectedDateWeekType = data.isUpperWeek!!) }
@@ -116,19 +113,11 @@ internal class ScheduleViewModel(
 
                 _state.update { it.copy(scheduleInfo = data) }
             }
-            .onError {
-                _state.update {
-                    it.copy(
-                        errorMessage = "Ошибка при получении расписания"
-                    )
-                }
+            .suspendOnError {
+                _errorMessage.emit("Error getScheduleInfo")
             }
-            .onException {
-                _state.update {
-                    it.copy(
-                        errorMessage = "Ошибка при запросе расписания"
-                    )
-                }
+            .suspendOnException {
+                _errorMessage.emit("Exception getScheduleInfo")
             }
     }
 
@@ -140,18 +129,10 @@ internal class ScheduleViewModel(
                 _state.update { it.copy(replacement = data) }
             }
             .onError {
-                _state.update {
-                    it.copy(
-                        errorMessage = "Ошибка при получении замен"
-                    )
-                }
+
             }
-            .onException {
-                _state.update {
-                    it.copy(
-                        errorMessage = "Ошибка при запросе замен"
-                    )
-                }
+            .suspendOnException {
+                _errorMessage.emit("Exception getReplacement")
             }
     }
 
@@ -169,20 +150,10 @@ internal class ScheduleViewModel(
                 }
             }
             .onError {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Ошибка при получении расписания"
-                    )
-                }
+                _state.update { it.copy(isLoading = false) }
             }
             .onException {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Ошибка при запросе расписания"
-                    )
-                }
+                _state.update { it.copy(isLoading = false) }
             }
     }
 

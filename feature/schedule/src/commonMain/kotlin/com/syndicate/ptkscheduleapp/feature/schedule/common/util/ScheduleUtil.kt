@@ -187,7 +187,6 @@ internal object ScheduleUtil {
                             teacher = replacementItemJson["teacher"]?.jsonPrimitive?.content ?: "",
                             subgroupNumber = replacementItemJson["subgroupNumber"]?.jsonPrimitive?.int ?: -1,
                             time = replacementItemJson["time"]?.jsonPrimitive?.content ?: "",
-                            previousPairNumber = replacementItemJson["previousPairNumber"]?.jsonPrimitive?.int ?: -1
                         )
 
                         if (pairItem.pairNumber == -1) {

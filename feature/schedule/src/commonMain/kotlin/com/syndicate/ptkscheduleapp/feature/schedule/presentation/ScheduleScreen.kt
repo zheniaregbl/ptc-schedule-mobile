@@ -20,16 +20,23 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -39,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
+import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
@@ -65,12 +73,14 @@ internal class ScheduleScreen : Screen {
 
         val viewModel = koinViewModel<ScheduleViewModel>()
         val state = viewModel.state.collectAsStateWithLifecycle()
+        val errorMessage = viewModel.errorMessage.collectAsState(initial = null)
 
         ScheduleScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
             state = state,
+            errorMessage = errorMessage,
             initPage = initPage,
             onAction = { action -> viewModel.onAction(action) }
         )
@@ -92,6 +102,7 @@ internal class ScheduleScreen : Screen {
 internal fun ScheduleScreenContent(
     modifier: Modifier = Modifier,
     state: State<ScheduleState>,
+    errorMessage: State<String?>,
     initPage: Int,
     onAction: (ScheduleAction) -> Unit
 ) {
@@ -99,6 +110,8 @@ internal fun ScheduleScreenContent(
     val scope = rememberCoroutineScope()
 
     val panelState = remember { mutableStateOf(PanelState.WeekPanel) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 
@@ -155,11 +168,26 @@ internal fun ScheduleScreenContent(
             scope.launch { weekPanelPagerState.animateScrollToPage(page = weekNumber) }
     }
 
+    LaunchedEffect(errorMessage.value) {
+
+        errorMessage.value?.let { message ->
+
+            val result = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = "Повторить",
+                duration = SnackbarDuration.Indefinite
+            )
+
+            if (result == SnackbarResult.ActionPerformed)
+                onAction(ScheduleAction.UpdateScheduleInfo)
+        }
+    }
+
     Box(modifier = modifier) {
 
         state.value.toUiState().DisplayResult(
             modifier = Modifier.fillMaxSize(),
-            onIdle = {},
+            onIdle = { },
             onLoading = {
                 LazyColumn(
                     modifier = Modifier
@@ -179,7 +207,6 @@ internal fun ScheduleScreenContent(
                     }
                 }
             },
-            onError = {},
             onSuccess = { screenState ->
 
                 val scheduleList = listOf(
@@ -344,5 +371,19 @@ internal fun ScheduleScreenContent(
                 }
             }
         )
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(TopCenter)
+                .padding(top = 20.dp)
+        ) { data ->
+            CountdownSnackbar(
+                snackbarData = data,
+                shape = RoundedCornerShape(8.dp),
+                containerColor = Color(0xFFFE5656),
+                actionColor = Color.White
+            )
+        }
     }
 }

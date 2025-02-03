@@ -17,13 +17,10 @@ import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ReplacementIte
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 internal sealed class ScheduleScreenState {
     data object Idle : ScheduleScreenState()
     data object Loading : ScheduleScreenState()
-    data class Error(val errorMessage: String) : ScheduleScreenState()
     data class Success(
         val schedule: List<List<PairItem>>,
         val replacement: List<ReplacementItem>,
@@ -42,7 +39,6 @@ internal fun ScheduleScreenState.DisplayResult(
     onIdle: (@Composable () -> Unit)? = null,
     onLoading: @Composable () -> Unit,
     onSuccess: @Composable (ScheduleScreenState.Success) -> Unit,
-    onError: @Composable (ScheduleScreenState.Error) -> Unit
 ) {
 
     AnimatedContent(
@@ -57,8 +53,6 @@ internal fun ScheduleScreenState.DisplayResult(
 
             when (state) {
 
-                is ScheduleScreenState.Error -> onError.invoke(state)
-
                 ScheduleScreenState.Idle -> onIdle?.invoke()
 
                 ScheduleScreenState.Loading -> onLoading.invoke()
@@ -71,7 +65,6 @@ internal fun ScheduleScreenState.DisplayResult(
 
 internal data class ScheduleState(
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
     val scheduleInfo: ScheduleInfo = ScheduleInfo(),
     val currentGroupNumber: String = "1991",
     val schedule: List<List<PairItem>> = emptyList(),
@@ -82,9 +75,12 @@ internal data class ScheduleState(
 ) {
 
     fun toUiState(): ScheduleScreenState {
-        return if (isLoading) ScheduleScreenState.Loading
-        else if (errorMessage != null) ScheduleScreenState.Error(errorMessage)
-        else if (!isLoading) ScheduleScreenState.Success(schedule, replacement, scheduleInfo.isUpperWeek ?: false)
-        else ScheduleScreenState.Idle
+        return when {
+            isLoading -> ScheduleScreenState.Loading
+            schedule.isNotEmpty() -> ScheduleScreenState.Success(
+                schedule, replacement, scheduleInfo.isUpperWeek ?: false
+            )
+            else -> ScheduleScreenState.Idle
+        }
     }
 }

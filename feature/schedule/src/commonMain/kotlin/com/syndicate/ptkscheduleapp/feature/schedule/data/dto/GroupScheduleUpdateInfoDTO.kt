@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class GroupScheduleUpdateInfoDTO(
-    @SerialName("group_number") val group: String,
-    @SerialName("last_update_time") private val _lastUpdateTime: String
+    @SerialName("groupNumber") val group: String,
+    @SerialName("lastUpdateTime") private val _lastUpdateTime: String
 ) {
     val lastUpdateTime: LocalDateTime
         get() = LocalDateTime.parse(_lastUpdateTime)

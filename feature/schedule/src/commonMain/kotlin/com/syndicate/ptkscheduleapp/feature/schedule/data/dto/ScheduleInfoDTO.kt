@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class ScheduleInfoDTO(
-    @SerialName("week_is_upper") val isUpperWeek: Boolean,
-    @SerialName("last_schedule_update_time") private val _lastScheduleUpdateTime: String,
-    @SerialName("last_replacement_update_time") private val _lastReplacementUpdateTime: String,
-    @SerialName("groups_info") val groupInfo: List<GroupScheduleUpdateInfoDTO>
+    @SerialName("weekIsUpper") val isUpperWeek: Boolean,
+    @SerialName("lastScheduleUpdateTime") private val _lastScheduleUpdateTime: String,
+    @SerialName("lastReplacementUpdateTime") private val _lastReplacementUpdateTime: String,
+    @SerialName("groups_Info") val groupInfo: List<GroupScheduleUpdateInfoDTO>
 ) {
 
     val lastScheduleUpdateTime: LocalDateTime

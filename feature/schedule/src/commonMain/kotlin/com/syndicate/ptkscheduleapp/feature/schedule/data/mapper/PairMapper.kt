@@ -7,10 +7,10 @@ internal fun PairDTO.toModel() = PairItem(
     dayOfWeek,
     isUpper,
     pairNumber,
-    subject,
-    place,
-    room,
-    teacher,
+    subject.name,
+    room.place,
+    room.number,
+    teacher.fullName,
     subgroupNumber,
     time
 )
