@@ -9,6 +9,9 @@ plugins {
 }
 
 kotlin {
+
+    applyDefaultHierarchyTemplate()
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -32,6 +35,7 @@ kotlin {
             api(compose.preview)
             api(libs.androidx.activity.compose)
         }
+
         commonMain.dependencies {
             api(libs.androidx.lifecycle.viewmodel)
             api(libs.androidx.lifecycle.runtime.compose)
@@ -47,6 +51,7 @@ kotlin {
             api(libs.shimmer)
 
             api(libs.voyager.navigator)
+            api(libs.voyager.screenmodel)
             api(libs.voyager.transitions)
 
             api(libs.kotlinx.serialization.json)
@@ -59,11 +64,28 @@ kotlin {
 
             api(libs.bundles.ktor)
 
+            api(libs.connectivity.core)
+            api(libs.connectivity.compose)
+
             api(libs.sandwich)
             api(libs.sandwich.ktor)
 
             api(projects.core)
             api(projects.uiKit.foundations)
+        }
+
+        val deviceMain by creating {
+            dependsOn(commonMain.get())
+            androidMain.get().dependsOn(this)
+            iosMain.get().dependsOn(this)
+            dependencies {
+                api(libs.connectivity.device)
+                api(libs.connectivity.compose.device)
+            }
+        }
+
+        compilerOptions {
+            freeCompilerArgs.add("-Xexpect-actual-classes")
         }
     }
 }

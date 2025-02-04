@@ -4,6 +4,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -49,8 +50,10 @@ import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackb
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
+import com.syndicate.ptkscheduleapp.feature.schedule.createConnectivityState
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel.Companion.weeks
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PanelState
@@ -92,8 +95,7 @@ internal class ScheduleScreen : Screen {
         private val initWeekNumber = ScheduleUtil
             .getCurrentWeek(weeks, currentDate)
 
-        val initPage = (initWeekNumber * 7) + weeks[initWeekNumber]
-            .indexOf(currentDate)
+        val initPage = (initWeekNumber * 7) + weeks[initWeekNumber].indexOf(currentDate)
     }
 }
 
@@ -109,9 +111,7 @@ internal fun ScheduleScreenContent(
     val scope = rememberCoroutineScope()
 
     val panelState = remember { mutableStateOf(PanelState.WeekPanel) }
-
     val snackbarHostState = remember { SnackbarHostState() }
-
     val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 
     val weeks = remember {
@@ -184,192 +184,200 @@ internal fun ScheduleScreenContent(
 
     Box(modifier = modifier) {
 
-        state.value.toUiState().DisplayResult(
-            modifier = Modifier.fillMaxSize(),
-            onIdle = { },
-            onLoading = {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
-                    item { Spacer(Modifier.height(180.dp)) }
+            ConnectivityString()
 
-                    items(4) { index ->
+            Box(modifier = Modifier.fillMaxSize()) {
 
-                        ShimmerPairCard(shimmerInstance = shimmerInstance)
-
-                        if (index != 3)
-                            Spacer(Modifier.height(14.dp))
-                    }
-                }
-            },
-            onSuccess = { screenState ->
-
-                val scheduleList = listOf(
-                    ScheduleUtil.getWeekScheduleByWeekType(
-                        screenState.schedule,
-                        true
-                    ),
-                    ScheduleUtil.getWeekScheduleByWeekType(
-                        screenState.schedule,
-                        false
-                    )
-                )
-
-                val startScheduleIndex = if (
-                    ScheduleUtil.getCurrentTypeWeek(
-                        screenState.isUpperWeek,
-                        initWeekNumber,
-                        0
-                    )
-                ) 0 else 1
-
-                HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .statusBarsPadding(),
-                    state = schedulePagerState
-                ) { page ->
-
-                    val pageDate = weeks.value[0][0].plus(page.toLong(), DateTimeUnit.DAY)
-
-                    val currentScheduleIndex = if (page / 7 % 2 == 0) startScheduleIndex
-                    else 1 - startScheduleIndex
-
-                    val dailySchedule: List<PairItem> = try {
-                        scheduleList[currentScheduleIndex][page % 7]
-                    } catch (_: Exception) {
-                        emptyList()
-                    }
-
-                    val currentSchedule = ScheduleUtil
-                        .groupDailyScheduleBySubgroup(dailySchedule)
-
-                    if (dailySchedule.isNotEmpty()) {
-
+                state.value.toUiState().DisplayResult(
+                    modifier = Modifier.fillMaxSize(),
+                    onIdle = { },
+                    onLoading = {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(
-                                    horizontal = 16.dp
-                                ),
+                                .padding(horizontal = 16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
 
-                            item { Spacer(modifier = Modifier.height(180.dp)) }
+                            item { Spacer(Modifier.height(180.dp)) }
 
-                            itemsIndexed(
-                                items = currentSchedule,
-                                key = { index, _ ->
-                                    index
-                                }
-                            ) { index, pair ->
+                            items(4) { index ->
 
-                                if (pair.size > 1) {
+                                ShimmerPairCard(shimmerInstance = shimmerInstance)
 
-                                    PairCard(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(RoundedCornerShape(10.dp))
-                                            .background(color = FirstThemeBackground)
-                                            .border(
-                                                width = 2.dp,
-                                                color = Color.Black.copy(alpha = 0.1f),
-                                                shape = RoundedCornerShape(10.dp)
-                                            ),
-                                        pairList = pair,
-                                        isDark = false
-                                    )
-
-                                } else {
-
-                                    PairCard(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(RoundedCornerShape(10.dp))
-                                            .background(color = FirstThemeBackground)
-                                            .border(
-                                                width = 2.dp,
-                                                color = Color.Black.copy(alpha = 0.1f),
-                                                shape = RoundedCornerShape(10.dp)
-                                            ),
-                                        pair = pair.first(),
-                                        isDark = false
-                                    )
-                                }
-
-                                if (index != currentSchedule.lastIndex)
-                                    Spacer(modifier = Modifier.height(14.dp))
-
-                            }
-
-                            item {
-                                Spacer(
-                                    modifier = Modifier
-                                        .height(
-                                            WindowInsets
-                                                .systemBars
-                                                .asPaddingValues()
-                                                .calculateBottomPadding()
-                                                    + 60.dp
-                                        )
-                                )
+                                if (index != 3)
+                                    Spacer(Modifier.height(14.dp))
                             }
                         }
+                    },
+                    onSuccess = { screenState ->
 
-                    } else {
+                        val scheduleList = listOf(
+                            ScheduleUtil.getWeekScheduleByWeekType(
+                                screenState.schedule,
+                                true
+                            ),
+                            ScheduleUtil.getWeekScheduleByWeekType(
+                                screenState.schedule,
+                                false
+                            )
+                        )
 
-                        Box(
+                        val startScheduleIndex = if (
+                            ScheduleUtil.getCurrentTypeWeek(
+                                screenState.isUpperWeek,
+                                initWeekNumber,
+                                0
+                            )
+                        ) 0 else 1
+
+                        HorizontalPager(
                             modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
+                                .fillMaxSize()
+                                .statusBarsPadding(),
+                            state = schedulePagerState
+                        ) { page ->
 
-                            Text(
-                                text = "Нет занятий",
-                                style = LocalTextStyle.current,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 24.sp,
-                                color = Color.Black
+                            val pageDate = weeks.value[0][0].plus(page.toLong(), DateTimeUnit.DAY)
+
+                            val currentScheduleIndex = if (page / 7 % 2 == 0) startScheduleIndex
+                            else 1 - startScheduleIndex
+
+                            val dailySchedule: List<PairItem> = try {
+                                scheduleList[currentScheduleIndex][page % 7]
+                            } catch (_: Exception) {
+                                emptyList()
+                            }
+
+                            val currentSchedule = ScheduleUtil
+                                .groupDailyScheduleBySubgroup(dailySchedule)
+
+                            if (dailySchedule.isNotEmpty()) {
+
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(
+                                            horizontal = 16.dp
+                                        ),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+
+                                    item { Spacer(modifier = Modifier.height(180.dp)) }
+
+                                    itemsIndexed(
+                                        items = currentSchedule,
+                                        key = { index, _ ->
+                                            index
+                                        }
+                                    ) { index, pair ->
+
+                                        if (pair.size > 1) {
+
+                                            PairCard(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(10.dp))
+                                                    .background(color = FirstThemeBackground)
+                                                    .border(
+                                                        width = 2.dp,
+                                                        color = Color.Black.copy(alpha = 0.1f),
+                                                        shape = RoundedCornerShape(10.dp)
+                                                    ),
+                                                pairList = pair,
+                                                isDark = false
+                                            )
+
+                                        } else {
+
+                                            PairCard(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(10.dp))
+                                                    .background(color = FirstThemeBackground)
+                                                    .border(
+                                                        width = 2.dp,
+                                                        color = Color.Black.copy(alpha = 0.1f),
+                                                        shape = RoundedCornerShape(10.dp)
+                                                    ),
+                                                pair = pair.first(),
+                                                isDark = false
+                                            )
+                                        }
+
+                                        if (index != currentSchedule.lastIndex)
+                                            Spacer(modifier = Modifier.height(14.dp))
+
+                                    }
+
+                                    item {
+                                        Spacer(
+                                            modifier = Modifier
+                                                .height(
+                                                    WindowInsets
+                                                        .systemBars
+                                                        .asPaddingValues()
+                                                        .calculateBottomPadding()
+                                                            + 60.dp
+                                                )
+                                        )
+                                    }
+                                }
+
+                            } else {
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+
+                                    Text(
+                                        text = "Нет занятий",
+                                        style = LocalTextStyle.current,
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 24.sp,
+                                        color = Color.Black
+                                    )
+                                }
+
+                            }
+                        }
+                    }
+                )
+
+                DatePanel(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding(),
+                    panelState = panelState,
+                    weekPanelPagerState = weekPanelPagerState,
+                    state = state,
+                    weeks = weeks,
+                    pagerWeekStateSaved = pagerWeekStateSaved,
+                    weekPanelPageSize = weekPanelPageSize,
+                    onChangeDate = { date ->
+
+                        val weekNumber = ScheduleUtil.getCurrentWeek(weeks.value, date)
+                        val page = (weekNumber * 7) + weeks.value[weekNumber].indexOf(date)
+
+                        scope.launch {
+                            schedulePagerState.animateScrollToPage(
+                                page = page,
+                                animationSpec = tween()
                             )
                         }
-
+                    },
+                    onHideCalendar = {
+                        if (panelState.value == PanelState.CalendarPanel) {
+                            panelState.value = PanelState.WeekPanel
+                        }
                     }
-                }
+                )
             }
-        )
-
-        DatePanel(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
-            panelState = panelState,
-            weekPanelPagerState = weekPanelPagerState,
-            state = state,
-            weeks = weeks,
-            pagerWeekStateSaved = pagerWeekStateSaved,
-            weekPanelPageSize = weekPanelPageSize,
-            onChangeDate = { date ->
-
-                val weekNumber = ScheduleUtil.getCurrentWeek(weeks.value, date)
-                val page = (weekNumber * 7) + weeks.value[weekNumber].indexOf(date)
-
-                scope.launch {
-                    schedulePagerState.animateScrollToPage(
-                        page = page,
-                        animationSpec = tween()
-                    )
-                }
-            },
-            onHideCalendar = {
-                if (panelState.value == PanelState.CalendarPanel) {
-                    panelState.value = PanelState.WeekPanel
-                }
-            }
-        )
+        }
 
         SnackbarHost(
             hostState = snackbarHostState,
