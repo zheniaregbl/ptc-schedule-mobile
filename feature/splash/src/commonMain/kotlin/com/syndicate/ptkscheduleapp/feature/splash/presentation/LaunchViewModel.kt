@@ -17,10 +17,7 @@ internal class LaunchViewModel(
 
     init {
         viewModelScope.launch {
-            preferencesRepository.userGroup
-                .collect { userGroup ->
-                    _selectedUserGroup.update { userGroup }
-                }
+            _selectedUserGroup.update { preferencesRepository.getUserGroup() }
         }
     }
 }

@@ -2,9 +2,6 @@ package com.syndicate.ptkscheduleapp.feature.schedule.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
@@ -41,6 +38,7 @@ internal class ScheduleViewModel(
     val state = _state
         .onStart {
             viewModelScope.launch {
+                getUserGroup()
                 getScheduleInfo()
                 getReplacement()
                 getSchedule()
@@ -62,15 +60,6 @@ internal class ScheduleViewModel(
     val errorMessage = _errorMessage.asSharedFlow()
 
     private val _initWeekType = MutableStateFlow(false)
-
-    init {
-        viewModelScope.launch {
-            getUserGroup()
-            getLastUpdateReplacementTime()
-            getLocalReplacement()
-            getLastUpdateScheduleTime()
-        }
-    }
 
     fun onAction(action: ScheduleAction) {
 
@@ -106,31 +95,8 @@ internal class ScheduleViewModel(
         }
     }
 
-    private suspend fun getUserGroup() {
-        preferencesRepository.userGroup
-            .collect { group ->
-                _state.update { it.copy(currentGroupNumber = group) }
-            }
-    }
-
-    private suspend fun getLastUpdateScheduleTime() {
-        preferencesRepository.lastUpdateScheduleTime
-            .collect { time ->
-                _lastUpdateScheduleTime.update { time }
-            }
-    }
-
-    private suspend fun getLastUpdateReplacementTime() {
-        preferencesRepository.lastUpdateReplacementTime
-            .collect { time ->
-                _lastUpdateReplacementTime.update { time }
-            }
-    }
-
-    private suspend fun getLocalReplacement() {
-        preferencesRepository.localReplacement
-            .collect { _localReplacement.update { it } }
-    }
+    private suspend fun getUserGroup() =
+        _state.update { it.copy(currentGroupNumber = preferencesRepository.getUserGroup()) }
 
     private suspend fun getScheduleInfo() {
 

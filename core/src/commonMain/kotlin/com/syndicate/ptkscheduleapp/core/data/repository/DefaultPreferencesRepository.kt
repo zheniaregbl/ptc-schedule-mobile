@@ -12,7 +12,7 @@ import kotlinx.datetime.LocalDateTime
 
 class DefaultPreferencesRepository(
     private val dataStore: DataStore<Preferences>
-): PreferencesRepository {
+) : PreferencesRepository {
 
     private object PreferencesKeys {
         val userGroupKey = stringPreferencesKey("user_group")
@@ -24,28 +24,7 @@ class DefaultPreferencesRepository(
 
     override val userGroup: Flow<String> = dataStore
         .data
-        .map {
-            if (it[PreferencesKeys.userGroupKey].isNullOrBlank()) ""
-            else it[PreferencesKeys.userGroupKey]!!
-        }
-
-    override val localReplacement: Flow<String?> = dataStore
-        .data
-        .map { it[PreferencesKeys.localReplacementKey] }
-
-    override val lastUpdateScheduleTime: Flow<LocalDateTime?> = dataStore
-        .data
-        .map {
-            if (it[PreferencesKeys.lastUpdateScheduleTimeKey].isNullOrBlank()) null
-            else LocalDateTime.parse(it[PreferencesKeys.lastUpdateScheduleTimeKey]!!)
-        }
-
-    override val lastUpdateReplacementTime: Flow<LocalDateTime?> = dataStore
-        .data
-        .map {
-            if (it[PreferencesKeys.lastUpdateReplacementTimeKey].isNullOrBlank()) null
-            else LocalDateTime.parse(it[PreferencesKeys.lastUpdateReplacementTimeKey]!!)
-        }
+        .map { it[PreferencesKeys.userGroupKey] ?: "" }
 
     override suspend fun saveGroup(group: String) {
         dataStore.edit { it[PreferencesKeys.userGroupKey] = group }
@@ -67,6 +46,26 @@ class DefaultPreferencesRepository(
         dataStore.edit { it[PreferencesKeys.lastUpdateReplacementTimeKey] = time.toString() }
     }
 
+    override suspend fun getUserGroup(): String =
+        dataStore.data.map { it[PreferencesKeys.userGroupKey] }.first() ?: ""
+
     override suspend fun getLocalSchedule(): String? =
         dataStore.data.map { it[PreferencesKeys.localScheduleKey] }.first()
+
+    override suspend fun getLocalReplacement(): String? =
+        dataStore.data.map { it[PreferencesKeys.localReplacementKey] }.first()
+
+    override suspend fun getLastUpdateScheduleTime(): LocalDateTime? = dataStore.data
+        .map {
+            if (it[PreferencesKeys.lastUpdateScheduleTimeKey].isNullOrBlank()) null
+            else LocalDateTime.parse(it[PreferencesKeys.lastUpdateScheduleTimeKey]!!)
+        }
+        .first()
+
+    override suspend fun getLastUpdateReplacementTime(): LocalDateTime? = dataStore.data
+        .map {
+            if (it[PreferencesKeys.lastUpdateReplacementTimeKey].isNullOrBlank()) null
+            else LocalDateTime.parse(it[PreferencesKeys.lastUpdateReplacementTimeKey]!!)
+        }
+        .first()
 }
