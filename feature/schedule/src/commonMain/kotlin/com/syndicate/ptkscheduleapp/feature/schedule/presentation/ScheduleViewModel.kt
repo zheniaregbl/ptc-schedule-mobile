@@ -52,10 +52,6 @@ internal class ScheduleViewModel(
 
     private val _scheduleInfo: MutableStateFlow<ScheduleInfo?> = MutableStateFlow(null)
 
-    private val _localReplacement: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val _lastUpdateScheduleTime: MutableStateFlow<LocalDateTime?> = MutableStateFlow(null)
-    private val _lastUpdateReplacementTime: MutableStateFlow<LocalDateTime?> = MutableStateFlow(null)
-
     private val _errorMessage = MutableSharedFlow<String?>()
     val errorMessage = _errorMessage.asSharedFlow()
 
@@ -142,11 +138,11 @@ internal class ScheduleViewModel(
                     val lastUpdateTime = scheduleInfo
                         .lastReplacementUpdateTime
 
-                    if (_lastUpdateReplacementTime.value != lastUpdateTime) {
+                    if (preferencesRepository.getLastUpdateReplacementTime() != lastUpdateTime) {
 
                         preferencesRepository.saveLocalReplacement(data.toString())
 
-                        // TODO : Show replacement update message
+                        _errorMessage.emit("Success getReplacement")
 
                         preferencesRepository.saveLastUpdateReplacementTime(lastUpdateTime)
                     }
@@ -163,7 +159,7 @@ internal class ScheduleViewModel(
 
                 _errorMessage.emit("Error getReplacement")
 
-                _localReplacement.value?.let { replacement ->
+                preferencesRepository.getLocalReplacement()?.let { replacement ->
                     _state.update {
                         it.copy(
                             replacement = ScheduleUtil
@@ -179,7 +175,7 @@ internal class ScheduleViewModel(
 
                 _errorMessage.emit("Exception getReplacement")
 
-                _localReplacement.value?.let { replacement ->
+                preferencesRepository.getLocalReplacement()?.let { replacement ->
                     _state.update {
                         it.copy(
                             replacement = ScheduleUtil
@@ -208,14 +204,14 @@ internal class ScheduleViewModel(
                         .find { it.group == userGroup }
                         ?.lastUpdateTime
 
-                    if (_lastUpdateScheduleTime != lastUpdateTime) {
+                    if (preferencesRepository.getLastUpdateScheduleTime() != lastUpdateTime) {
 
                         preferencesRepository
                             .saveLocalSchedule(
                                 Json.encodeToString(data.map { it.toDTO() })
                             )
 
-                        // TODO : Show schedule update message
+                        _errorMessage.emit("Success getSchedule")
 
                         lastUpdateTime?.let {
                             preferencesRepository.saveLastUpdateScheduleTime(it)
