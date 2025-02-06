@@ -6,7 +6,7 @@ import com.skydoves.sandwich.ktor.statusCode
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
-import com.syndicate.ptkscheduleapp.core.domain.repository.SettingsRepository
+import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 internal class GroupViewModel(
     private val groupRepository: GroupRepository,
-    private val settingsRepository: SettingsRepository
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GroupState())
@@ -76,9 +76,9 @@ internal class GroupViewModel(
 
     private fun selectGroup(group: String) = viewModelScope.launch {
         _state.update { it.copy(isLoading = true) }
-        settingsRepository.setGroup(group)
+        preferencesRepository.saveGroup(group)
 
-        settingsRepository.userGroup
+        preferencesRepository.userGroup
             .collect { userGroup ->
                 _state.update {
                     it.copy(

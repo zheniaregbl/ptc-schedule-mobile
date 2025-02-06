@@ -9,9 +9,8 @@ import kotlinx.serialization.json.JsonObject
 internal interface ScheduleRepository {
     suspend fun getSchedule(group: String): ApiResponse<List<PairItem>>
     suspend fun getReplacement(
-        group: String,
         dateStart: String = "",
         dateEnd: String = "",
-    ): ApiResponse<List<ReplacementItem>>
+    ): ApiResponse<JsonObject>
     suspend fun getScheduleInfo(): ApiResponse<ScheduleInfo>
 }

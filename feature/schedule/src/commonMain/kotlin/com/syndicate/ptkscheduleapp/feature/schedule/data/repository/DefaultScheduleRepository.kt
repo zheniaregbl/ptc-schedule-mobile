@@ -9,6 +9,7 @@ import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
+import kotlinx.serialization.json.JsonObject
 
 internal class DefaultScheduleRepository(
     private val remoteScheduleDataSource: RemoteScheduleDataSource
@@ -21,13 +22,12 @@ internal class DefaultScheduleRepository(
     }
 
     override suspend fun getReplacement(
-        group: String,
         dateStart: String,
         dateEnd: String
-    ): ApiResponse<List<ReplacementItem>> {
+    ): ApiResponse<JsonObject> {
         return remoteScheduleDataSource
             .getReplacement(dateStart, dateEnd)
-            .suspendMapSuccess { ScheduleUtil.getReplacementFromJson(replacements!!, group) }
+            .suspendMapSuccess { replacements!! }
     }
 
     override suspend fun getScheduleInfo(): ApiResponse<ScheduleInfo> {

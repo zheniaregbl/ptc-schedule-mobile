@@ -1,8 +1,8 @@
 package com.syndicate.ptkscheduleapp.feature.groups.di
 
 import cafe.adriel.voyager.core.registry.screenModule
-import com.syndicate.ptkscheduleapp.core.data.repository.DefaultSettingsRepository
-import com.syndicate.ptkscheduleapp.core.domain.repository.SettingsRepository
+import com.syndicate.ptkscheduleapp.core.data.repository.DefaultPreferencesRepository
+import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import org.koin.dsl.module
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.GroupViewModel
@@ -18,7 +18,7 @@ import org.koin.dsl.bind
 val featureGroupsModule = module {
     singleOf(::KtorRemoteGroupDataSource).bind<RemoteGroupDataSource>()
     singleOf(::DefaultGroupRepository).bind<GroupRepository>()
-    singleOf(::DefaultSettingsRepository).bind<SettingsRepository>()
+    singleOf(::DefaultPreferencesRepository).bind<PreferencesRepository>()
 
     viewModelOf(::GroupViewModel)
 }

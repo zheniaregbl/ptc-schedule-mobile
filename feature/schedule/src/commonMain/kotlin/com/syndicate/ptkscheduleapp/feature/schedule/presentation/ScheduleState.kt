@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ReplacementItem
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
@@ -65,8 +64,8 @@ internal fun ScheduleScreenState.DisplayResult(
 
 internal data class ScheduleState(
     val isLoading: Boolean = false,
-    val scheduleInfo: ScheduleInfo = ScheduleInfo(),
-    val currentGroupNumber: String = "1991",
+    val isUpperWeek: Boolean? = null,
+    val currentGroupNumber: String = "",
     val schedule: List<List<PairItem>> = emptyList(),
     val replacement: List<ReplacementItem> = emptyList(),
     val selectedDate: LocalDate = Clock.System.nowDate(),
@@ -78,7 +77,7 @@ internal data class ScheduleState(
         return when {
             isLoading -> ScheduleScreenState.Loading
             schedule.isNotEmpty() -> ScheduleScreenState.Success(
-                schedule, replacement, scheduleInfo.isUpperWeek ?: false
+                schedule, replacement, isUpperWeek ?: false
             )
             else -> ScheduleScreenState.Idle
         }

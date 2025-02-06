@@ -17,19 +17,16 @@ internal data class PairDTO(
 
 @Serializable
 internal data class RoomDTO(
-    @SerialName("id") val id: Long,
     @SerialName("number") val number: String,
     @SerialName("place") val place: String
 )
 
 @Serializable
 internal data class SubjectDTO(
-    @SerialName("id") val id: Long,
     @SerialName("name") val name: String
 )
 
 @Serializable
 internal data class TeacherDTO(
-    @SerialName("id") val id: Long,
     @SerialName("fullName") val fullName: String
 )
