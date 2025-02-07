@@ -1,5 +1,6 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.common.util
 
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.removeIf
 import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
@@ -44,6 +45,144 @@ internal object ScheduleUtil {
         }
 
         return schedule
+    }
+
+    fun scheduleWithReplacement(
+        currentSchedule: List<List<PairItem>>,
+        replacementItem: ReplacementItem?
+    ): List<List<PairItem>> {
+
+        if (replacementItem == null)
+            return currentSchedule
+
+        val newSchedule = currentSchedule.toMutableList()
+
+        swapReplacement(newSchedule, replacementItem)
+        subgroupReplacement(newSchedule, replacementItem)
+        ordinaryReplacement(newSchedule, replacementItem)
+
+        return newSchedule
+    }
+
+    private fun swapReplacement(
+        schedule: MutableList<List<PairItem>>,
+        replacementItem: ReplacementItem
+    ) {
+
+        val swapNumberPairList = ArrayList<Int>()
+        val swapPairList = ArrayList<List<PairItem>>()
+
+        replacementItem.listReplacement.forEach { replacement ->
+            if (replacement.first().previousPairNumber != -1) {
+                swapPairList.add(
+                    replacement.map {
+                        it.copy(
+                            swapPair = true,
+                            isReplacement = true
+                        )
+                    }
+                )
+                swapNumberPairList.add(replacement.first().previousPairNumber)
+            }
+        }
+
+        schedule.removeAll { it.first().pairNumber in swapNumberPairList }
+
+        schedule.addAll(swapPairList)
+
+        schedule.sortBy { it.first().pairNumber }
+    }
+
+    private fun subgroupReplacement(
+        schedule: MutableList<List<PairItem>>,
+        replacementItem: ReplacementItem
+    ) {
+
+        val replacementNumberPairList = ArrayList<Int>()
+        val replacementPairList = ArrayList<List<PairItem>>()
+        val newSchedule = ArrayList<List<PairItem>>()
+
+        replacementItem.listReplacement.forEach { replacement ->
+            if (replacement.first().subgroupNumber != 0) {
+                replacementPairList.add(replacement)
+                replacementNumberPairList.add(replacement.first().pairNumber)
+            }
+        }
+
+        schedule.forEach { pair ->
+
+            if (pair.first().pairNumber in replacementNumberPairList) {
+
+                val replacements = replacementPairList
+                    .find { it.first().pairNumber == pair.first().pairNumber }!!
+                val replacementSubgroupNumber = replacements.map { it.subgroupNumber }.toSet()
+                val tempPair = ArrayList<PairItem>()
+
+                pair.forEach { pairBySubgroup ->
+                    if (pairBySubgroup.subgroupNumber in replacementSubgroupNumber) {
+                        tempPair.add(
+                            replacements
+                                .find { it.subgroupNumber == pairBySubgroup.subgroupNumber }!!
+                                .copy(isReplacement = true)
+                        )
+                    } else {
+                        tempPair.add(pairBySubgroup)
+                    }
+                }
+
+                newSchedule.add(tempPair)
+
+            } else {
+                newSchedule.add(pair)
+            }
+        }
+
+        schedule.clear()
+        schedule.addAll(newSchedule)
+    }
+
+    private fun ordinaryReplacement(
+        schedule: MutableList<List<PairItem>>,
+        replacementItem: ReplacementItem
+    ) {
+
+        val replacementNumberPairList = ArrayList<Int>()
+        val replacementPairList = ArrayList<List<PairItem>>()
+        val newSchedule = ArrayList<List<PairItem>>()
+
+        replacementItem.listReplacement.forEach { replacement ->
+            if (replacement.first().subgroupNumber == 0) {
+                replacementPairList.add(replacement)
+                replacementNumberPairList.add(replacement.first().pairNumber)
+            }
+        }
+
+        schedule.forEach { pair ->
+
+            if (pair.first().pairNumber in replacementNumberPairList) {
+                newSchedule.add(
+                    replacementPairList
+                        .find { it.first().pairNumber == pair.first().pairNumber }!!
+                        .map { it.copy(isReplacement = true) }
+                )
+
+                replacementPairList.removeIf { removePair ->
+                    removePair == replacementPairList
+                        .find { it.first().pairNumber == pair.first().pairNumber }!!
+                }
+            } else {
+                newSchedule.add(pair)
+            }
+        }
+
+        newSchedule.addAll(
+            replacementPairList.map {
+                    pairList -> pairList.map { it.copy(isReplacement = true, isNewPair = true) }
+            }
+        )
+
+        schedule.clear()
+        schedule.addAll(newSchedule)
     }
 
     fun getWeekScheduleByWeekType(

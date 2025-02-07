@@ -50,7 +50,6 @@ import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackb
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
-import com.syndicate.ptkscheduleapp.feature.schedule.createConnectivityState
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel.Companion.weeks
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString
@@ -58,6 +57,7 @@ import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.Dat
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PanelState
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ShimmerPairCard
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.theme.ErrorMessageColor
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.coroutines.launch
@@ -242,6 +242,9 @@ internal fun ScheduleScreenContent(
 
                             val pageDate = weeks.value[0][0].plus(page.toLong(), DateTimeUnit.DAY)
 
+                            val dailyReplacement =
+                                screenState.replacement.find { it.date == pageDate }
+
                             val currentScheduleIndex = if (page / 7 % 2 == 0) startScheduleIndex
                             else 1 - startScheduleIndex
 
@@ -252,7 +255,10 @@ internal fun ScheduleScreenContent(
                             }
 
                             val currentSchedule = ScheduleUtil
-                                .groupDailyScheduleBySubgroup(dailySchedule)
+                                .scheduleWithReplacement(
+                                    ScheduleUtil.groupDailyScheduleBySubgroup(dailySchedule),
+                                    dailyReplacement
+                                )
 
                             if (dailySchedule.isNotEmpty()) {
 
@@ -388,7 +394,7 @@ internal fun ScheduleScreenContent(
             CountdownSnackbar(
                 snackbarData = data,
                 shape = RoundedCornerShape(8.dp),
-                containerColor = Color(0xFFFE5656),
+                containerColor = ErrorMessageColor,
                 actionColor = Color.White
             )
         }
