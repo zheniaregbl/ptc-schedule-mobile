@@ -30,10 +30,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.TopCenter
@@ -56,6 +58,7 @@ import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.Con
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PanelState
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ReplacementPopup
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ShimmerPairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.theme.ErrorMessageColor
 import com.valentinilk.shimmer.ShimmerBounds
@@ -143,6 +146,11 @@ internal fun ScheduleScreenContent(
     )
 
     val weekPanelPageSize = remember { mutableStateOf(IntSize.Zero) }
+
+    var showReplacementDialog by remember { mutableStateOf(false) }
+    var newPair by remember { mutableStateOf(false) }
+    var selectedPair by remember { mutableStateOf(emptyList<PairItem>()) }
+    var selectedReplacement by remember { mutableStateOf(emptyList<PairItem>()) }
 
     LaunchedEffect(schedulePagerState) {
 
@@ -254,9 +262,12 @@ internal fun ScheduleScreenContent(
                                 emptyList()
                             }
 
+                            val ordinarySchedule = ScheduleUtil
+                                .groupDailyScheduleBySubgroup(dailySchedule)
+
                             val currentSchedule = ScheduleUtil
                                 .scheduleWithReplacement(
-                                    ScheduleUtil.groupDailyScheduleBySubgroup(dailySchedule),
+                                    ordinarySchedule,
                                     dailyReplacement
                                 )
 
@@ -283,33 +294,87 @@ internal fun ScheduleScreenContent(
                                         if (pair.size > 1) {
 
                                             PairCard(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .clip(RoundedCornerShape(10.dp))
-                                                    .background(color = FirstThemeBackground)
-                                                    .border(
-                                                        width = 2.dp,
-                                                        color = Color.Black.copy(alpha = 0.1f),
-                                                        shape = RoundedCornerShape(10.dp)
-                                                    ),
+                                                modifier = Modifier.fillMaxWidth(),
                                                 pairList = pair,
-                                                isDark = false
+                                                enabled = panelState.value != PanelState.CalendarPanel,
+                                                onClick = {
+
+                                                    selectedReplacement = pair
+
+                                                    selectedPair = when {
+
+                                                        pair.first().previousPairNumber != -1 -> {
+                                                            newPair = false
+                                                            ordinarySchedule
+                                                                .find {
+                                                                    it.first().pairNumber == pair.first().previousPairNumber
+                                                                }!!
+                                                        }
+
+                                                        pair.first().pairNumber == -1 -> {
+                                                            newPair = true
+                                                            emptyList()
+                                                        }
+
+                                                        pair.first().isNewPair -> {
+                                                            newPair = true
+                                                            emptyList()
+                                                        }
+
+                                                        else -> {
+                                                            newPair = false
+                                                            ordinarySchedule
+                                                                .find {
+                                                                    it.first().pairNumber == pair.first().pairNumber
+                                                                } ?: emptyList()
+                                                        }
+                                                    }
+
+                                                    showReplacementDialog = true
+                                                }
                                             )
 
                                         } else {
 
                                             PairCard(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .clip(RoundedCornerShape(10.dp))
-                                                    .background(color = FirstThemeBackground)
-                                                    .border(
-                                                        width = 2.dp,
-                                                        color = Color.Black.copy(alpha = 0.1f),
-                                                        shape = RoundedCornerShape(10.dp)
-                                                    ),
+                                                modifier = Modifier.fillMaxWidth(),
                                                 pair = pair.first(),
-                                                isDark = false
+                                                enabled = panelState.value != PanelState.CalendarPanel,
+                                                onClick = {
+
+                                                    selectedReplacement = pair
+
+                                                    selectedPair = when {
+
+                                                        pair.first().previousPairNumber != -1 -> {
+                                                            newPair = false
+                                                            ordinarySchedule
+                                                                .find {
+                                                                    it.first().pairNumber == pair.first().previousPairNumber
+                                                                }!!
+                                                        }
+
+                                                        pair.first().pairNumber == -1 -> {
+                                                            newPair = true
+                                                            emptyList()
+                                                        }
+
+                                                        pair.first().isNewPair -> {
+                                                            newPair = true
+                                                            emptyList()
+                                                        }
+
+                                                        else -> {
+                                                            newPair = false
+                                                            ordinarySchedule
+                                                                .find {
+                                                                    it.first().pairNumber == pair.first().pairNumber
+                                                                } ?: emptyList()
+                                                        }
+                                                    }
+
+                                                    showReplacementDialog = true
+                                                }
                                             )
                                         }
 
@@ -398,5 +463,13 @@ internal fun ScheduleScreenContent(
                 actionColor = Color.White
             )
         }
+
+        ReplacementPopup(
+            showDialog = showReplacementDialog,
+            pair = selectedPair,
+            replacement = selectedReplacement,
+            newPair = newPair,
+            onDismissRequest = { showReplacementDialog = false }
+        )
     }
 }

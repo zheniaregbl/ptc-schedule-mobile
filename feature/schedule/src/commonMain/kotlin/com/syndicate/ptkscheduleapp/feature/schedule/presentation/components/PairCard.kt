@@ -2,6 +2,8 @@ package com.syndicate.ptkscheduleapp.feature.schedule.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -24,6 +26,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.HslColor
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
@@ -35,10 +38,25 @@ import org.jetbrains.compose.resources.painterResource
 internal fun PairCard(
     modifier: Modifier = Modifier,
     pair: PairItem = PairItem(),
-    isDark: Boolean = false
+    enabled: Boolean = true,
+    isDark: Boolean = false,
+    onClick: () -> Unit
 ) {
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = FirstThemeBackground)
+            .border(
+                width = 2.dp,
+                color = Color.Black.copy(alpha = 0.1f),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .clickable(
+                enabled = enabled && pair.isReplacement,
+                onClick = onClick
+            )
+    ) {
 
         Row(
             modifier = Modifier
@@ -86,10 +104,25 @@ internal fun PairCard(
         PairItem(),
         PairItem()
     ),
-    isDark: Boolean = false
+    enabled: Boolean = true,
+    isDark: Boolean = false,
+    onClick: () -> Unit
 ) {
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = FirstThemeBackground)
+            .border(
+                width = 2.dp,
+                color = Color.Black.copy(alpha = 0.1f),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .clickable(
+                enabled = enabled && pairList.any { it.isReplacement },
+                onClick = onClick
+            )
+    ) {
 
         Row(
             modifier = Modifier

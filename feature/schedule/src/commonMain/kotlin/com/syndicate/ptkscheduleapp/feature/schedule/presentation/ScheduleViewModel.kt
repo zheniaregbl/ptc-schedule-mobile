@@ -141,8 +141,6 @@ internal class ScheduleViewModel(
 
                         preferencesRepository.saveLocalReplacement(data.toString())
 
-                        _errorMessage.emit("Success getReplacement")
-
                         preferencesRepository.saveLastUpdateReplacementTime(lastUpdateTime)
                     }
                 }
