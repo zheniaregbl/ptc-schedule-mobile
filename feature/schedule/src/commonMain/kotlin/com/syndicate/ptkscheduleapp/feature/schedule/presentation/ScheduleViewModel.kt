@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -210,8 +209,6 @@ internal class ScheduleViewModel(
                             .saveLocalSchedule(
                                 Json.encodeToString(data.map { it.toDTO() })
                             )
-
-                        _errorMessage.emit("Success getSchedule")
 
                         lastUpdateTime?.let {
                             preferencesRepository.saveLastUpdateScheduleTime(it)
