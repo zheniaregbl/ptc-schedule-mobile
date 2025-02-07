@@ -160,16 +160,18 @@ internal object ScheduleUtil {
         schedule.forEach { pair ->
 
             if (pair.first().pairNumber in replacementNumberPairList) {
-                newSchedule.add(
-                    replacementPairList
-                        .find { it.first().pairNumber == pair.first().pairNumber }!!
-                        .map { it.copy(isReplacement = true) }
-                )
+
+                replacementPairList
+                    .find { it.first().pairNumber == pair.first().pairNumber }
+                    ?.let { pairList ->
+                        newSchedule.add(pairList.map { it.copy(isReplacement = true) })
+                    }
 
                 replacementPairList.removeIf { removePair ->
                     removePair == replacementPairList
-                        .find { it.first().pairNumber == pair.first().pairNumber }!!
+                        .find { it.first().pairNumber == pair.first().pairNumber }
                 }
+
             } else {
                 newSchedule.add(pair)
             }
