@@ -1,8 +1,6 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.presentation
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,7 +38,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
@@ -49,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
-import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
@@ -82,8 +78,7 @@ internal class ScheduleScreen : Screen {
 
         ScheduleScreenContent(
             modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding(),
+                .fillMaxSize(),
             state = state,
             errorMessage = errorMessage,
             initPage = initPage,
@@ -190,7 +185,7 @@ internal fun ScheduleScreenContent(
         }
     }
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier.systemBarsPadding()) {
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -463,13 +458,13 @@ internal fun ScheduleScreenContent(
                 actionColor = Color.White
             )
         }
-
-        ReplacementPopup(
-            showDialog = showReplacementDialog,
-            pair = selectedPair,
-            replacement = selectedReplacement,
-            newPair = newPair,
-            onDismissRequest = { showReplacementDialog = false }
-        )
     }
+
+    ReplacementPopup(
+        showDialog = showReplacementDialog,
+        pair = selectedPair,
+        replacement = selectedReplacement,
+        newPair = newPair,
+        onDismissRequest = { showReplacementDialog = false }
+    )
 }
