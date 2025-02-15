@@ -55,7 +55,11 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
@@ -86,16 +90,29 @@ internal class ScheduleScreen : Screen {
     @Composable
     override fun Content() {
 
+        val navigator = LocalNavigator.currentOrThrow
+        val groupScreen = rememberScreen(SharedScreen.GroupScreen)
+
         val viewModel = koinViewModel<ScheduleViewModel>()
         val state = viewModel.state.collectAsStateWithLifecycle()
         val errorMessage = viewModel.errorMessage.collectAsState(initial = null)
+
+        LaunchedEffect(Unit) {
+            viewModel.onAction(ScheduleAction.UpdateScheduleInfo)
+        }
 
         ScheduleScreenContent(
             modifier = Modifier.fillMaxSize(),
             state = state,
             errorMessage = errorMessage,
             initPage = initPage,
-            onAction = { action -> viewModel.onAction(action) }
+            onAction = { action ->
+                when (action) {
+                    is ScheduleAction.NavigateToGroupSelection ->
+                        navigator.push(groupScreen)
+                    else -> viewModel.onAction(action)
+                }
+            }
         )
     }
 
@@ -233,7 +250,7 @@ internal fun ScheduleScreenContent(
 
                     Box {
 
-                        OptionSheetContent()
+                        OptionSheetContent(onAction = onAction)
 
                         ScrimSpacer(
                             color = Color.Black.copy(alpha = 0.32f),

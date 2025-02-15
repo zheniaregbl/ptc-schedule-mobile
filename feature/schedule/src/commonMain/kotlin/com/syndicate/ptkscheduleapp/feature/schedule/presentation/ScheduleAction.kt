@@ -7,4 +7,5 @@ internal sealed interface ScheduleAction {
     data class OnChangeSchedulePage(val page: Int) : ScheduleAction
     data class UpdateDailyWeekState(val currentDate: LocalDate) : ScheduleAction
     data object UpdateScheduleInfo : ScheduleAction
+    data object NavigateToGroupSelection : ScheduleAction
 }

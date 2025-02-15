@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -120,7 +120,7 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            ChangeGroupSection(onClick = { })
+            ChangeGroupSection(onClick = { onAction(ScheduleAction.NavigateToGroupSelection) })
 
             TelegramButton(onClick = { })
 

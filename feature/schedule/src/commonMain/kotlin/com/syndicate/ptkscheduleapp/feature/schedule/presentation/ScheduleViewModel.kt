@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -34,20 +35,7 @@ internal class ScheduleViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ScheduleState())
-    val state = _state
-        .onStart {
-            viewModelScope.launch {
-                getUserGroup()
-                getScheduleInfo()
-                getReplacement()
-                getSchedule()
-            }
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(10_000L),
-            _state.value
-        )
+    val state = _state.asStateFlow()
 
     private val _scheduleInfo: MutableStateFlow<ScheduleInfo?> = MutableStateFlow(null)
 
@@ -82,11 +70,14 @@ internal class ScheduleViewModel(
             ScheduleAction.UpdateScheduleInfo -> {
                 viewModelScope.launch {
                     _errorMessage.emit(null)
+                    getUserGroup()
                     getScheduleInfo()
                     getReplacement()
                     getSchedule()
                 }
             }
+
+            else -> Unit
         }
     }
 
