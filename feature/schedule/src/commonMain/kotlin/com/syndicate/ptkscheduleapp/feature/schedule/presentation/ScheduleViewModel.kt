@@ -60,10 +60,10 @@ internal class ScheduleViewModel(
 
         when (action) {
 
-            is ScheduleAction.ChangeSchedulePage ->
+            is ScheduleAction.OnChangeSchedulePage ->
                 _state.update { it.copy(selectedSchedulePage = action.page) }
 
-            is ScheduleAction.ChangeSelectedDate ->
+            is ScheduleAction.OnChangeSelectedDate ->
                 _state.update { it.copy(selectedDate = action.date) }
 
             is ScheduleAction.UpdateDailyWeekState -> {

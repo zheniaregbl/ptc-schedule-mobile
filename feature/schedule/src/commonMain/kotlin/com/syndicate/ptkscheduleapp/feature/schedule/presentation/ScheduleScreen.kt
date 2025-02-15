@@ -1,6 +1,11 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.presentation
 
+import androidx.compose.animation.core.Ease
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +14,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
@@ -18,6 +24,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -39,22 +48,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
+import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel.Companion.weeks
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.OptionSheetContent
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.PanelState
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ReplacementPopup
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ScheduleScaffold
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ShimmerPairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.theme.ErrorMessageColor
 import com.valentinilk.shimmer.ShimmerBounds
@@ -77,8 +92,7 @@ internal class ScheduleScreen : Screen {
         val errorMessage = viewModel.errorMessage.collectAsState(initial = null)
 
         ScheduleScreenContent(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             state = state,
             errorMessage = errorMessage,
             initPage = initPage,
@@ -107,6 +121,20 @@ internal fun ScheduleScreenContent(
 ) {
 
     val scope = rememberCoroutineScope()
+
+    val peekHeight = 26.dp + WindowInsets
+        .navigationBars
+        .asPaddingValues()
+        .calculateBottomPadding()
+
+    val bottomSheetState = rememberBottomSheetState(
+        initialValue = BottomSheetValue.Collapsed,
+        animationSpec = tween(
+            durationMillis = 200,
+            easing = Ease
+        )
+    )
+    val scheduleScaffoldState = rememberBottomSheetScaffoldState(bottomSheetState)
 
     val panelState = remember { mutableStateOf(PanelState.WeekPanel) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -156,8 +184,8 @@ internal fun ScheduleScreenContent(
             val weekNumber = schedulePagerState.targetPage / 7
             val indexInWeek = schedulePagerState.targetPage % 7
 
-            onAction(ScheduleAction.ChangeSchedulePage(schedulePagerState.targetPage))
-            onAction(ScheduleAction.ChangeSelectedDate(weeks.value[weekNumber][indexInWeek]))
+            onAction(ScheduleAction.OnChangeSchedulePage(schedulePagerState.targetPage))
+            onAction(ScheduleAction.OnChangeSelectedDate(weeks.value[weekNumber][indexInWeek]))
             onAction(ScheduleAction.UpdateDailyWeekState(weeks.value[weekNumber][indexInWeek]))
         }
     }
@@ -185,263 +213,294 @@ internal fun ScheduleScreenContent(
         }
     }
 
-    Box(modifier = modifier.systemBarsPadding()) {
+    Box(modifier = modifier) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding()
+        ) {
 
             ConnectivityString()
 
-            Box(modifier = Modifier.fillMaxSize()) {
+            ScheduleScaffold(
+                scaffoldState = scheduleScaffoldState,
+                sheetGesturesEnabled = panelState.value != PanelState.CalendarPanel,
+                sheetPeekHeight = peekHeight,
+                sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
+                backgroundColor = FirstThemeBackground,
+                onDismiss = { scope.launch { bottomSheetState.collapse() } },
+                sheetContent = {
 
-                state.value.toUiState().DisplayResult(
-                    modifier = Modifier.fillMaxSize(),
-                    onIdle = { },
-                    onLoading = {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                    Box {
 
-                            item { Spacer(Modifier.height(180.dp)) }
+                        OptionSheetContent()
 
-                            items(4) { index ->
-
-                                ShimmerPairCard(shimmerInstance = shimmerInstance)
-
-                                if (index != 3)
-                                    Spacer(Modifier.height(14.dp))
+                        ScrimSpacer(
+                            color = Color.Black.copy(alpha = 0.32f),
+                            height = peekHeight,
+                            visible = panelState.value == PanelState.CalendarPanel,
+                            onClick = {
+                                if (panelState.value == PanelState.CalendarPanel)
+                                    panelState.value = PanelState.WeekPanel
                             }
-                        }
-                    },
-                    onSuccess = { screenState ->
-
-                        val scheduleList = listOf(
-                            ScheduleUtil.getWeekScheduleByWeekType(
-                                screenState.schedule,
-                                true
-                            ),
-                            ScheduleUtil.getWeekScheduleByWeekType(
-                                screenState.schedule,
-                                false
-                            )
                         )
+                    }
+                }
+            ) {
 
-                        val startScheduleIndex = if (
-                            ScheduleUtil.getCurrentTypeWeek(
-                                screenState.isUpperWeek,
-                                initWeekNumber,
-                                0
-                            )
-                        ) 0 else 1
+                Box(modifier = Modifier.fillMaxSize()) {
 
-                        HorizontalPager(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .statusBarsPadding(),
-                            state = schedulePagerState
-                        ) { page ->
+                    state.value.toUiState().DisplayResult(
+                        modifier = Modifier.fillMaxSize(),
+                        onIdle = { },
+                        onLoading = {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(horizontal = 16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
 
-                            val pageDate = weeks.value[0][0].plus(page.toLong(), DateTimeUnit.DAY)
+                                item { Spacer(Modifier.height(180.dp)) }
 
-                            val dailyReplacement =
-                                screenState.replacement.find { it.date == pageDate }
+                                items(4) { index ->
 
-                            val currentScheduleIndex = if (page / 7 % 2 == 0) startScheduleIndex
-                            else 1 - startScheduleIndex
+                                    ShimmerPairCard(shimmerInstance = shimmerInstance)
 
-                            val dailySchedule: List<PairItem> = try {
-                                scheduleList[currentScheduleIndex][page % 7]
-                            } catch (_: Exception) {
-                                emptyList()
+                                    if (index != 3)
+                                        Spacer(Modifier.height(14.dp))
+                                }
                             }
+                        },
+                        onSuccess = { screenState ->
 
-                            val ordinarySchedule = ScheduleUtil
-                                .groupDailyScheduleBySubgroup(dailySchedule)
-
-                            val currentSchedule = ScheduleUtil
-                                .scheduleWithReplacement(
-                                    ordinarySchedule,
-                                    dailyReplacement
+                            val scheduleList = listOf(
+                                ScheduleUtil.getWeekScheduleByWeekType(
+                                    screenState.schedule,
+                                    true
+                                ),
+                                ScheduleUtil.getWeekScheduleByWeekType(
+                                    screenState.schedule,
+                                    false
                                 )
+                            )
 
-                            if (dailySchedule.isNotEmpty()) {
+                            val startScheduleIndex = if (
+                                ScheduleUtil.getCurrentTypeWeek(
+                                    screenState.isUpperWeek,
+                                    initWeekNumber,
+                                    0
+                                )
+                            ) 0 else 1
 
-                                LazyColumn(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(
-                                            horizontal = 16.dp
-                                        ),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
+                            HorizontalPager(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .statusBarsPadding(),
+                                state = schedulePagerState
+                            ) { page ->
 
-                                    item { Spacer(modifier = Modifier.height(180.dp)) }
+                                val pageDate = weeks.value[0][0].plus(page.toLong(), DateTimeUnit.DAY)
 
-                                    itemsIndexed(
-                                        items = currentSchedule,
-                                        key = { index, _ ->
-                                            index
-                                        }
-                                    ) { index, pair ->
+                                val dailyReplacement =
+                                    screenState.replacement.find { it.date == pageDate }
 
-                                        if (pair.size > 1) {
+                                val currentScheduleIndex = if (page / 7 % 2 == 0) startScheduleIndex
+                                else 1 - startScheduleIndex
 
-                                            PairCard(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                pairList = pair,
-                                                enabled = panelState.value != PanelState.CalendarPanel,
-                                                onClick = {
+                                val dailySchedule: List<PairItem> = try {
+                                    scheduleList[currentScheduleIndex][page % 7]
+                                } catch (_: Exception) {
+                                    emptyList()
+                                }
 
-                                                    selectedReplacement = pair
+                                val ordinarySchedule = ScheduleUtil
+                                    .groupDailyScheduleBySubgroup(dailySchedule)
 
-                                                    selectedPair = when {
+                                val currentSchedule = ScheduleUtil
+                                    .scheduleWithReplacement(
+                                        ordinarySchedule,
+                                        dailyReplacement
+                                    )
 
-                                                        pair.first().previousPairNumber != -1 -> {
-                                                            newPair = false
-                                                            ordinarySchedule
-                                                                .find {
-                                                                    it.first().pairNumber == pair.first().previousPairNumber
-                                                                }!!
+                                if (dailySchedule.isNotEmpty()) {
+
+                                    LazyColumn(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(
+                                                horizontal = 16.dp
+                                            ),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+
+                                        item { Spacer(modifier = Modifier.height(180.dp)) }
+
+                                        itemsIndexed(
+                                            items = currentSchedule,
+                                            key = { index, _ ->
+                                                index
+                                            }
+                                        ) { index, pair ->
+
+                                            if (pair.size > 1) {
+
+                                                PairCard(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    pairList = pair,
+                                                    enabled = panelState.value != PanelState.CalendarPanel,
+                                                    onClick = {
+
+                                                        selectedReplacement = pair
+
+                                                        selectedPair = when {
+
+                                                            pair.first().previousPairNumber != -1 -> {
+                                                                newPair = false
+                                                                ordinarySchedule
+                                                                    .find {
+                                                                        it.first().pairNumber == pair.first().previousPairNumber
+                                                                    }!!
+                                                            }
+
+                                                            pair.first().pairNumber == -1 -> {
+                                                                newPair = true
+                                                                emptyList()
+                                                            }
+
+                                                            pair.first().isNewPair -> {
+                                                                newPair = true
+                                                                emptyList()
+                                                            }
+
+                                                            else -> {
+                                                                newPair = false
+                                                                ordinarySchedule
+                                                                    .find {
+                                                                        it.first().pairNumber == pair.first().pairNumber
+                                                                    } ?: emptyList()
+                                                            }
                                                         }
 
-                                                        pair.first().pairNumber == -1 -> {
-                                                            newPair = true
-                                                            emptyList()
-                                                        }
-
-                                                        pair.first().isNewPair -> {
-                                                            newPair = true
-                                                            emptyList()
-                                                        }
-
-                                                        else -> {
-                                                            newPair = false
-                                                            ordinarySchedule
-                                                                .find {
-                                                                    it.first().pairNumber == pair.first().pairNumber
-                                                                } ?: emptyList()
-                                                        }
+                                                        showReplacementDialog = true
                                                     }
+                                                )
 
-                                                    showReplacementDialog = true
-                                                }
-                                            )
+                                            } else {
 
-                                        } else {
+                                                PairCard(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    pair = pair.first(),
+                                                    enabled = panelState.value != PanelState.CalendarPanel,
+                                                    onClick = {
 
-                                            PairCard(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                pair = pair.first(),
-                                                enabled = panelState.value != PanelState.CalendarPanel,
-                                                onClick = {
+                                                        selectedReplacement = pair
 
-                                                    selectedReplacement = pair
+                                                        selectedPair = when {
 
-                                                    selectedPair = when {
+                                                            pair.first().previousPairNumber != -1 -> {
+                                                                newPair = false
+                                                                ordinarySchedule
+                                                                    .find {
+                                                                        it.first().pairNumber == pair.first().previousPairNumber
+                                                                    }!!
+                                                            }
 
-                                                        pair.first().previousPairNumber != -1 -> {
-                                                            newPair = false
-                                                            ordinarySchedule
-                                                                .find {
-                                                                    it.first().pairNumber == pair.first().previousPairNumber
-                                                                }!!
+                                                            pair.first().pairNumber == -1 -> {
+                                                                newPair = true
+                                                                emptyList()
+                                                            }
+
+                                                            pair.first().isNewPair -> {
+                                                                newPair = true
+                                                                emptyList()
+                                                            }
+
+                                                            else -> {
+                                                                newPair = false
+                                                                ordinarySchedule
+                                                                    .find {
+                                                                        it.first().pairNumber == pair.first().pairNumber
+                                                                    } ?: emptyList()
+                                                            }
                                                         }
 
-                                                        pair.first().pairNumber == -1 -> {
-                                                            newPair = true
-                                                            emptyList()
-                                                        }
-
-                                                        pair.first().isNewPair -> {
-                                                            newPair = true
-                                                            emptyList()
-                                                        }
-
-                                                        else -> {
-                                                            newPair = false
-                                                            ordinarySchedule
-                                                                .find {
-                                                                    it.first().pairNumber == pair.first().pairNumber
-                                                                } ?: emptyList()
-                                                        }
+                                                        showReplacementDialog = true
                                                     }
+                                                )
+                                            }
 
-                                                    showReplacementDialog = true
-                                                }
-                                            )
+                                            if (index != currentSchedule.lastIndex)
+                                                Spacer(modifier = Modifier.height(14.dp))
+
                                         }
 
-                                        if (index != currentSchedule.lastIndex)
-                                            Spacer(modifier = Modifier.height(14.dp))
-
+                                        item {
+                                            Spacer(
+                                                modifier = Modifier
+                                                    .height(
+                                                        WindowInsets
+                                                            .systemBars
+                                                            .asPaddingValues()
+                                                            .calculateBottomPadding()
+                                                                + 60.dp
+                                                    )
+                                            )
+                                        }
                                     }
 
-                                    item {
-                                        Spacer(
-                                            modifier = Modifier
-                                                .height(
-                                                    WindowInsets
-                                                        .systemBars
-                                                        .asPaddingValues()
-                                                        .calculateBottomPadding()
-                                                            + 60.dp
-                                                )
+                                } else {
+
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                        Text(
+                                            text = "Нет занятий",
+                                            style = LocalTextStyle.current,
+                                            fontWeight = FontWeight.Medium,
+                                            fontSize = 24.sp,
+                                            color = Color.Black
                                         )
                                     }
+
                                 }
-
-                            } else {
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-
-                                    Text(
-                                        text = "Нет занятий",
-                                        style = LocalTextStyle.current,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 24.sp,
-                                        color = Color.Black
-                                    )
-                                }
-
                             }
                         }
-                    }
-                )
+                    )
 
-                DatePanel(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .statusBarsPadding(),
-                    panelState = panelState,
-                    weekPanelPagerState = weekPanelPagerState,
-                    state = state,
-                    weeks = weeks,
-                    pagerWeekStateSaved = pagerWeekStateSaved,
-                    weekPanelPageSize = weekPanelPageSize,
-                    onChangeDate = { date ->
+                    DatePanel(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .statusBarsPadding(),
+                        panelState = panelState,
+                        weekPanelPagerState = weekPanelPagerState,
+                        state = state,
+                        weeks = weeks,
+                        pagerWeekStateSaved = pagerWeekStateSaved,
+                        weekPanelPageSize = weekPanelPageSize,
+                        onChangeDate = { date ->
 
-                        val weekNumber = ScheduleUtil.getCurrentWeek(weeks.value, date)
-                        val page = (weekNumber * 7) + weeks.value[weekNumber].indexOf(date)
+                            val weekNumber = ScheduleUtil.getCurrentWeek(weeks.value, date)
+                            val page = (weekNumber * 7) + weeks.value[weekNumber].indexOf(date)
 
-                        scope.launch {
-                            schedulePagerState.animateScrollToPage(
-                                page = page,
-                                animationSpec = tween()
-                            )
+                            scope.launch {
+                                schedulePagerState.animateScrollToPage(
+                                    page = page,
+                                    animationSpec = tween()
+                                )
+                            }
+                        },
+                        onHideCalendar = {
+                            if (panelState.value == PanelState.CalendarPanel) {
+                                panelState.value = PanelState.WeekPanel
+                            }
                         }
-                    },
-                    onHideCalendar = {
-                        if (panelState.value == PanelState.CalendarPanel) {
-                            panelState.value = PanelState.WeekPanel
-                        }
-                    }
-                )
+                    )
+                }
             }
         }
 
@@ -467,4 +526,32 @@ internal fun ScheduleScreenContent(
         newPair = newPair,
         onDismissRequest = { showReplacementDialog = false }
     )
+}
+
+@Composable
+private fun ScrimSpacer(
+    color: Color,
+    height: Dp,
+    visible: Boolean,
+    onClick: () -> Unit = { }
+) {
+
+    if (color.isSpecified) {
+        val alpha by animateFloatAsState(
+            targetValue = if (visible) 1f else 0f,
+            animationSpec = tween(
+                easing = Ease
+            ),
+            label = "scrim"
+        )
+
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height)
+                .pointerInput(onClick) { detectTapGestures { onClick() } }
+        ) {
+            drawRect(color = color, alpha = alpha)
+        }
+    }
 }

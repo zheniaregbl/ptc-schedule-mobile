@@ -10,14 +10,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -32,8 +30,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun DialogPopup(
@@ -59,7 +55,7 @@ fun DialogPopup(
 
             LaunchedEffect(Unit) { animateIn = true }
 
-            Scrim(
+            DialogScrim(
                 visible = animateIn && showDialog,
                 color = Color.Black.copy(alpha = 0.32f),
                 onDismissRequest = onDismissRequest
@@ -95,7 +91,7 @@ fun DialogPopup(
 }
 
 @Composable
-private fun Scrim(
+private fun DialogScrim(
     visible: Boolean,
     color: Color,
     onDismissRequest: () -> Unit

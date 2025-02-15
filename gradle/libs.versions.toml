@@ -26,6 +26,8 @@ datastore = "1.1.1"
 sandwich = "2.0.10"
 build-config = "5.5.1"
 connectivity = "1.2.0"
+ui-tooling = "1.7.8"
+ui-tooling-preview = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -40,6 +42,9 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
+ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "ui-tooling-preview" }
 
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 

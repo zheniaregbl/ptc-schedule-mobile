@@ -32,10 +32,8 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
-            api(compose.preview)
-            api(libs.androidx.activity.compose)
+            api(libs.ui.tooling.preview)
         }
-
         commonMain.dependencies {
             api(libs.androidx.lifecycle.viewmodel)
             api(libs.androidx.lifecycle.runtime.compose)
@@ -88,6 +86,10 @@ kotlin {
             freeCompilerArgs.add("-Xexpect-actual-classes")
         }
     }
+}
+
+dependencies {
+    debugImplementation(libs.androidx.ui.tooling)
 }
 
 compose.resources {
