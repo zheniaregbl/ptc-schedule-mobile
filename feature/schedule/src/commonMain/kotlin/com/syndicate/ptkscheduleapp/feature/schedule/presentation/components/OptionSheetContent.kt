@@ -39,7 +39,6 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.TelegramLogoColor
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleAction
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
-import com.syndicate.ptkscheduleapp.feature.schedule.resources.calendar_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.group_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.telegram_svg
 import org.jetbrains.compose.resources.painterResource

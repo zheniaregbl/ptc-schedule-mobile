@@ -11,7 +11,6 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldDefaults
 import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FabPosition
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHost
@@ -31,7 +30,6 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun ScheduleScaffold(
     sheetContent: @Composable ColumnScope.() -> Unit,
@@ -57,7 +55,11 @@ internal fun ScheduleScaffold(
     val bottomSheetState = scaffoldState.bottomSheetState
     val progress by remember {
         mutableFloatStateOf(
-            bottomSheetState.progress
+            bottomSheetState
+                .progress(
+                    from = BottomSheetValue.Collapsed,
+                    to = BottomSheetValue.Expanded
+                )
         )
     }
 
