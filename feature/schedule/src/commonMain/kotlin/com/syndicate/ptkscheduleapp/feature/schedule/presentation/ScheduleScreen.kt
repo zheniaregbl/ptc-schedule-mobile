@@ -237,7 +237,7 @@ internal fun ScheduleScreenContent(
                 .systemBarsPadding()
         ) {
 
-            ConnectivityString()
+            ConnectivityString(onAction = onAction)
 
             ScheduleScaffold(
                 scaffoldState = scheduleScaffoldState,

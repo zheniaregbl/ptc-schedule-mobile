@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ConnectionGreen
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightRed
 import com.syndicate.ptkscheduleapp.feature.schedule.createConnectivityState
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleAction
 import dev.jordond.connectivity.Connectivity
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun ConnectivityString() {
+internal fun ConnectivityString(onAction: (ScheduleAction) -> Unit) {
 
     val connectivityState = createConnectivityState(true)
     var showString by remember { mutableStateOf(false) }
@@ -53,6 +54,7 @@ internal fun ConnectivityString() {
         when (connectivityState.status) {
 
             is Connectivity.Status.Connected -> {
+                onAction(ScheduleAction.UpdateScheduleInfo)
                 connectionInfo = "Соединение восстановлено"
                 delay(1200)
                 showString = false
@@ -63,9 +65,7 @@ internal fun ConnectivityString() {
                 showString = true
             }
 
-            null -> {
-                showString = false
-            }
+            null -> { showString = false }
         }
     }
 
