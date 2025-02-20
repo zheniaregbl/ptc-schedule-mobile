@@ -11,8 +11,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -57,7 +59,12 @@ import com.syndicate.ptkscheduleapp.feature.schedule.resources.expand_arrow_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getCurrentMonth
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getMonthsFromWeeks
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMonth
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.DisplayResult
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleState
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.theme.ShimmerCardTheme
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
@@ -106,6 +113,11 @@ internal fun DatePanel(
     }
 
     val colorBorder = Color.Black.copy(alpha = .3f)
+
+    val shimmerInstance = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window,
+        theme = ShimmerCardTheme
+    )
 
     Box(modifier = modifier) {
 
@@ -197,6 +209,7 @@ internal fun DatePanel(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
                         .padding(
                             start = 35.dp,
                             end = 25.dp
@@ -204,13 +217,38 @@ internal fun DatePanel(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    Text(
-                        text = if (state.value.selectedDateWeekType) "Верхняя неделя"
-                        else "Нижняя неделя",
-                        style = LocalTextStyle.current,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
+                    state.value.toUiState().DisplayResult(
+                        modifier = Modifier.fillMaxHeight(),
+                        onIdle = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(120.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .shimmer(shimmerInstance)
+                                    .background(Color.Gray)
+                            )
+                        },
+                        onLoading = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(120.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .shimmer(shimmerInstance)
+                                    .background(Color.Gray)
+                            )
+                        },
+                        onSuccess = {
+                            Text(
+                                text = if (state.value.selectedDateWeekType) "Верхняя неделя"
+                                else "Нижняя неделя",
+                                style = LocalTextStyle.current,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.Black
+                            )
+                        }
                     )
 
                     Text(

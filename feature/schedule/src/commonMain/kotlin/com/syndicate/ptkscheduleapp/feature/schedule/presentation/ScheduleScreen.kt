@@ -75,6 +75,7 @@ import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.Rep
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ScheduleScaffold
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ShimmerPairCard
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.theme.ErrorMessageColor
+import com.syndicate.ptkscheduleapp.feature.schedule.presentation.theme.ShimmerCardTheme
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.coroutines.launch
@@ -154,7 +155,10 @@ internal fun ScheduleScreenContent(
 
     val panelState = remember { mutableStateOf(PanelState.WeekPanel) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
+    val shimmerInstance = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window,
+        theme = ShimmerCardTheme
+    )
 
     val weeks = remember {
         mutableStateOf(
