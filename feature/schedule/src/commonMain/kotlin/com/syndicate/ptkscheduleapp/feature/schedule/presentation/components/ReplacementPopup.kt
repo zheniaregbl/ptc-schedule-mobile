@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
@@ -26,7 +27,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
-import com.syndicate.ptkscheduleapp.feature.schedule.resources.down_arrow_svg
+import com.syndicate.ptkscheduleapp.feature.schedule.resources.arrow_down_new_svg
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -43,92 +44,63 @@ internal fun ReplacementPopup(
         onDismissRequest = onDismissRequest
     ) {
 
-        Box(
+        ReplacementPopupContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
-                .background(FirstThemeBackground)
-        ) {
+                .background(FirstThemeBackground),
+            pair = pair,
+            replacement = replacement,
+            newPair = newPair
+        )
+    }
+}
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+@Composable
+internal fun ReplacementPopupContent(
+    modifier: Modifier = Modifier,
+    pair: List<PairItem>,
+    replacement: List<PairItem>,
+    newPair: Boolean,
+) {
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(SecondThemeBackground)
-                        .padding(vertical = 10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+    Box(modifier = modifier) {
 
-                    Text(
-                        text = if (newPair) "Пара добавлена!" else "Пара изменена!",
-                        style = LocalTextStyle.current,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 24.sp,
-                        color = GrayText
-                    )
-                }
+        Column(modifier = Modifier.fillMaxWidth()) {
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 14.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(SecondThemeBackground)
+                    .padding(vertical = 10.dp),
+                contentAlignment = Alignment.Center
+            ) {
 
-                    if (!newPair) {
-                        item {
-                            if (pair.size > 1) {
+                Text(
+                    text = if (newPair) "Пара добавлена!" else "Пара изменена!",
+                    style = LocalTextStyle.current,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 24.sp,
+                    color = GrayText
+                )
+            }
 
-                                PairCard(
-                                    modifier = Modifier
-                                        .padding(top = 20.dp)
-                                        .fillMaxWidth(),
-                                    pairList = pair,
-                                    enabled = false,
-                                    onClick = { }
-                                )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-                            } else {
-
-                                PairCard(
-                                    modifier = Modifier
-                                        .padding(top = 20.dp)
-                                        .fillMaxWidth(),
-                                    pair = pair.first(),
-                                    enabled = false,
-                                    onClick = { }
-                                )
-
-                            }
-                        }
-
-                        item { Spacer(Modifier.height(18.dp)) }
-
-                        item {
-                            Image(
-                                painter = painterResource(Res.drawable.down_arrow_svg),
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(GrayText)
-                            )
-                        }
-
-                        item { Spacer(Modifier.height(18.dp)) }
-                    } else {
-                        item { Spacer(Modifier.height(20.dp)) }
-                    }
-
+                if (!newPair) {
                     item {
-                        if (replacement.size > 1) {
+                        if (pair.size > 1) {
 
                             PairCard(
                                 modifier = Modifier
-                                    .padding(bottom = 20.dp)
+                                    .padding(top = 20.dp)
                                     .fillMaxWidth(),
-                                pairList = listOf(
-                                    replacement.first().copy(isReplacement = false),
-                                    replacement.last()
-                                ),
+                                pairList = pair,
                                 enabled = false,
                                 onClick = { }
                             )
@@ -137,14 +109,58 @@ internal fun ReplacementPopup(
 
                             PairCard(
                                 modifier = Modifier
-                                    .padding(bottom = 20.dp)
+                                    .padding(top = 20.dp)
                                     .fillMaxWidth(),
-                                pair = replacement.first().copy(isReplacement = false),
+                                pair = pair.first(),
                                 enabled = false,
                                 onClick = { }
                             )
 
                         }
+                    }
+
+                    item { Spacer(Modifier.height(10.dp)) }
+
+                    item {
+                        Image(
+                            modifier = Modifier.size(28.dp),
+                            painter = painterResource(Res.drawable.arrow_down_new_svg),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(GrayText)
+                        )
+                    }
+
+                    item { Spacer(Modifier.height(10.dp)) }
+                } else {
+                    item { Spacer(Modifier.height(20.dp)) }
+                }
+
+                item {
+                    if (replacement.size > 1) {
+
+                        PairCard(
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
+                                .fillMaxWidth(),
+                            pairList = listOf(
+                                replacement.first().copy(isReplacement = false),
+                                replacement.last()
+                            ),
+                            enabled = false,
+                            onClick = { }
+                        )
+
+                    } else {
+
+                        PairCard(
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
+                                .fillMaxWidth(),
+                            pair = replacement.first().copy(isReplacement = false),
+                            enabled = false,
+                            onClick = { }
+                        )
+
                     }
                 }
             }
