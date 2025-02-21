@@ -197,14 +197,12 @@ internal fun ScheduleScreenContent(
 
     LaunchedEffect(schedulePagerState) {
 
-        // TODO: Fix bug with scrolling on schedulePagerState
+        snapshotFlow { schedulePagerState.currentPage }.collect { currentPage ->
 
-        snapshotFlow { schedulePagerState.currentPage }.collect { _ ->
+            val weekNumber = currentPage / 7
+            val indexInWeek = currentPage % 7
 
-            val weekNumber = schedulePagerState.targetPage / 7
-            val indexInWeek = schedulePagerState.targetPage % 7
-
-            onAction(ScheduleAction.OnChangeSchedulePage(schedulePagerState.targetPage))
+            onAction(ScheduleAction.OnChangeSchedulePage(currentPage))
             onAction(ScheduleAction.OnChangeSelectedDate(weeks.value[weekNumber][indexInWeek]))
             onAction(ScheduleAction.UpdateDailyWeekState(weeks.value[weekNumber][indexInWeek]))
         }
