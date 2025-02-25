@@ -98,10 +98,6 @@ internal class ScheduleScreen : Screen {
         val state = viewModel.state.collectAsStateWithLifecycle()
         val errorMessage = viewModel.errorMessage.collectAsState(initial = null)
 
-        LaunchedEffect(Unit) {
-            viewModel.onAction(ScheduleAction.UpdateScheduleInfo)
-        }
-
         ScheduleScreenContent(
             modifier = Modifier.fillMaxSize(),
             state = state,
@@ -239,7 +235,7 @@ internal fun ScheduleScreenContent(
                 .systemBarsPadding()
         ) {
 
-            ConnectivityString(onAction = onAction)
+            ConnectivityString(isConnected = state.value.isConnected)
 
             ScheduleScaffold(
                 scaffoldState = scheduleScaffoldState,

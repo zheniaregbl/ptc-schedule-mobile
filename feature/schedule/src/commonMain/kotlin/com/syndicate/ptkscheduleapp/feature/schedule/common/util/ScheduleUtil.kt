@@ -348,8 +348,8 @@ internal object ScheduleUtil {
                     dailyReplacementList.add(pairReplacement)
                 }
 
-            } catch (e: Exception) {
-                println(e)
+            } catch (_: Exception) {
+
             }
 
             if (dailyReplacementList.isNotEmpty()) {

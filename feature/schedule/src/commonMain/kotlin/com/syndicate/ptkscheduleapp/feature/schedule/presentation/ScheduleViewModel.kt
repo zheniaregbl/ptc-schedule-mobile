@@ -13,10 +13,13 @@ import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toDTO
 import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
+import com.syndicate.ptkscheduleapp.feature.schedule.platformConnectivity
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -32,7 +35,15 @@ internal class ScheduleViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ScheduleState())
-    val state = _state.asStateFlow()
+    val state = _state
+        .onStart { onAction(ScheduleAction.UpdateScheduleInfo) }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(30_000L),
+            _state.value
+        )
+
+    private val connectivity = platformConnectivity()
 
     private val _scheduleInfo: MutableStateFlow<ScheduleInfo?> = MutableStateFlow(null)
 
@@ -40,6 +51,20 @@ internal class ScheduleViewModel(
     val errorMessage = _errorMessage.asSharedFlow()
 
     private val _initWeekType = MutableStateFlow(false)
+
+    init {
+        viewModelScope.launch {
+            connectivity.statusUpdates.collect { status ->
+                _state.update {
+
+                    if (it.isConnected != status.isConnected && status.isConnected)
+                        onAction(ScheduleAction.UpdateScheduleInfo)
+
+                    it.copy(isConnected = status.isConnected)
+                }
+            }
+        }
+    }
 
     fun onAction(action: ScheduleAction) {
 

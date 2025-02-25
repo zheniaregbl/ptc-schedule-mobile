@@ -11,8 +11,8 @@ import com.syndicate.ptkscheduleapp.feature.schedule.data.network.KtorRemoteSche
 import com.syndicate.ptkscheduleapp.feature.schedule.data.repository.DefaultScheduleRepository
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 
 val featureScheduleModule = module {
@@ -20,7 +20,7 @@ val featureScheduleModule = module {
     singleOf(::DefaultScheduleRepository).bind<ScheduleRepository>()
     singleOf(::DefaultPreferencesRepository).bind<PreferencesRepository>()
 
-    viewModelOf(::ScheduleViewModel)
+    factoryOf(::ScheduleViewModel)
 }
 
 val featureScheduleScreenModule = screenModule {

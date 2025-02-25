@@ -11,8 +11,8 @@ import com.syndicate.ptkscheduleapp.feature.groups.data.network.RemoteGroupDataS
 import com.syndicate.ptkscheduleapp.feature.groups.data.repository.DefaultGroupRepository
 import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.GroupScreen
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 
 val featureGroupsModule = module {
@@ -20,7 +20,7 @@ val featureGroupsModule = module {
     singleOf(::DefaultGroupRepository).bind<GroupRepository>()
     singleOf(::DefaultPreferencesRepository).bind<PreferencesRepository>()
 
-    viewModelOf(::GroupViewModel)
+    factoryOf(::GroupViewModel)
 }
 
 val featureGroupsScreenModule = screenModule {

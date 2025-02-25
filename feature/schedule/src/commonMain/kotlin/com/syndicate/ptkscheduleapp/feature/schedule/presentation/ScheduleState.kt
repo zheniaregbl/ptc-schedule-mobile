@@ -70,7 +70,8 @@ internal data class ScheduleState(
     val replacement: List<ReplacementItem> = emptyList(),
     val selectedDate: LocalDate = Clock.System.nowDate(),
     val selectedSchedulePage: Int = 0,
-    val selectedDateWeekType: Boolean = false
+    val selectedDateWeekType: Boolean = false,
+    val isConnected: Boolean = true
 ) {
 
     fun toUiState(): ScheduleScreenState {

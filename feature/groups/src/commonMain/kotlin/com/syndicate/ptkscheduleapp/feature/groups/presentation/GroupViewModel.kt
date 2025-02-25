@@ -10,8 +10,7 @@ import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -21,12 +20,7 @@ internal class GroupViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GroupState())
-    val state = _state
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            _state.value
-        )
+    val state = _state.asStateFlow()
 
     fun onAction(action: GroupAction) {
 

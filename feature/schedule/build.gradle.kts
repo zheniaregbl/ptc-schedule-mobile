@@ -51,6 +51,7 @@ kotlin {
             api(libs.voyager.navigator)
             api(libs.voyager.screenmodel)
             api(libs.voyager.transitions)
+            api(libs.voyager.lifecycle.kmp)
 
             api(libs.kotlinx.serialization.json)
 

@@ -24,23 +24,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ConnectionGreen
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightRed
-import com.syndicate.ptkscheduleapp.feature.schedule.createConnectivityState
-import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleAction
-import dev.jordond.connectivity.Connectivity
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun ConnectivityString(onAction: (ScheduleAction) -> Unit) {
+internal fun ConnectivityString(isConnected: Boolean) {
 
-    val connectivityState = createConnectivityState(true)
     var showString by remember { mutableStateOf(false) }
 
     val color by animateColorAsState(
-        targetValue = when (connectivityState.status) {
-            Connectivity.Status.Disconnected -> LightRed
-            is Connectivity.Status.Connected -> ConnectionGreen
-            null -> Color.White
-        },
+        targetValue = if (isConnected) ConnectionGreen else LightRed,
         animationSpec = tween(
             delayMillis = 400,
             easing = Ease
@@ -49,23 +41,14 @@ internal fun ConnectivityString(onAction: (ScheduleAction) -> Unit) {
     )
     var connectionInfo by remember { mutableStateOf("Соединение разорвано") }
 
-    LaunchedEffect(connectivityState.status) {
-
-        when (connectivityState.status) {
-
-            is Connectivity.Status.Connected -> {
-                onAction(ScheduleAction.UpdateScheduleInfo)
-                connectionInfo = "Соединение восстановлено"
-                delay(1200)
-                showString = false
-            }
-
-            Connectivity.Status.Disconnected -> {
-                connectionInfo = "Соединение разорвано"
-                showString = true
-            }
-
-            null -> { showString = false }
+    LaunchedEffect(isConnected) {
+        if (isConnected) {
+            connectionInfo = "Соединение восстановлено"
+            delay(1200)
+            showString = false
+        } else {
+            connectionInfo = "Соединение разорвано"
+            showString = true
         }
     }
 

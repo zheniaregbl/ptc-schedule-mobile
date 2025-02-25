@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +32,6 @@ import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
@@ -53,6 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 class GroupScreen : Screen {
 
+    @OptIn(InternalVoyagerApi::class)
     @Composable
     override fun Content() {
 
@@ -60,11 +61,13 @@ class GroupScreen : Screen {
         val scheduleScreen = rememberScreen(SharedScreen.ScheduleScreen)
 
         val viewModel = koinViewModel<GroupViewModel>()
-        val state by viewModel.state.collectAsStateWithLifecycle()
+        val state by viewModel.state.collectAsState()
 
         LaunchedEffect(state.selectedGroup) {
-            if (state.selectedGroup != null)
+            if (state.selectedGroup != null) {
+                navigator.dispose(scheduleScreen)
                 navigator.replace(scheduleScreen)
+            }
         }
 
         GroupScreenContent(
