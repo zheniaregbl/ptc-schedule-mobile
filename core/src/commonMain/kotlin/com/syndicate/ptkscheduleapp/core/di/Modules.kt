@@ -35,7 +35,7 @@ val networkModule = module {
             defaultRequest {
                 host = BuildConfig.BASE_URL
                 url {
-                    protocol = URLProtocol.HTTP
+                    protocol = URLProtocol.HTTPS
                     path("api/v2/")
                 }
                 contentType(ContentType.Application.Json)
