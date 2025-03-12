@@ -2,7 +2,6 @@ package com.syndicate.ptkscheduleapp.feature.schedule.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
-import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
+import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayThirdTheme
+import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.TelegramLogoColor
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleAction
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
@@ -120,7 +120,16 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            ChangeGroupSection(onClick = { onAction(ScheduleAction.NavigateToGroupSelection) })
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(SecondThemeBackground),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ChangeGroupSection(onClick = { onAction(ScheduleAction.NavigateToGroupSelection) })
+            }
 
             TelegramButton(onClick = { })
 
@@ -142,43 +151,29 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
 @Composable
 private fun ChangeGroupSection(onClick: () -> Unit) {
 
-    val colorBorder = Color.Black.copy(alpha = 0.3f)
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(FirstThemeBackground)
-            .clickable { onClick() }
-            .border(
-                width = 3.dp,
-                shape = RoundedCornerShape(10.dp),
-                color = colorBorder
-            )
+            .clickable(onClick = onClick)
             .padding(20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(
+            painter = painterResource(Res.drawable.group_svg),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(GrayThirdTheme)
+        )
 
-            Image(
-                painter = painterResource(Res.drawable.group_svg),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(GrayText)
-            )
-
-            Spacer(modifier = Modifier.width(20.dp))
-
-            Text(
-                text = "Изменить группу",
-                style = LocalTextStyle.current,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                color = Color.Black
-            )
-        }
+        Text(
+            text = "Изменить группу",
+            style = LocalTextStyle.current,
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
+            color = GrayThirdTheme
+        )
     }
 }
 
@@ -191,7 +186,7 @@ private fun TelegramButton(onClick: () -> Unit) {
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(color = TelegramLogoColor)
-            .clickable { onClick() }
+            .clickable(onClick = onClick)
             .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
