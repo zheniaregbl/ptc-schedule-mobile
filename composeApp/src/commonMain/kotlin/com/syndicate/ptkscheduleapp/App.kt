@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.syndicate.ptkscheduleapp.core.presentation.theme.AppTheme
 import com.syndicate.ptkscheduleapp.feature.splash.presentation.SplashScreen
@@ -31,10 +32,14 @@ fun App() {
 
             ProvideNavigatorLifecycleKMPSupport {
 
-                Navigator(SplashScreen()) { navigator ->
+                Navigator(
+                    screen = SplashScreen(),
+                    disposeBehavior = NavigatorDisposeBehavior(disposeSteps = false)
+                ) { navigator ->
 
                     FadeTransition(
                         navigator = navigator,
+                        disposeScreenAfterTransitionEnd = true,
                         animationSpec = tween(
                             durationMillis = 200,
                             easing = Ease,

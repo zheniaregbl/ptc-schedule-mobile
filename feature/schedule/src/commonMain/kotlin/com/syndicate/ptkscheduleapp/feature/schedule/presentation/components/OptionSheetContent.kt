@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp.feature.schedule.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -33,15 +36,27 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syndicate.ptkscheduleapp.core.presentation.theme.DarkColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
+import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayThirdTheme
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LightColorPalette
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LightRed
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LocalColorPalette
+import com.syndicate.ptkscheduleapp.core.presentation.theme.SandColor
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
+import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.TelegramLogoColor
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleAction
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.group_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.telegram_svg
+import com.syndicate.ptkscheduleapp.feature.schedule.resources.theme_svg
 import org.jetbrains.compose.resources.painterResource
+
+private val SomeColor = Color(0xFF7A7979)
 
 @Composable
 internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
@@ -125,10 +140,22 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(SecondThemeBackground),
+                    .background(SecondThemeBackground)
+                    .padding(10.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+
                 ChangeGroupSection(onClick = { onAction(ScheduleAction.NavigateToGroupSelection) })
+
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .height(1.dp)
+                        .background(SomeColor.copy(0.2f))
+                )
+
+                ChangeThemeSection(onClickItem = {  })
             }
 
             TelegramButton(onClick = { })
@@ -156,15 +183,16 @@ private fun ChangeGroupSection(onClick: () -> Unit) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
             .clickable(onClick = onClick)
-            .padding(20.dp),
+            .padding(14.dp),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         Image(
+            modifier = Modifier.size(28.dp),
             painter = painterResource(Res.drawable.group_svg),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(GrayThirdTheme)
+            colorFilter = ColorFilter.tint(SomeColor)
         )
 
         Text(
@@ -172,7 +200,102 @@ private fun ChangeGroupSection(onClick: () -> Unit) {
             style = LocalTextStyle.current,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
-            color = GrayThirdTheme
+            color = SomeColor
+        )
+    }
+}
+
+@Composable
+private fun ChangeThemeSection(onClickItem: (ThemeMode) -> Unit) {
+
+    val currentThemeMode = LocalColorPalette.current.themeMode
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Image(
+                modifier = Modifier.size(28.dp),
+                painter = painterResource(Res.drawable.theme_svg),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(SomeColor)
+            )
+
+            Text(
+                text = "Изменить тему",
+                style = LocalTextStyle.current,
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                color = SomeColor
+            )
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+
+            ThemeMode.entries.forEach { theme ->
+
+                ThemeBox(
+                    modifier = Modifier
+                        .padding(vertical = 6.dp)
+                        .size(68.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    themeMode = theme,
+                    onClick = { onClickItem(theme) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThemeBox(
+    modifier: Modifier,
+    themeMode: ThemeMode,
+    onClick: () -> Unit
+) {
+
+    val currentThemeMode = LocalColorPalette.current.themeMode
+    val boxPalette = when (themeMode) {
+        ThemeMode.LIGHT -> LightColorPalette
+        ThemeMode.GRAY -> GrayColorPalette
+        ThemeMode.DARK -> DarkColorPalette
+    }
+
+    Box(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .background(boxPalette.backgroundColor)
+            .border(
+                width = 2.5.dp,
+                shape = RoundedCornerShape(8.dp),
+                color = if (currentThemeMode == themeMode) SelectedBlue
+                else boxPalette.otherColor
+            )
+    ) {
+
+        Box(
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .fillMaxHeight()
+                .padding(vertical = 12.dp)
+                .clip(RoundedCornerShape(100))
+                .width(5.dp)
+                .background(
+                    color = when (themeMode) {
+                        ThemeMode.LIGHT -> LightRed
+                        ThemeMode.GRAY -> SandColor
+                        ThemeMode.DARK -> LightBlue
+                    }
+                )
         )
     }
 }
@@ -187,7 +310,10 @@ private fun TelegramButton(onClick: () -> Unit) {
             .clip(RoundedCornerShape(10.dp))
             .background(color = TelegramLogoColor)
             .clickable(onClick = onClick)
-            .padding(20.dp),
+            .padding(
+                horizontal = 20.dp,
+                vertical = 14.dp
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -195,6 +321,7 @@ private fun TelegramButton(onClick: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
 
             Image(
+                modifier = Modifier.size(28.dp),
                 painter = painterResource(Res.drawable.telegram_svg),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(Color.White)
