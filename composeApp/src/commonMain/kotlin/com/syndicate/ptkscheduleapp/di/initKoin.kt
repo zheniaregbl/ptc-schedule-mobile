@@ -1,5 +1,6 @@
 package com.syndicate.ptkscheduleapp.di
 
+import com.syndicate.ptkscheduleapp.core.di.coreModule
 import com.syndicate.ptkscheduleapp.core.di.networkModule
 import com.syndicate.ptkscheduleapp.feature.groups.di.featureGroupsModule
 import com.syndicate.ptkscheduleapp.feature.schedule.di.featureScheduleModule
@@ -15,6 +16,7 @@ fun initKoin(
     startKoin {
         config?.invoke(this)
         modules(
+            coreModule,
             networkModule,
             featureSplashModule,
             featureGroupsModule,

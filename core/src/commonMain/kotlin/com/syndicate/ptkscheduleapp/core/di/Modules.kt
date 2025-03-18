@@ -13,7 +13,9 @@ import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import com.syndicate.ptkscheduleapp.core.presentation.ThemeViewModel
 import ptk_schedule_app.core.BuildConfig
 
 val networkModule = module {
@@ -42,4 +44,8 @@ val networkModule = module {
             }
         }
     }
+}
+
+val coreModule = module {
+    viewModelOf(::ThemeViewModel)
 }
