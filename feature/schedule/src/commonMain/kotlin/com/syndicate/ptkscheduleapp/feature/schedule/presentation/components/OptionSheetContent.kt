@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.DarkColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayColorPalette
-import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayThirdTheme
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightRed
@@ -133,7 +131,7 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
                     .background(color = colorBorder)
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(44.dp))
 
             Column(
                 modifier = Modifier
@@ -161,16 +159,6 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
             TelegramButton(onClick = { })
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            Spacer(
-                modifier = Modifier
-                    .height(
-                        WindowInsets
-                            .navigationBars
-                            .asPaddingValues()
-                            .calculateBottomPadding()
-                    )
-            )
         }
     }
 }

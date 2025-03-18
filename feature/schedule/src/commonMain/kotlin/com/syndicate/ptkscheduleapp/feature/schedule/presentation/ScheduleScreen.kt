@@ -135,7 +135,7 @@ internal fun ScheduleScreenContent(
 
     val scope = rememberCoroutineScope()
 
-    val peekHeight = 26.dp + WindowInsets
+    val peekHeight = 8.dp + WindowInsets
         .navigationBars
         .asPaddingValues()
         .calculateBottomPadding()
