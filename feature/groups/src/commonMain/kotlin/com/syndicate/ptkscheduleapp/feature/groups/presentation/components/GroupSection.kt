@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LocalColorPalette
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.DisplayResult
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.GroupState
 
@@ -23,6 +27,8 @@ internal fun GroupSection(
     groupPickerState: PickerState
 ) {
 
+    val currentThemeMode = LocalColorPalette.current.themeMode
+
     Box(modifier = modifier) {
 
         Text(
@@ -31,7 +37,7 @@ internal fun GroupSection(
             style = LocalTextStyle.current,
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
-            color = Color.Black
+            color = MaterialTheme.colorPalette.contentColor
         )
 
         state.toUiState().DisplayResult(
@@ -41,7 +47,8 @@ internal fun GroupSection(
             onLoading = {
                 CircleLoading(
                     size = 60.dp,
-                    color = Color(0xFF4B71FF)
+                    color = if (currentThemeMode == ThemeMode.LIGHT) Color(0xFF4B71FF)
+                    else Color.White
                 )
             },
             onError = {},

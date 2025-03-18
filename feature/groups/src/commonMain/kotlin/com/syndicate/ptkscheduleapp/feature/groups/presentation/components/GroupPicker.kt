@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -95,7 +97,7 @@ fun GroupPicker(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = textStyle,
-                    color = Color.Black,
+                    color = MaterialTheme.colorPalette.contentColor,
                     fontSize = fontSize,
                     modifier = Modifier
                         .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
@@ -106,12 +108,12 @@ fun GroupPicker(
 
         HorizontalDivider(
             modifier = Modifier.offset(y = itemHeightDp * visibleItemsMiddle),
-            color = Color.Black
+            color = MaterialTheme.colorPalette.contentColor
         )
 
         HorizontalDivider(
             modifier = Modifier.offset(y = itemHeightDp * (visibleItemsMiddle + 1)),
-            color = Color.Black
+            color = MaterialTheme.colorPalette.contentColor
         )
 
     }

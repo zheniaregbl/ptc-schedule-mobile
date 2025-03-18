@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.choice_control.AnimatedRadioButton
 
 @Composable
@@ -37,7 +39,7 @@ internal fun CourseSection(
             style = LocalTextStyle.current,
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
-            color = Color.Black
+            color = MaterialTheme.colorPalette.contentColor
         )
 
         Column(
@@ -45,7 +47,6 @@ internal fun CourseSection(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             courseList.forEachIndexed { index, label ->
-
                 CourseItem(
                     modifier = Modifier
                         .height(30.dp)
@@ -93,7 +94,7 @@ fun CourseItem(
             style = LocalTextStyle.current,
             fontWeight = FontWeight.Normal,
             fontSize = 24.sp,
-            color = Color.Black
+            color = MaterialTheme.colorPalette.contentColor
         )
     }
 }

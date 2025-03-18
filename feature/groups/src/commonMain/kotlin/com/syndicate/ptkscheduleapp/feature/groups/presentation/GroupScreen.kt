@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.registry.rememberScreen
@@ -40,6 +42,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.CourseSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.GroupSection
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.rememberPickerState
@@ -51,7 +54,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
-class GroupScreen : Screen {
+internal class GroupScreen : Screen {
 
     @OptIn(InternalVoyagerApi::class)
     @Composable
@@ -75,9 +78,7 @@ class GroupScreen : Screen {
                 .fillMaxSize()
                 .systemBarsPadding(),
             state = state,
-            onAction = { action ->
-                viewModel.onAction(action)
-            }
+            onAction = { viewModel.onAction(it) }
         )
     }
 }
@@ -99,6 +100,7 @@ internal fun GroupScreenContent(
     val groupPickerState = rememberPickerState()
 
     LaunchedEffect(state.toUiState()) {
+
         if (state.toUiState() is GroupScreenState.Error) {
 
             scope.launch {
@@ -173,7 +175,8 @@ internal fun GroupScreenContent(
                             }
                         ),
                     painter = painterResource(Res.drawable.back_svg),
-                    contentDescription = null
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.contentColor)
                 )
             }
         }
