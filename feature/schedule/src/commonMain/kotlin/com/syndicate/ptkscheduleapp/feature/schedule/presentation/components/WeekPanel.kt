@@ -60,6 +60,7 @@ internal fun WeekPanel(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()

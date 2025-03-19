@@ -27,6 +27,7 @@ import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -61,7 +62,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
-import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
@@ -134,6 +135,8 @@ internal fun ScheduleScreenContent(
 ) {
 
     val scope = rememberCoroutineScope()
+
+    val currentThemeMode = MaterialTheme.colorPalette.themeMode
 
     val peekHeight = 8.dp + WindowInsets
         .navigationBars
@@ -242,14 +245,11 @@ internal fun ScheduleScreenContent(
                 sheetGesturesEnabled = panelState.value != PanelState.CalendarPanel,
                 sheetPeekHeight = peekHeight,
                 sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
-                backgroundColor = FirstThemeBackground,
+                backgroundColor = MaterialTheme.colorPalette.backgroundColor,
                 onDismiss = { scope.launch { bottomSheetState.collapse() } },
                 sheetContent = {
-
                     Box {
-
                         OptionSheetContent(onAction = onAction)
-
                         ScrimSpacer(
                             color = Color.Black.copy(alpha = 0.32f),
                             height = peekHeight,
@@ -353,9 +353,7 @@ internal fun ScheduleScreenContent(
 
                                         itemsIndexed(
                                             items = currentSchedule,
-                                            key = { index, _ ->
-                                                index
-                                            }
+                                            key = { index, _ -> index }
                                         ) { index, pair ->
 
                                             if (pair.size > 1) {
@@ -477,7 +475,7 @@ internal fun ScheduleScreenContent(
                                             style = LocalTextStyle.current,
                                             fontWeight = FontWeight.Medium,
                                             fontSize = 24.sp,
-                                            color = Color.Black
+                                            color = MaterialTheme.colorPalette.contentColor
                                         )
                                     }
 

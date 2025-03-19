@@ -26,6 +26,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -50,8 +51,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.components.AutoResizeText
 import com.syndicate.ptkscheduleapp.core.presentation.components.FontSizeRange
-import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.calendar_svg
@@ -112,7 +115,7 @@ internal fun DatePanel(
         )
     }
 
-    val colorBorder = Color.Black.copy(alpha = .3f)
+    val colorBorder = MaterialTheme.colorPalette.contentColor.copy(alpha = .3f)
 
     val shimmerInstance = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window,
@@ -143,7 +146,7 @@ internal fun DatePanel(
                         bottomEnd = 25.dp
                     )
                 )
-                .background(FirstThemeBackground)
+                .background(MaterialTheme.colorPalette.backgroundColor)
                 .drawBehind {
 
                     drawLine(
@@ -246,7 +249,7 @@ internal fun DatePanel(
                                 style = LocalTextStyle.current,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.Black
+                                color = MaterialTheme.colorPalette.contentColor
                             )
                         }
                     )
@@ -256,7 +259,7 @@ internal fun DatePanel(
                         style = LocalTextStyle.current,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
+                        color = MaterialTheme.colorPalette.contentColor
                     )
                 }
 
@@ -276,7 +279,7 @@ internal fun DatePanel(
                         style = LocalTextStyle.current,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
+                        color = MaterialTheme.colorPalette.contentColor
                     )
 
                     Row(
@@ -319,7 +322,7 @@ internal fun DatePanel(
                             AutoResizeText(
                                 text = it,
                                 fontWeight = FontWeight.Medium,
-                                color = Color.Black,
+                                color = MaterialTheme.colorPalette.contentColor,
                                 maxLines = 1,
                                 fontSizeRange = FontSizeRange(
                                     min = 12.sp,
@@ -353,19 +356,12 @@ internal fun DatePanel(
 
                 AnimatedVisibility(visible = panelState.value == PanelState.CalendarPanel) {
 
-                    Box(
-                        modifier = Modifier
-                            .padding(
-                                top = 6.dp
-                            )
-                    ) {
+                    Box(modifier = Modifier.padding(top = 6.dp)) {
 
                         Calendar(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(
-                                    bottom = 12.dp
-                                ),
+                                .padding(bottom = 12.dp),
                             pagerState = calendarPagerState,
                             selectedDateProvider = { state.value.selectedDate },
                             months = months,
@@ -398,7 +394,7 @@ private fun ExpandedButton(
             modifier = Modifier.size(26.dp),
             painter = painterResource(Res.drawable.expand_arrow_svg),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(Color.Black)
+            colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.contentColor)
         )
     }
 }
@@ -410,6 +406,7 @@ fun DateButton(
 ) {
 
     val currentLocalDate = Clock.System.nowDate()
+    val currentThemeMode = MaterialTheme.colorPalette.themeMode
 
     AnimatedVisibility(
         visible = selectedDateProvider() != currentLocalDate,
@@ -421,7 +418,10 @@ fun DateButton(
                 modifier = Modifier.size(26.dp),
                 painter = painterResource(Res.drawable.calendar_svg),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(SelectedBlue)
+                colorFilter = ColorFilter.tint(
+                    if (currentThemeMode == ThemeMode.LIGHT) SelectedBlue
+                    else LightBlue
+                )
             )
         }
     }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,8 +27,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.HslColor
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
@@ -39,17 +40,16 @@ internal fun PairCard(
     modifier: Modifier = Modifier,
     pair: PairItem = PairItem(),
     enabled: Boolean = true,
-    isDark: Boolean = false,
     onClick: () -> Unit
 ) {
 
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(color = FirstThemeBackground)
+            .background(MaterialTheme.colorPalette.backgroundColor)
             .border(
                 width = 2.dp,
-                color = Color.Black.copy(alpha = 0.1f),
+                color = MaterialTheme.colorPalette.secondaryColor,
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(
@@ -75,7 +75,6 @@ internal fun PairCard(
             PairInfo(
                 pairItem = pair,
                 isLast = true,
-                isDark = isDark
             )
         }
 
@@ -105,17 +104,16 @@ internal fun PairCard(
         PairItem()
     ),
     enabled: Boolean = true,
-    isDark: Boolean = false,
     onClick: () -> Unit
 ) {
 
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(color = FirstThemeBackground)
+            .background(MaterialTheme.colorPalette.backgroundColor)
             .border(
                 width = 2.dp,
-                color = Color.Black.copy(alpha = 0.1f),
+                color = MaterialTheme.colorPalette.secondaryColor.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(
@@ -146,7 +144,6 @@ internal fun PairCard(
                     PairInfo(
                         pairItem = lessonItem,
                         isLast = index == pairList.lastIndex,
-                        isDark = isDark
                     )
                 }
             }
@@ -174,7 +171,6 @@ internal fun PairCard(
 internal fun PairInfo(
     pairItem: PairItem = PairItem(),
     isLast: Boolean = false,
-    isDark: Boolean = false
 ) {
 
     Column(
@@ -188,7 +184,7 @@ internal fun PairInfo(
             style = LocalTextStyle.current,
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            color = if (isDark) Color.White else Color.Black
+            color = MaterialTheme.colorPalette.contentColor
         )
 
         Text(
@@ -220,7 +216,7 @@ internal fun PairInfo(
                 lineHeight = 15.sp,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = if (isDark) Color.White else Color.Black
+                color = MaterialTheme.colorPalette.contentColor
             )
         }
 
@@ -234,7 +230,7 @@ internal fun PairInfo(
                 lineHeight = 15.sp,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = if (isDark) Color.White else Color.Black
+                color = MaterialTheme.colorPalette.contentColor
             )
         }
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,17 +34,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.DarkColorPalette
-import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightRed
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LocalColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SandColor
-import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.TelegramLogoColor
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleAction
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.group_svg
@@ -51,17 +51,15 @@ import com.syndicate.ptkscheduleapp.feature.schedule.resources.telegram_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.theme_svg
 import org.jetbrains.compose.resources.painterResource
 
-private val SomeColor = Color(0xFF7A7979)
-
 @Composable
 internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
 
-    val colorBorder = Color.Black.copy(alpha = 0.3f)
+    val colorBorder = MaterialTheme.colorPalette.contentColor.copy(alpha = 0.3f)
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
-        color = FirstThemeBackground
+        color = MaterialTheme.colorPalette.backgroundColor
     ) {
 
         Column(
@@ -135,7 +133,7 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(SecondThemeBackground)
+                    .background(MaterialTheme.colorPalette.thirdlyColor)
                     .padding(10.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
@@ -147,7 +145,7 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                         .height(1.dp)
-                        .background(SomeColor.copy(0.2f))
+                        .background(MaterialTheme.colorPalette.otherColor.copy(0.2f))
                 )
 
                 ChangeThemeSection(onClickItem = {  })
@@ -177,7 +175,7 @@ private fun ChangeGroupSection(onClick: () -> Unit) {
             modifier = Modifier.size(28.dp),
             painter = painterResource(Res.drawable.group_svg),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(SomeColor)
+            colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.otherColor)
         )
 
         Text(
@@ -185,15 +183,13 @@ private fun ChangeGroupSection(onClick: () -> Unit) {
             style = LocalTextStyle.current,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
-            color = SomeColor
+            color = MaterialTheme.colorPalette.otherColor
         )
     }
 }
 
 @Composable
 private fun ChangeThemeSection(onClickItem: (ThemeMode) -> Unit) {
-
-    val currentThemeMode = LocalColorPalette.current.themeMode
 
     Column(
         modifier = Modifier
@@ -212,7 +208,7 @@ private fun ChangeThemeSection(onClickItem: (ThemeMode) -> Unit) {
                 modifier = Modifier.size(28.dp),
                 painter = painterResource(Res.drawable.theme_svg),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(SomeColor)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.otherColor)
             )
 
             Text(
@@ -220,7 +216,7 @@ private fun ChangeThemeSection(onClickItem: (ThemeMode) -> Unit) {
                 style = LocalTextStyle.current,
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
-                color = SomeColor
+                color = MaterialTheme.colorPalette.otherColor
             )
         }
 
@@ -262,8 +258,11 @@ private fun ThemeBox(
             .border(
                 width = 2.5.dp,
                 shape = RoundedCornerShape(8.dp),
-                color = if (currentThemeMode == themeMode) SelectedBlue
-                else boxPalette.otherColor
+                color = when {
+                    currentThemeMode == themeMode && themeMode == ThemeMode.LIGHT -> SelectedBlue
+                    currentThemeMode == themeMode -> LightBlue
+                    else -> boxPalette.secondaryColor
+                }
             )
     ) {
 

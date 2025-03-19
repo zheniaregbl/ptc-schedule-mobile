@@ -15,6 +15,8 @@ enum class ThemeMode {
 data class ColorPalette(
     val backgroundColor: Color,
     val contentColor: Color,
+    val secondaryColor: Color,
+    val thirdlyColor: Color,
     val otherColor: Color,
     val themeMode: ThemeMode
 )
@@ -22,21 +24,27 @@ data class ColorPalette(
 val LightColorPalette = ColorPalette(
     backgroundColor = FirstThemeBackground,
     contentColor = Color.Black,
-    otherColor = SecondThemeBackground,
+    secondaryColor = Color.Black.copy(alpha = 0.1f),
+    thirdlyColor = SecondThemeBackground,
+    otherColor = Color(0xFF7A7979),
     themeMode = ThemeMode.LIGHT
 )
 
 val GrayColorPalette = ColorPalette(
     backgroundColor = ThirdThemeBackground,
     contentColor = Color.White,
-    otherColor = GrayThirdTheme,
+    secondaryColor = GrayThirdTheme.copy(alpha = 0.3f),
+    thirdlyColor = Color(0xFF2e2d2d),
+    otherColor = Color(0xFFb5b3b3),
     themeMode = ThemeMode.GRAY
 )
 
 val DarkColorPalette = ColorPalette(
     backgroundColor = FourthThemeBackground,
     contentColor = Color.White,
-    otherColor = ThirdThemeBackground,
+    secondaryColor = ThirdThemeBackground,
+    thirdlyColor = Color(0xFF151515),
+    otherColor = SecondThemeBackground,
     themeMode = ThemeMode.DARK
 )
 

@@ -59,12 +59,14 @@ internal fun Calendar(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 30.dp),
             state = pagerState
         ) { page ->
+
             val monthDates = months.value[page]
             val weeks = getWeeksFromMonth(monthDates)
 
@@ -74,7 +76,6 @@ internal fun Calendar(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 weeks.forEach { week ->
-
                     WeekRow(
                         modifier = Modifier
                             .fillMaxWidth(),
