@@ -44,6 +44,7 @@ kotlin {
             implementation(libs.koin.compose)
 
             implementation(projects.core)
+            implementation(projects.widget)
             implementation(projects.feature.splash)
             implementation(projects.feature.groups)
             implementation(projects.feature.schedule)
