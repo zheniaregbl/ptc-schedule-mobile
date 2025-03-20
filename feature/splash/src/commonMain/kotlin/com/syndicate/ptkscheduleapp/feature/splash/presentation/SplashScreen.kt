@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,9 +32,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayThirdTheme
-import com.syndicate.ptkscheduleapp.core.presentation.theme.LocalColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.MainBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.splash.resources.Res
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
@@ -73,17 +75,9 @@ internal fun SplashScreenContent(
     onLaunchApp: () -> Unit
 ) {
 
-    val currentThemeMode = LocalColorPalette.current.themeMode
-
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
-            Res.readBytes(
-                when (currentThemeMode) {
-                    ThemeMode.LIGHT -> "files/logo_lottie_blue.json"
-                    ThemeMode.GRAY -> "files/logo_lottie_gray.json"
-                    ThemeMode.DARK -> "files/logo_lottie_white.json"
-                }
-            ).decodeToString()
+            Res.readBytes("files/logo_lottie_white.json").decodeToString()
         )
     }
     var isShowText by remember { mutableStateOf(false) }
@@ -116,7 +110,14 @@ internal fun SplashScreenContent(
                     composition = composition,
                     progress = { progress }
                 ),
-                contentDescription = null
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(
+                    when (MaterialTheme.colorPalette.themeMode) {
+                        ThemeMode.LIGHT -> MainBlue
+                        ThemeMode.GRAY -> GrayThirdTheme
+                        ThemeMode.DARK -> Color.White
+                    }
+                )
             )
         }
 
@@ -132,7 +133,7 @@ internal fun SplashScreenContent(
                 style = LocalTextStyle.current,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
-                color = when (currentThemeMode) {
+                color = when (MaterialTheme.colorPalette.themeMode) {
                     ThemeMode.LIGHT -> MainBlue
                     ThemeMode.GRAY -> GrayThirdTheme
                     ThemeMode.DARK -> Color.White

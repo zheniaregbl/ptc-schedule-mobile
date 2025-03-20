@@ -17,9 +17,8 @@ import org.koin.dsl.module
 import ptk_schedule_app.core.BuildConfig
 import com.syndicate.ptkscheduleapp.core.data.repository.DefaultPreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
-import com.syndicate.ptkscheduleapp.core.presentation.ThemeViewModel
+import com.syndicate.ptkscheduleapp.core.presentation.AppViewModel
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 
 val networkModule = module {
@@ -52,5 +51,5 @@ val networkModule = module {
 
 val coreModule = module {
     singleOf(::DefaultPreferencesRepository).bind<PreferencesRepository>()
-    single { ThemeViewModel() }
+    single { AppViewModel(get()) }
 }

@@ -21,5 +21,5 @@ val featureGroupsModule = module {
 }
 
 val featureGroupsScreenModule = screenModule {
-    register<SharedScreen.GroupScreen> { GroupScreen(it.themeMode) }
+    register<SharedScreen.GroupScreen> { GroupScreen() }
 }

@@ -99,6 +99,9 @@ internal class ScheduleViewModel(
                 }
             }
 
+            is ScheduleAction.ChangeTheme ->
+                viewModelScope.launch { preferencesRepository.saveThemeMode(action.themeMode) }
+
             else -> Unit
         }
     }

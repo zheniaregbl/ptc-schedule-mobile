@@ -148,7 +148,7 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
                         .background(MaterialTheme.colorPalette.otherColor.copy(0.2f))
                 )
 
-                ChangeThemeSection(onClickItem = {  })
+                ChangeThemeSection(onClickItem = { onAction(ScheduleAction.ChangeTheme(it)) })
             }
 
             TelegramButton(onClick = { })

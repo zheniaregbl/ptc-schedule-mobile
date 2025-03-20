@@ -1,10 +1,13 @@
 package com.syndicate.ptkscheduleapp.core.domain.repository
 
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
 interface PreferencesRepository {
     val userGroup: Flow<String>
+    val userThemeMode: Flow<ThemeMode>
+    suspend fun saveThemeMode(themeMode: ThemeMode)
     suspend fun saveGroup(group: String)
     suspend fun saveLocalSchedule(scheduleString: String)
     suspend fun saveLocalReplacement(replacementString: String)

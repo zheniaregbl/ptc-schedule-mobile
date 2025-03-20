@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -15,6 +16,7 @@ class DefaultPreferencesRepository(
 ) : PreferencesRepository {
 
     private object PreferencesKeys {
+        val userThemeModeKey = stringPreferencesKey("user_theme_mode")
         val userGroupKey = stringPreferencesKey("user_group")
         val localScheduleKey = stringPreferencesKey("local_schedule")
         val localReplacementKey = stringPreferencesKey("local_replacement")
@@ -25,6 +27,14 @@ class DefaultPreferencesRepository(
     override val userGroup: Flow<String> = dataStore
         .data
         .map { it[PreferencesKeys.userGroupKey] ?: "" }
+
+    override val userThemeMode: Flow<ThemeMode> = dataStore
+        .data
+        .map { ThemeMode.valueOf(it[PreferencesKeys.userThemeModeKey] ?: "LIGHT") }
+
+    override suspend fun saveThemeMode(themeMode: ThemeMode) {
+        dataStore.edit { it[PreferencesKeys.userThemeModeKey] = themeMode.toString() }
+    }
 
     override suspend fun saveGroup(group: String) {
         dataStore.edit { it[PreferencesKeys.userGroupKey] = group }
