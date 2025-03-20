@@ -1,8 +1,6 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.di
 
 import cafe.adriel.voyager.core.registry.screenModule
-import com.syndicate.ptkscheduleapp.core.data.repository.DefaultPreferencesRepository
-import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleScreen
 import org.koin.dsl.module
@@ -18,7 +16,6 @@ import org.koin.dsl.bind
 val featureScheduleModule = module {
     singleOf(::KtorRemoteScheduleDataSource).bind<RemoteScheduleDataSource>()
     singleOf(::DefaultScheduleRepository).bind<ScheduleRepository>()
-    singleOf(::DefaultPreferencesRepository).bind<PreferencesRepository>()
 
     factoryOf(::ScheduleViewModel)
 }
