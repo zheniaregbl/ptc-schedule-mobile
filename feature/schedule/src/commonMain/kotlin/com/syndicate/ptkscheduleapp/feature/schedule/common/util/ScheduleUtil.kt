@@ -1,7 +1,7 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.common.util
 
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.removeIf
-import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.PairDTO
+import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ReplacementItem

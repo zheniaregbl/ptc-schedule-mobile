@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.build.config)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -47,6 +48,8 @@ kotlin {
             api(libs.datastore)
             api(libs.datastore.preferences)
 
+            api(libs.kotlinx.serialization.json)
+
             api(libs.kotlinx.datetime)
 
             api(libs.voyager.navigator)
@@ -54,6 +57,9 @@ kotlin {
             api(libs.koin.compose)
             api(libs.koin.compose.viewmodel)
             api(libs.koin.core)
+
+            api(libs.sandwich)
+            api(libs.sandwich.ktor)
 
             api(libs.bundles.ktor)
         }

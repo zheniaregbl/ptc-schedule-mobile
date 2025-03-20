@@ -1,7 +1,7 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.data.mapper
 
-import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.GroupScheduleUpdateInfoDTO
-import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.ScheduleInfoDTO
+import com.syndicate.ptkscheduleapp.core.data.dto.GroupScheduleUpdateInfoDTO
+import com.syndicate.ptkscheduleapp.core.data.dto.ScheduleInfoDTO
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.GroupScheduleUpdateInfo
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
 

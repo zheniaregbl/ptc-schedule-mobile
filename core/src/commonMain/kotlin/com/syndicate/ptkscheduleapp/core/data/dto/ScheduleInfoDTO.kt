@@ -1,11 +1,11 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.data.dto
+package com.syndicate.ptkscheduleapp.core.data.dto
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ScheduleInfoDTO(
+data class ScheduleInfoDTO(
     @SerialName("weekIsUpper") val isUpperWeek: Boolean,
     @SerialName("lastScheduleUpdateTime") private val _lastScheduleUpdateTime: String,
     @SerialName("lastReplacementUpdateTime") private val _lastReplacementUpdateTime: String,

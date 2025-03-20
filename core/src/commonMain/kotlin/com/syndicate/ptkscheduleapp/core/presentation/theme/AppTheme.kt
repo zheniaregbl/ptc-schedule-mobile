@@ -2,7 +2,6 @@ package com.syndicate.ptkscheduleapp.core.presentation.theme
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme

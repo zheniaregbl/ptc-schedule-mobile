@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.core.data.datastore
+package com.syndicate.ptkscheduleapp.core.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory

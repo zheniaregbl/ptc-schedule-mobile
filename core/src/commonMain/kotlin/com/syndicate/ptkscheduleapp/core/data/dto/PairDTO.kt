@@ -1,10 +1,10 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.data.dto
+package com.syndicate.ptkscheduleapp.core.data.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class PairDTO(
+data class PairDTO(
     @SerialName("dayOfWeek") val dayOfWeek: String,
     @SerialName("isUpper") val isUpper: Boolean? = null,
     @SerialName("pairNumber") val pairNumber: Int,
@@ -16,17 +16,17 @@ internal data class PairDTO(
 )
 
 @Serializable
-internal data class RoomDTO(
+data class RoomDTO(
     @SerialName("number") val number: String,
     @SerialName("place") val place: String
 )
 
 @Serializable
-internal data class SubjectDTO(
+data class SubjectDTO(
     @SerialName("name") val name: String
 )
 
 @Serializable
-internal data class TeacherDTO(
+data class TeacherDTO(
     @SerialName("fullName") val fullName: String
 )

@@ -1,14 +1,14 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.data.network
+package com.syndicate.ptkscheduleapp.core.data.network
 
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.ktor.getApiResponse
-import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.ReplacementResponseDTO
-import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.ScheduleInfoResponseDTO
-import com.syndicate.ptkscheduleapp.feature.schedule.data.dto.ScheduleResponseDTO
+import com.syndicate.ptkscheduleapp.core.data.dto.ReplacementResponseDTO
+import com.syndicate.ptkscheduleapp.core.data.dto.ScheduleInfoResponseDTO
+import com.syndicate.ptkscheduleapp.core.data.dto.ScheduleResponseDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.request.parameter
 
-internal class KtorRemoteScheduleDataSource(
+class KtorRemoteScheduleDataSource(
     private val httpClient: HttpClient
 ): RemoteScheduleDataSource {
 
