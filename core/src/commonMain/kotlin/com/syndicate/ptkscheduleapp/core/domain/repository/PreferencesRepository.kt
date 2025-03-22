@@ -9,11 +9,13 @@ interface PreferencesRepository {
     val userThemeMode: Flow<ThemeMode>
     suspend fun saveThemeMode(themeMode: ThemeMode)
     suspend fun saveGroup(group: String)
+    suspend fun saveLocalWeekType(isUpperWeek: Boolean)
     suspend fun saveLocalSchedule(scheduleString: String)
     suspend fun saveLocalReplacement(replacementString: String)
     suspend fun saveLastUpdateScheduleTime(time: LocalDateTime)
     suspend fun saveLastUpdateReplacementTime(time: LocalDateTime)
     suspend fun getUserGroup(): String
+    suspend fun getLocalWeekType(): Boolean
     suspend fun getLocalSchedule(): String?
     suspend fun getLocalReplacement(): String?
     suspend fun getLastUpdateScheduleTime(): LocalDateTime?

@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp.core.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
@@ -18,6 +19,7 @@ class DefaultPreferencesRepository(
     private object PreferencesKeys {
         val userThemeModeKey = stringPreferencesKey("user_theme_mode")
         val userGroupKey = stringPreferencesKey("user_group")
+        val localWeekType = booleanPreferencesKey("week_type")
         val localScheduleKey = stringPreferencesKey("local_schedule")
         val localReplacementKey = stringPreferencesKey("local_replacement")
         val lastUpdateScheduleTimeKey = stringPreferencesKey("last_update_schedule_time")
@@ -40,6 +42,10 @@ class DefaultPreferencesRepository(
         dataStore.edit { it[PreferencesKeys.userGroupKey] = group }
     }
 
+    override suspend fun saveLocalWeekType(isUpperWeek: Boolean) {
+        dataStore.edit { it[PreferencesKeys.localWeekType] = isUpperWeek }
+    }
+
     override suspend fun saveLocalSchedule(scheduleString: String) {
         dataStore.edit { it[PreferencesKeys.localScheduleKey] = scheduleString }
     }
@@ -58,6 +64,9 @@ class DefaultPreferencesRepository(
 
     override suspend fun getUserGroup(): String =
         dataStore.data.map { it[PreferencesKeys.userGroupKey] }.first() ?: ""
+
+    override suspend fun getLocalWeekType(): Boolean =
+        dataStore.data.map { it[PreferencesKeys.localWeekType] ?: false }.first()
 
     override suspend fun getLocalSchedule(): String? =
         dataStore.data.map { it[PreferencesKeys.localScheduleKey] }.first()

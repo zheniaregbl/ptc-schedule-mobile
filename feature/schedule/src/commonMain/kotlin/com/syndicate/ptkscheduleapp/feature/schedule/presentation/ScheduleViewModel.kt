@@ -131,12 +131,24 @@ internal class ScheduleViewModel(
 
                 _state.update { it.copy(isUpperWeek = data.isUpperWeek) }
                 _scheduleInfo.update { data }
+
+                preferencesRepository.saveLocalWeekType(data.isUpperWeek!!)
             }
             .suspendOnError {
+
                 _errorMessage.emit("Error getScheduleInfo")
+
+                preferencesRepository.getLocalWeekType().also { isUpperWeek ->
+                    _state.update { it.copy(isUpperWeek = isUpperWeek) }
+                }
             }
             .suspendOnException {
+
                 _errorMessage.emit("Exception getScheduleInfo")
+
+                preferencesRepository.getLocalWeekType().also { isUpperWeek ->
+                    _state.update { it.copy(isUpperWeek = isUpperWeek) }
+                }
             }
     }
 
@@ -154,9 +166,7 @@ internal class ScheduleViewModel(
                         .lastReplacementUpdateTime
 
                     if (preferencesRepository.getLastUpdateReplacementTime() != lastUpdateTime) {
-
                         preferencesRepository.saveLocalReplacement(data.toString())
-
                         preferencesRepository.saveLastUpdateReplacementTime(lastUpdateTime)
                     }
                 }
