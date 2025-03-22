@@ -31,7 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.TopCenter
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
@@ -136,8 +135,6 @@ internal fun ScheduleScreenContent(
 
     val scope = rememberCoroutineScope()
 
-    val currentThemeMode = MaterialTheme.colorPalette.themeMode
-
     val peekHeight = 8.dp + WindowInsets
         .navigationBars
         .asPaddingValues()
@@ -219,14 +216,11 @@ internal fun ScheduleScreenContent(
 
         errorMessage.value?.let { message ->
 
-            val result = snackbarHostState.showSnackbar(
+            snackbarHostState.showSnackbar(
                 message = message,
-                actionLabel = "Повторить",
+                actionLabel = null,
                 duration = SnackbarDuration.Indefinite
             )
-
-            if (result == SnackbarResult.ActionPerformed)
-                onAction(ScheduleAction.UpdateScheduleInfo)
         }
     }
 
@@ -519,8 +513,8 @@ internal fun ScheduleScreenContent(
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier
-                .align(TopCenter)
-                .padding(top = 20.dp)
+                .align(BottomCenter)
+                .padding(bottom = 40.dp)
         ) { data ->
             CountdownSnackbar(
                 snackbarData = data,
