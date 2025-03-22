@@ -113,7 +113,7 @@ internal fun PairCard(
             .background(MaterialTheme.colorPalette.backgroundColor)
             .border(
                 width = 2.dp,
-                color = MaterialTheme.colorPalette.secondaryColor.copy(alpha = 0.3f),
+                color = MaterialTheme.colorPalette.secondaryColor,
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(
