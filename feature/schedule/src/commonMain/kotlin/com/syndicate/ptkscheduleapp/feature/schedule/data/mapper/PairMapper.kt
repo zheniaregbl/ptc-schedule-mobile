@@ -4,7 +4,7 @@ import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.RoomDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.SubjectDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.TeacherDTO
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 
 internal fun PairDTO.toModel() = PairItem(
     dayOfWeek = dayOfWeek,

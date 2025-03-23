@@ -4,7 +4,7 @@ import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.suspendMapSuccess
 import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.core.data.network.RemoteScheduleDataSource
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.repository.ScheduleRepository
 import kotlinx.serialization.json.JsonObject

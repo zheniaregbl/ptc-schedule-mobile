@@ -25,7 +25,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.components.DialogPopup
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.arrow_down_new_svg
 import org.jetbrains.compose.resources.painterResource

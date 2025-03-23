@@ -1,5 +1,6 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.domain.model
 
+import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone

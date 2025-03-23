@@ -64,7 +64,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackb
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel.Companion.weeks
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
