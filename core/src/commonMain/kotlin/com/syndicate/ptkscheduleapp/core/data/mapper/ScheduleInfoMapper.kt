@@ -1,16 +1,16 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.data.mapper
+package com.syndicate.ptkscheduleapp.core.data.mapper
 
 import com.syndicate.ptkscheduleapp.core.data.dto.GroupScheduleUpdateInfoDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.ScheduleInfoDTO
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.GroupScheduleUpdateInfo
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ScheduleInfo
+import com.syndicate.ptkscheduleapp.core.domain.model.GroupScheduleUpdateInfo
+import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
 
-internal fun GroupScheduleUpdateInfoDTO.toModel() = GroupScheduleUpdateInfo(
+fun GroupScheduleUpdateInfoDTO.toModel() = GroupScheduleUpdateInfo(
     group = group,
     lastUpdateTime = this.lastUpdateTime
 )
 
-internal fun ScheduleInfoDTO.toModel() = ScheduleInfo(
+fun ScheduleInfoDTO.toModel() = ScheduleInfo(
     isUpperWeek = isUpperWeek,
     lastScheduleUpdateTime = this.lastScheduleUpdateTime,
     lastReplacementUpdateTime = this.lastReplacementUpdateTime,

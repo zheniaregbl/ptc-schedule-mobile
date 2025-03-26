@@ -1,12 +1,11 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.domain.model
+package com.syndicate.ptkscheduleapp.core.domain.model
 
-import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-internal data class ReplacementItem(
+data class ReplacementItem(
     val date: LocalDate = Clock
         .System
         .now()

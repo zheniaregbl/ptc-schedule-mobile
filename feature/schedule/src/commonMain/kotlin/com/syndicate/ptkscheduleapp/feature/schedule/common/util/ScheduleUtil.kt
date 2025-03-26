@@ -2,9 +2,9 @@ package com.syndicate.ptkscheduleapp.feature.schedule.common.util
 
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.removeIf
 import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
-import com.syndicate.ptkscheduleapp.feature.schedule.data.mapper.toModel
+import com.syndicate.ptkscheduleapp.core.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.model.ReplacementItem
+import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate

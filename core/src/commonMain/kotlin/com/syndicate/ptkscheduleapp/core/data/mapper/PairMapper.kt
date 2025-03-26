@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.data.mapper
+package com.syndicate.ptkscheduleapp.core.data.mapper
 
 import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.RoomDTO
@@ -6,7 +6,7 @@ import com.syndicate.ptkscheduleapp.core.data.dto.SubjectDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.TeacherDTO
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 
-internal fun PairDTO.toModel() = PairItem(
+fun PairDTO.toModel() = PairItem(
     dayOfWeek = dayOfWeek,
     isUpper = isUpper,
     pairNumber = pairNumber,
@@ -18,7 +18,7 @@ internal fun PairDTO.toModel() = PairItem(
     time = time
 )
 
-internal fun PairItem.toDTO() = PairDTO(
+fun PairItem.toDTO() = PairDTO(
     dayOfWeek = dayOfWeek,
     isUpper = isUpper,
     pairNumber = pairNumber,

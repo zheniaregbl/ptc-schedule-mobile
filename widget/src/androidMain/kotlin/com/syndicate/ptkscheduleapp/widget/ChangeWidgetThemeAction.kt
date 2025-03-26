@@ -14,7 +14,7 @@ class ChangeWidgetThemeAction : ActionCallback {
     ) {
 
         val intent = Intent(context, ScheduleWidgetReceiver::class.java).apply {
-            /*action = ScheduleWidgetReceiver.CHANGE_THEME_ACTION*/
+            action = ScheduleWidgetReceiver.CHANGE_THEME_ACTION
         }
 
         context.sendBroadcast(intent)

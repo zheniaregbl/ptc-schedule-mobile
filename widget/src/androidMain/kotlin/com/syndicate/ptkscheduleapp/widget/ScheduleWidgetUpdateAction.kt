@@ -14,7 +14,7 @@ class ScheduleWidgetUpdateAction : ActionCallback {
     ) {
 
         val intent = Intent(context, ScheduleWidgetReceiver::class.java).apply {
-            /*action = ScheduleWidgetReceiver.UPDATE_ACTION*/
+            action = ScheduleWidgetReceiver.UPDATE_ACTION
         }
 
         context.sendBroadcast(intent)
