@@ -1,6 +1,6 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.common.util
+package com.syndicate.ptkscheduleapp.core.common.util
 
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.removeIf
+import com.syndicate.ptkscheduleapp.core.common.util.extension.removeIf
 import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.core.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
@@ -17,7 +17,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 
-internal object ScheduleUtil {
+object ScheduleUtil {
 
     fun groupDailyScheduleBySubgroup(
         dailySchedule: List<PairItem>

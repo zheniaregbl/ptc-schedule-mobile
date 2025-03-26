@@ -62,8 +62,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CountdownSnackbar
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
+import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
+import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel.Companion.weeks
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString

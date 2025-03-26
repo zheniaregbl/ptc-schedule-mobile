@@ -12,7 +12,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
+import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getStringByMonth
 import com.syndicate.ptkscheduleapp.feature.schedule.common.util.getWeeksFromMonth
 import kotlinx.datetime.Clock

@@ -6,8 +6,8 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.ScheduleUtil
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
+import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
+import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.core.data.mapper.toDTO
 import com.syndicate.ptkscheduleapp.core.data.mapper.toModel

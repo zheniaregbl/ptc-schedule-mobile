@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension
+package com.syndicate.ptkscheduleapp.core.common.util.extension
 
 inline fun <T> ArrayList<T>.removeIf(predicate: (T) -> Boolean): Boolean {
     val iterator = this.iterator()

@@ -55,7 +55,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
-import com.syndicate.ptkscheduleapp.feature.schedule.common.util.extension.nowDate
+import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.calendar_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.expand_arrow_svg
