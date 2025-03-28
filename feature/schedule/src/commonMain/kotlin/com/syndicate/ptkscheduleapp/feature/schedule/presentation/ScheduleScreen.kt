@@ -239,7 +239,7 @@ internal fun ScheduleScreenContent(
                     Box {
                         OptionSheetContent(onAction = onAction)
                         ScrimSpacer(
-                            color = Color.Black.copy(alpha = 0.32f),
+                            color = Color.Black.copy(alpha = 0.42f),
                             height = 50.dp,
                             visible = panelState.value == PanelState.CalendarPanel,
                             onClick = {

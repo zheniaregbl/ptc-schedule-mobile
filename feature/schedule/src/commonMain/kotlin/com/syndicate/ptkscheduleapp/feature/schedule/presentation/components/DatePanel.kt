@@ -132,7 +132,7 @@ internal fun DatePanel(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.32f))
+                    .background(Color.Black.copy(alpha = 0.42f))
                     .pointerInput(onHideCalendar) { detectTapGestures { onHideCalendar() } }
             )
         }
