@@ -32,6 +32,7 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
+            implementation(libs.androidx.work.runtime.ktx)
             api(libs.glance.appwidget)
             api(libs.glance.preview)
             api(libs.glance.appwidget.preview)
