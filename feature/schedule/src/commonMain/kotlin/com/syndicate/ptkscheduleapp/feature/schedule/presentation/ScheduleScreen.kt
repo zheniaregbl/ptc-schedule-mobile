@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
@@ -135,11 +134,6 @@ internal fun ScheduleScreenContent(
 
     val scope = rememberCoroutineScope()
 
-    val peekHeight = 8.dp + WindowInsets
-        .navigationBars
-        .asPaddingValues()
-        .calculateBottomPadding()
-
     val bottomSheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed,
         animationSpec = tween(
@@ -237,7 +231,7 @@ internal fun ScheduleScreenContent(
             ScheduleScaffold(
                 scaffoldState = scheduleScaffoldState,
                 sheetGesturesEnabled = panelState.value != PanelState.CalendarPanel,
-                sheetPeekHeight = peekHeight,
+                sheetPeekHeight = 50.dp,
                 sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
                 backgroundColor = MaterialTheme.colorPalette.backgroundColor,
                 onDismiss = { scope.launch { bottomSheetState.collapse() } },
@@ -246,7 +240,7 @@ internal fun ScheduleScreenContent(
                         OptionSheetContent(onAction = onAction)
                         ScrimSpacer(
                             color = Color.Black.copy(alpha = 0.32f),
-                            height = peekHeight,
+                            height = 50.dp,
                             visible = panelState.value == PanelState.CalendarPanel,
                             onClick = {
                                 if (panelState.value == PanelState.CalendarPanel)
@@ -337,9 +331,7 @@ internal fun ScheduleScreenContent(
                                     LazyColumn(
                                         modifier = Modifier
                                             .fillMaxSize()
-                                            .padding(
-                                                horizontal = 16.dp
-                                            ),
+                                            .padding(horizontal = 16.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
 
