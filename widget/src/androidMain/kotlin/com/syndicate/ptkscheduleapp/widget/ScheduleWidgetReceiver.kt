@@ -44,6 +44,11 @@ internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver(), KoinComponent
 
         when (intent.action) {
 
+            Intent.ACTION_TIMEZONE_CHANGED -> CoroutineScope(Dispatchers.IO).launch {
+                changeWidgetState(context)
+                fetchSchedule(context)
+            }
+
             UPDATE_ACTION -> CoroutineScope(Dispatchers.IO).launch {
                 changeWidgetState(context)
                 fetchSchedule(context)
