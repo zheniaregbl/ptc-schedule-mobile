@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,10 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayThirdTheme
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
+import com.syndicate.ptkscheduleapp.core.presentation.theme.ThirdThemeBackground
+import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.arrow_down_new_svg
 import org.jetbrains.compose.resources.painterResource
@@ -39,6 +45,8 @@ internal fun ReplacementPopup(
     onDismissRequest: () -> Unit
 ) {
 
+    val themeMode = MaterialTheme.colorPalette.themeMode
+
     DialogPopup(
         showDialog = showDialog,
         onDismissRequest = onDismissRequest
@@ -48,7 +56,13 @@ internal fun ReplacementPopup(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
-                .background(FirstThemeBackground),
+                .background(
+                    when (themeMode) {
+                        ThemeMode.LIGHT -> FirstThemeBackground
+                        ThemeMode.GRAY -> ThirdThemeBackground
+                        ThemeMode.DARK -> Color(0xFF151515)
+                    }
+                ),
             pair = pair,
             replacement = replacement,
             newPair = newPair
@@ -64,6 +78,8 @@ internal fun ReplacementPopupContent(
     newPair: Boolean,
 ) {
 
+    val themeMode = MaterialTheme.colorPalette.themeMode
+
     Box(modifier = modifier) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -71,7 +87,10 @@ internal fun ReplacementPopupContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(SecondThemeBackground)
+                    .background(
+                        if (themeMode == ThemeMode.LIGHT) SecondThemeBackground
+                        else GrayThirdTheme
+                    )
                     .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
