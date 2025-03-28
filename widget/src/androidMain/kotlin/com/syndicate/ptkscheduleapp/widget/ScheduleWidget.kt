@@ -15,6 +15,7 @@ internal class ScheduleWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) = provideContent {
 
         val isLoading = currentState<Boolean>(ScheduleWidgetReceiver.IsLoading) == true
+        val isAlternativeTheme = currentState<Boolean>(ScheduleWidgetReceiver.AlternativeTheme) == true
         val updateTime = currentState<String>(ScheduleWidgetReceiver.UpdateTime) ?: ""
         val groupNumber = currentState<String>(ScheduleWidgetReceiver.GroupNumber) ?: ""
         val stringSchedule = currentState<String>(ScheduleWidgetReceiver.WidgetSchedule) ?: ""
@@ -26,6 +27,7 @@ internal class ScheduleWidget : GlanceAppWidget() {
 
         ScheduleWidgetUI(
             widgetSchedule = widgetSchedule,
+            isAlternativeTheme = isAlternativeTheme,
             isUpdating = isLoading,
             updateTime = updateTime,
             groupNumber = groupNumber

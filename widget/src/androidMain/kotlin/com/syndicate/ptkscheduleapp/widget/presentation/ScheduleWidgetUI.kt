@@ -110,7 +110,7 @@ fun ScheduleWidgetUI(
                                         modifier = GlanceModifier
                                             .fillMaxWidth()
                                             .background(
-                                                imageProvider = ImageProvider(R.drawable.widget_background),
+                                                imageProvider = ImageProvider(R.drawable.widget_pair_card_background),
                                                 colorFilter = ColorFilter.tint(
                                                     colorProvider = ColorProvider(
                                                         if (isAlternativeTheme) GrayColorPalette.backgroundColor
@@ -128,7 +128,7 @@ fun ScheduleWidgetUI(
                                         modifier = GlanceModifier
                                             .fillMaxWidth()
                                             .background(
-                                                imageProvider = ImageProvider(R.drawable.widget_background),
+                                                imageProvider = ImageProvider(R.drawable.widget_pair_card_background),
                                                 colorFilter = ColorFilter.tint(
                                                     colorProvider = ColorProvider(
                                                         if (isAlternativeTheme) GrayColorPalette.backgroundColor
