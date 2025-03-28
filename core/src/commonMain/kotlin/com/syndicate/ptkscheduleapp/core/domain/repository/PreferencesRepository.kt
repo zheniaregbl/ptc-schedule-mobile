@@ -14,10 +14,14 @@ interface PreferencesRepository {
     suspend fun saveLocalReplacement(replacementString: String)
     suspend fun saveLastUpdateScheduleTime(time: LocalDateTime)
     suspend fun saveLastUpdateReplacementTime(time: LocalDateTime)
+    suspend fun saveLastUpdateWidgetTime(time: String)
+    suspend fun saveWidgetSchedule(schedule: String)
     suspend fun getUserGroup(): String
     suspend fun getLocalWeekType(): Boolean
     suspend fun getLocalSchedule(): String?
     suspend fun getLocalReplacement(): String?
     suspend fun getLastUpdateScheduleTime(): LocalDateTime?
     suspend fun getLastUpdateReplacementTime(): LocalDateTime?
+    suspend fun getLastUpdateWidgetTime(): String?
+    suspend fun getWidgetSchedule(): String?
 }

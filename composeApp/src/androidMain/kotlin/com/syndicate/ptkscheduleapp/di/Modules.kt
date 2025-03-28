@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.syndicate.ptkscheduleapp.core.data.datastore.createDataStore
+import com.syndicate.ptkscheduleapp.widget.di.widgetModule
 import org.koin.dsl.module
 
 fun androidModule(context: Context) = module {
     single<DataStore<Preferences>> { createDataStore(context) }
 }
 
-fun androidPlatformModules(context: Context) = listOf(androidModule(context))
+fun androidPlatformModules(context: Context) = listOf(androidModule(context), widgetModule)

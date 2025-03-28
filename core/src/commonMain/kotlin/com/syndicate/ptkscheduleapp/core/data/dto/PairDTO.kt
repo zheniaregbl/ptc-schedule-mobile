@@ -12,7 +12,8 @@ data class PairDTO(
     @SerialName("cabinet") val room: RoomDTO,
     @SerialName("teacher") val teacher: TeacherDTO,
     @SerialName("subgroupNumber") val subgroupNumber: Int,
-    @SerialName("time") val time: String
+    @SerialName("time") val time: String,
+    @SerialName("replacement_info") val replacementInfoDTO: ReplacementInfoDTO? = null
 )
 
 @Serializable
@@ -29,4 +30,12 @@ data class SubjectDTO(
 @Serializable
 data class TeacherDTO(
     @SerialName("fullName") val fullName: String
+)
+
+@Serializable
+data class ReplacementInfoDTO(
+    @SerialName("is_replacement") val isReplacement: Boolean,
+    @SerialName("previous_pair_item") val previousPairNumber: Int,
+    @SerialName("is_new_pair") val isNewPair: Boolean,
+    @SerialName("swap_pair") val swapPair: Boolean,
 )

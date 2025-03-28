@@ -24,6 +24,8 @@ class DefaultPreferencesRepository(
         val localReplacementKey = stringPreferencesKey("local_replacement")
         val lastUpdateScheduleTimeKey = stringPreferencesKey("last_update_schedule_time")
         val lastUpdateReplacementTimeKey = stringPreferencesKey("last_update_replacement_time")
+        val lastUpdateWidgetTimeKey = stringPreferencesKey("last_update_widget_time")
+        val widgetScheduleKey = stringPreferencesKey("widget_schedule")
     }
 
     override val userGroup: Flow<String> = dataStore
@@ -62,6 +64,14 @@ class DefaultPreferencesRepository(
         dataStore.edit { it[PreferencesKeys.lastUpdateReplacementTimeKey] = time.toString() }
     }
 
+    override suspend fun saveLastUpdateWidgetTime(time: String) {
+        dataStore.edit { it[PreferencesKeys.lastUpdateWidgetTimeKey] = time }
+    }
+
+    override suspend fun saveWidgetSchedule(schedule: String) {
+        dataStore.edit { it[PreferencesKeys.widgetScheduleKey] = schedule }
+    }
+
     override suspend fun getUserGroup(): String =
         dataStore.data.map { it[PreferencesKeys.userGroupKey] }.first() ?: ""
 
@@ -85,6 +95,20 @@ class DefaultPreferencesRepository(
         .map {
             if (it[PreferencesKeys.lastUpdateReplacementTimeKey].isNullOrBlank()) null
             else LocalDateTime.parse(it[PreferencesKeys.lastUpdateReplacementTimeKey]!!)
+        }
+        .first()
+
+    override suspend fun getLastUpdateWidgetTime(): String? = dataStore.data
+        .map {
+            if (it[PreferencesKeys.lastUpdateWidgetTimeKey].isNullOrBlank()) null
+            else it[PreferencesKeys.lastUpdateWidgetTimeKey]!!
+        }
+        .first()
+
+    override suspend fun getWidgetSchedule(): String? = dataStore.data
+        .map {
+            if (it[PreferencesKeys.widgetScheduleKey].isNullOrBlank()) null
+            else it[PreferencesKeys.widgetScheduleKey]!!
         }
         .first()
 }

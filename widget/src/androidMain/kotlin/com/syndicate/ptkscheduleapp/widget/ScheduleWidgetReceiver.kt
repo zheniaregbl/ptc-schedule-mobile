@@ -9,8 +9,19 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
+import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
+import com.syndicate.ptkscheduleapp.widget.presentation.WidgetAction
+import com.syndicate.ptkscheduleapp.widget.presentation.WidgetViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver() {
+internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver(), KoinComponent {
+
+    private val widgetViewModel by inject<WidgetViewModel>()
+    private val preferencesRepository by inject<PreferencesRepository>()
 
     override val glanceAppWidget: GlanceAppWidget
         get() = ScheduleWidget()
@@ -21,10 +32,22 @@ internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver() {
         appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            changeWidgetState(context)
+            fetchSchedule(context)
+        }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+
+        when (intent.action) {
+            UPDATE_ACTION -> CoroutineScope(Dispatchers.IO).launch {
+                changeWidgetState(context)
+                fetchSchedule(context)
+            }
+        }
     }
 
     private suspend fun fetchSchedule(context: Context) {
@@ -32,10 +55,29 @@ internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver() {
         val glanceIds = GlanceAppWidgetManager(context)
             .getGlanceIds(ScheduleWidget::class.java)
 
+        widgetViewModel.onAction(WidgetAction.UpdateWidgetSchedule)
+
         glanceIds.forEach { id ->
 
             updateAppWidgetState(context, id) { state ->
+                state[WidgetSchedule] = preferencesRepository.getWidgetSchedule() ?: ""
+                state[UpdateTime] = preferencesRepository.getLastUpdateWidgetTime() ?: ""
+                state[GroupNumber] = preferencesRepository.getUserGroup()
+                state[IsLoading] = false
+            }
 
+            glanceAppWidget.update(context, id)
+        }
+    }
+
+    private suspend fun changeWidgetState(context: Context) {
+
+        val glanceIds = GlanceAppWidgetManager(context).getGlanceIds(ScheduleWidget::class.java)
+
+        glanceIds.forEach { id ->
+
+            updateAppWidgetState(context, id) { state ->
+                state[IsLoading] = true
             }
 
             glanceAppWidget.update(context, id)
