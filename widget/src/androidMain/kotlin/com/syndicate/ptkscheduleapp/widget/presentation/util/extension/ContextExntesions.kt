@@ -13,7 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.TypedValueCompat.dpToPx
 import androidx.core.util.TypedValueCompat.spToPx
 
-fun Context.textAsBitmap(
+internal fun Context.textAsBitmap(
     text: String,
     maxWidth: Dp,
     font: Int,

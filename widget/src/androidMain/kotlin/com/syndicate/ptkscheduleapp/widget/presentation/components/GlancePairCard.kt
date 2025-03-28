@@ -26,7 +26,7 @@ import com.syndicate.ptkscheduleapp.widget.R
 import com.syndicate.ptkscheduleapp.widget.presentation.util.extension.scaledSp
 
 @Composable
-fun GlancePairCard(
+internal fun GlancePairCard(
     modifier: GlanceModifier = GlanceModifier,
     pairItem: PairItem = PairItem(),
     isDarkText: Boolean = true
@@ -60,7 +60,7 @@ fun GlancePairCard(
 }
 
 @Composable
-fun GlancePairCard(
+internal fun GlancePairCard(
     modifier: GlanceModifier = GlanceModifier,
     pairList: List<PairItem> = listOf(
         PairItem(),

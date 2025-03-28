@@ -14,7 +14,7 @@ import androidx.glance.LocalContext
 import com.syndicate.ptkscheduleapp.widget.presentation.util.extension.textAsBitmap
 
 @Composable
-fun GlanceText(
+internal fun GlanceText(
     modifier: GlanceModifier = GlanceModifier,
     text: String,
     maxWidth: Dp = 0.dp,

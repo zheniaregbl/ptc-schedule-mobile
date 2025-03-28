@@ -36,7 +36,7 @@ import com.syndicate.ptkscheduleapp.widget.presentation.components.GlanceText
 import com.syndicate.ptkscheduleapp.widget.presentation.util.extension.scaledSp
 
 @Composable
-fun ScheduleWidgetUI(
+internal fun ScheduleWidgetUI(
     widgetSchedule: List<List<PairItem>> = emptyList(),
     isAlternativeTheme: Boolean = false,
     isUpdating: Boolean = false,

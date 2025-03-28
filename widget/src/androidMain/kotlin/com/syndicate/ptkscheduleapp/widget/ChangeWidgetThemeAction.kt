@@ -6,7 +6,7 @@ import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
 
-class ChangeWidgetThemeAction : ActionCallback {
+internal class ChangeWidgetThemeAction : ActionCallback {
     override suspend fun onAction(
         context: Context,
         glanceId: GlanceId,
