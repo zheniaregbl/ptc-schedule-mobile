@@ -2,7 +2,7 @@ package com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case
 
 import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 
-class GetWeekTypeBySelectedDate() {
+internal class GetWeekTypeBySelectedDateCase() {
     operator fun invoke(
         responseWeekType: Boolean,
         currentWeekNumber: Int,

@@ -2,18 +2,20 @@ package com.syndicate.ptkscheduleapp.feature.schedule.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
-import com.skydoves.sandwich.suspendOnSuccess
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
-import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
-import com.syndicate.ptkscheduleapp.core.data.mapper.toDTO
-import com.syndicate.ptkscheduleapp.core.data.mapper.toModel
+import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
-import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetWeekTypeBySelectedDate
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalReplacementCase
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalScheduleCase
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalWeekTypeCase
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetReplacementCase
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetScheduleCase
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetScheduleInfoCase
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetWeekTypeBySelectedDateCase
 import com.syndicate.ptkscheduleapp.feature.schedule.platformConnectivity
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,14 +28,16 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
 
 internal class ScheduleViewModel(
-    private val scheduleRepository: ScheduleRepository,
     private val preferencesRepository: PreferencesRepository,
-    private val getWeekTypeBySelectedDate: GetWeekTypeBySelectedDate
+    private val getScheduleInfoCase: GetScheduleInfoCase,
+    private val getReplacementCase: GetReplacementCase,
+    private val getScheduleCase: GetScheduleCase,
+    private val getLocalWeekTypeCase: GetLocalWeekTypeCase,
+    private val getLocalReplacementCase: GetLocalReplacementCase,
+    private val getLocalScheduleCase: GetLocalScheduleCase,
+    private val getWeekTypeBySelectedDateCase: GetWeekTypeBySelectedDateCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ScheduleState())
@@ -115,181 +119,103 @@ internal class ScheduleViewModel(
 
         _state.update { it.copy(isLoading = true) }
 
-        scheduleRepository
-            .getScheduleInfo()
-            .suspendOnSuccess {
+        when (val result = getScheduleInfoCase()) {
+
+            is CaseResult.Error -> {
+
+                _errorMessage.emit(result.message)
+
+                val localWeekType = getLocalWeekTypeCase()
+
                 if (_state.value.isUpperWeek == null) {
-                    _initWeekType.update { data.isUpperWeek!! }
-                    _state.update { it.copy(selectedDateWeekType = data.isUpperWeek!!) }
+                    _initWeekType.update { localWeekType }
+                    _state.update { it.copy(selectedDateWeekType = localWeekType) }
                 } else {
                     _state.update { it.copy(
-                        selectedDateWeekType = getWeekTypeBySelectedDate(
-                            data.isUpperWeek!!,
+                        selectedDateWeekType = getWeekTypeBySelectedDateCase(
+                            localWeekType,
                             currentWeekNumber,
                             _state.value.selectedSchedulePage
                         )
                     ) }
                 }
 
-                _state.update { it.copy(isUpperWeek = data.isUpperWeek) }
-                _scheduleInfo.update { data }
-
-                preferencesRepository.saveLocalWeekType(data.isUpperWeek!!)
+                _state.update { it.copy(isUpperWeek = getLocalWeekTypeCase()) }
             }
-            .suspendOnError {
 
-                _errorMessage.emit("Error getScheduleInfo")
+            is CaseResult.Success<ScheduleInfo> -> {
 
-                preferencesRepository.getLocalWeekType().also { isUpperWeek ->
-                    _state.update { it.copy(isUpperWeek = isUpperWeek) }
+                if (_state.value.isUpperWeek == null) {
+                    _initWeekType.update { result.data.isUpperWeek!! }
+                    _state.update { it.copy(selectedDateWeekType = result.data.isUpperWeek!!) }
+                } else {
+                    _state.update { it.copy(
+                        selectedDateWeekType = getWeekTypeBySelectedDateCase(
+                            result.data.isUpperWeek!!,
+                            currentWeekNumber,
+                            _state.value.selectedSchedulePage
+                        )
+                    ) }
                 }
-            }
-            .suspendOnException {
 
-                _errorMessage.emit("Exception getScheduleInfo")
+                _state.update { it.copy(isUpperWeek = result.data.isUpperWeek) }
+                _scheduleInfo.update { result.data }
 
-                preferencesRepository.getLocalWeekType().also { isUpperWeek ->
-                    _state.update { it.copy(isUpperWeek = isUpperWeek) }
-                }
+                preferencesRepository.saveLocalWeekType(result.data.isUpperWeek!!)
             }
+        }
     }
 
     private suspend fun getReplacement() {
 
         val userGroup = _state.value.currentGroupNumber
 
-        scheduleRepository
-            .getReplacement()
-            .suspendOnSuccess {
+        val lastUpdateTime = _scheduleInfo.value?.lastReplacementUpdateTime
 
-                _scheduleInfo.value?.let { scheduleInfo ->
+        when (val result = getReplacementCase(userGroup, lastUpdateTime)) {
 
-                    val lastUpdateTime = scheduleInfo
-                        .lastReplacementUpdateTime
-
-                    if (preferencesRepository.getLastUpdateReplacementTime() != lastUpdateTime) {
-                        preferencesRepository.saveLocalReplacement(data.toString())
-                        preferencesRepository.saveLastUpdateReplacementTime(lastUpdateTime)
-                    }
-                }
-
-                _state.update {
-                    it.copy(
-                        replacement = ScheduleUtil
-                            .getReplacementFromJson(data, userGroup)
-                    )
+            is CaseResult.Error -> {
+                _errorMessage.emit(result.message)
+                getLocalReplacementCase(userGroup)?.let { replacement ->
+                    _state.update { it.copy(replacement = replacement) }
                 }
             }
-            .suspendOnError {
 
-                _errorMessage.emit("Error getReplacement")
-
-                preferencesRepository.getLocalReplacement()?.let { replacement ->
-                    _state.update {
-                        it.copy(
-                            replacement = ScheduleUtil
-                                .getReplacementFromJson(
-                                    Json.decodeFromString<JsonObject>(replacement),
-                                    userGroup
-                                )
-                        )
-                    }
-                }
+            is CaseResult.Success<List<ReplacementItem>> -> {
+                _state.update { it.copy(replacement = result.data) }
             }
-            .suspendOnException {
-
-                _errorMessage.emit("Exception getReplacement")
-
-                preferencesRepository.getLocalReplacement()?.let { replacement ->
-                    _state.update {
-                        it.copy(
-                            replacement = ScheduleUtil
-                                .getReplacementFromJson(
-                                    Json.decodeFromString<JsonObject>(replacement),
-                                    userGroup
-                                )
-                        )
-                    }
-                }
-            }
+        }
     }
 
     private suspend fun getSchedule() {
 
         val userGroup = _state.value.currentGroupNumber
 
-        scheduleRepository
-            .getSchedule(userGroup)
-            .suspendOnSuccess {
+        val lastUpdateTime = _scheduleInfo
+            .value
+            ?.groupInfo
+            ?.find { it.group == userGroup }
+            ?.lastUpdateTime
 
-                _scheduleInfo.value?.let { scheduleInfo ->
+        when (val result = getScheduleCase(userGroup, lastUpdateTime)) {
 
-                    val lastUpdateTime = scheduleInfo
-                        .groupInfo
-                        .find { it.group == userGroup }
-                        ?.lastUpdateTime
-
-                    if (preferencesRepository.getLastUpdateScheduleTime() != lastUpdateTime) {
-
-                        preferencesRepository
-                            .saveLocalSchedule(
-                                Json.encodeToString(data.map { it.toDTO() })
-                            )
-
-                        lastUpdateTime?.let {
-                            preferencesRepository.saveLastUpdateScheduleTime(it)
-                        }
-                    }
-                }
-
-                _state.update {
-                    it.copy(
+            is CaseResult.Error -> {
+                _errorMessage.emit(result.message)
+                getLocalScheduleCase()?.let { schedule ->
+                    _state.update { it.copy(
                         isLoading = false,
-                        schedule = ScheduleUtil
-                            .getWeekSchedule(data)
-                    )
+                        schedule = schedule
+                    ) }
                 }
             }
-            .suspendOnError {
 
-                _state.update { it.copy(isLoading = false) }
-
-                _errorMessage.emit("Error getSchedule")
-
-                preferencesRepository.getLocalSchedule()?.let { scheduleString ->
-
-                    val localSchedule = Json
-                        .decodeFromString<List<PairDTO>>(scheduleString)
-                        .map { it.toModel() }
-
-                    _state.update {
-                        it.copy(
-                            schedule = ScheduleUtil
-                                .getWeekSchedule(localSchedule)
-                        )
-                    }
-                }
+            is CaseResult.Success<List<List<PairItem>>> -> {
+                _state.update { it.copy(
+                    isLoading = false,
+                    schedule = result.data
+                ) }
             }
-            .suspendOnException {
-
-                _state.update { it.copy(isLoading = false) }
-
-                _errorMessage.emit("Exception getSchedule")
-
-                preferencesRepository.getLocalSchedule()?.let { scheduleString ->
-
-                    val localSchedule = Json
-                        .decodeFromString<List<PairDTO>>(scheduleString)
-                        .map { it.toModel() }
-
-                    _state.update {
-                        it.copy(
-                            schedule = ScheduleUtil
-                                .getWeekSchedule(localSchedule)
-                        )
-                    }
-                }
-            }
+        }
     }
 
     private companion object {
