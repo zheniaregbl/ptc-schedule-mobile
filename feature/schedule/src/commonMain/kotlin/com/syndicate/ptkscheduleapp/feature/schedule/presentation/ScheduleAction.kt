@@ -6,8 +6,8 @@ import kotlinx.datetime.LocalDate
 internal sealed interface ScheduleAction {
     data class OnChangeSelectedDate(val date: LocalDate) : ScheduleAction
     data class OnChangeSchedulePage(val page: Int) : ScheduleAction
-    data class UpdateDailyWeekState(val currentDate: LocalDate) : ScheduleAction
-    data class ChangeTheme(val themeMode: ThemeMode) : ScheduleAction
-    data object UpdateScheduleInfo : ScheduleAction
+    data class OnUpdateDailyWeekState(val currentDate: LocalDate) : ScheduleAction
+    data class OnChangeTheme(val themeMode: ThemeMode) : ScheduleAction
+    data object OnUpdateScheduleInfo : ScheduleAction
     data object NavigateToGroupSelection : ScheduleAction
 }

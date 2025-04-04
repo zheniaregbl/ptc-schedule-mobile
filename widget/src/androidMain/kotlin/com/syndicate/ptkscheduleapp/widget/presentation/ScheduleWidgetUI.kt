@@ -39,7 +39,7 @@ import com.syndicate.ptkscheduleapp.widget.presentation.util.extension.scaledSp
 internal fun ScheduleWidgetUI(
     widgetSchedule: List<List<PairItem>> = emptyList(),
     isAlternativeTheme: Boolean = false,
-    isUpdating: Boolean = false,
+    isLoading: Boolean = false,
     updateTime: String = "",
     groupNumber: String = ""
 ) {
@@ -96,7 +96,7 @@ internal fun ScheduleWidgetUI(
 
             LazyColumn(modifier = GlanceModifier.defaultWeight()) {
 
-                if (!isUpdating) {
+                if (!isLoading) {
 
                     if (widgetSchedule.isNotEmpty()) {
 
@@ -229,7 +229,7 @@ internal fun ScheduleWidgetUI(
 
                     Spacer(modifier = GlanceModifier.width(6.dp))
 
-                    if (isUpdating) {
+                    if (isLoading) {
 
                         CircularProgressIndicator(
                             modifier = GlanceModifier.size(25.dp),

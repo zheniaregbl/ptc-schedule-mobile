@@ -28,7 +28,7 @@ internal class ScheduleWidget : GlanceAppWidget() {
         ScheduleWidgetUI(
             widgetSchedule = widgetSchedule,
             isAlternativeTheme = isAlternativeTheme,
-            isUpdating = isLoading,
+            isLoading = isLoading,
             updateTime = updateTime,
             groupNumber = groupNumber
         )

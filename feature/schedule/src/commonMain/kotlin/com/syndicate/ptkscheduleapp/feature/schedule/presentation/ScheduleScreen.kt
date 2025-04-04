@@ -64,7 +64,6 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
-import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleViewModel.Companion.weeks
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.OptionSheetContent
@@ -112,10 +111,14 @@ internal class ScheduleScreen : Screen {
         )
     }
 
-    companion object {
+    private companion object {
 
         private val currentDate = Clock.System.nowDate()
 
+        val weeks = ScheduleUtil.getWeeksFromStartDate(
+            LocalDate(currentDate.year, Month.JANUARY, 1),
+            78
+        )
         private val initWeekNumber = ScheduleUtil
             .getCurrentWeek(weeks, currentDate)
 
@@ -194,7 +197,7 @@ internal fun ScheduleScreenContent(
 
             onAction(ScheduleAction.OnChangeSchedulePage(currentPage))
             onAction(ScheduleAction.OnChangeSelectedDate(weeks.value[weekNumber][indexInWeek]))
-            onAction(ScheduleAction.UpdateDailyWeekState(weeks.value[weekNumber][indexInWeek]))
+            onAction(ScheduleAction.OnUpdateDailyWeekState(weeks.value[weekNumber][indexInWeek]))
         }
     }
 

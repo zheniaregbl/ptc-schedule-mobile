@@ -13,6 +13,7 @@ import com.syndicate.ptkscheduleapp.core.data.mapper.toDTO
 import com.syndicate.ptkscheduleapp.core.data.mapper.toModel
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
+import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetWeekTypeBySelectedDate
 import com.syndicate.ptkscheduleapp.feature.schedule.platformConnectivity
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,12 +32,13 @@ import kotlinx.serialization.json.JsonObject
 
 internal class ScheduleViewModel(
     private val scheduleRepository: ScheduleRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val getWeekTypeBySelectedDate: GetWeekTypeBySelectedDate
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ScheduleState())
     val state = _state
-        .onStart { onAction(ScheduleAction.UpdateScheduleInfo) }
+        .onStart { onAction(ScheduleAction.OnUpdateScheduleInfo) }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(30_000L),
@@ -58,7 +60,7 @@ internal class ScheduleViewModel(
                 _state.update {
 
                     if (it.isConnected != status.isConnected && status.isConnected)
-                        onAction(ScheduleAction.UpdateScheduleInfo)
+                        onAction(ScheduleAction.OnUpdateScheduleInfo)
 
                     it.copy(isConnected = status.isConnected)
                 }
@@ -76,7 +78,7 @@ internal class ScheduleViewModel(
             is ScheduleAction.OnChangeSelectedDate ->
                 _state.update { it.copy(selectedDate = action.date) }
 
-            is ScheduleAction.UpdateDailyWeekState -> {
+            is ScheduleAction.OnUpdateDailyWeekState -> {
 
                 val weekNumber = ScheduleUtil
                     .getCurrentWeek(weeks, action.currentDate)
@@ -89,7 +91,7 @@ internal class ScheduleViewModel(
                 }
             }
 
-            ScheduleAction.UpdateScheduleInfo -> {
+            ScheduleAction.OnUpdateScheduleInfo -> {
                 viewModelScope.launch {
                     _errorMessage.emit(null)
                     getUserGroup()
@@ -99,7 +101,7 @@ internal class ScheduleViewModel(
                 }
             }
 
-            is ScheduleAction.ChangeTheme ->
+            is ScheduleAction.OnChangeTheme ->
                 viewModelScope.launch { preferencesRepository.saveThemeMode(action.themeMode) }
 
             else -> Unit
@@ -120,13 +122,13 @@ internal class ScheduleViewModel(
                     _initWeekType.update { data.isUpperWeek!! }
                     _state.update { it.copy(selectedDateWeekType = data.isUpperWeek!!) }
                 } else {
-
-                    val startWeekType = ScheduleUtil
-                        .getCurrentTypeWeek(data.isUpperWeek!!, currentWeekNumber, 0)
-                    val currentWeekType = if (_state.value.selectedSchedulePage / 7 % 2 == 0)
-                        startWeekType else !startWeekType
-
-                    _state.update { it.copy(selectedDateWeekType = currentWeekType) }
+                    _state.update { it.copy(
+                        selectedDateWeekType = getWeekTypeBySelectedDate(
+                            data.isUpperWeek!!,
+                            currentWeekNumber,
+                            _state.value.selectedSchedulePage
+                        )
+                    ) }
                 }
 
                 _state.update { it.copy(isUpperWeek = data.isUpperWeek) }
@@ -290,7 +292,7 @@ internal class ScheduleViewModel(
             }
     }
 
-    companion object {
+    private companion object {
 
         val weeks = ScheduleUtil.getWeeksFromStartDate(
             LocalDate(Clock.System.nowDate().year, Month.JANUARY, 1),
