@@ -8,6 +8,9 @@ import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
@@ -141,6 +144,7 @@ object ScheduleUtil {
         schedule.addAll(newSchedule)
     }
 
+    @OptIn(FormatStringsInDatetimeFormats::class)
     private fun ordinaryReplacement(
         schedule: MutableList<List<PairItem>>,
         replacementItem: ReplacementItem
@@ -183,8 +187,27 @@ object ScheduleUtil {
             }
         )
 
+        val timeFormatPattern = "HH:mm"
+        val timeFormat = LocalTime.Format { byUnicodePattern(timeFormatPattern) }
+
+        newSchedule.sortBy {
+            timeFormat.parse(
+                it.first().time
+                    .substringBefore("-")
+                    .replace(".", ":")
+                    .normalizeTime()
+            )
+        }
+
         schedule.clear()
         schedule.addAll(newSchedule)
+    }
+
+    private fun String.normalizeTime(): String {
+        return if (this.substringBefore(":").length > 1)
+            this
+        else
+            "0$this"
     }
 
     fun getWeekScheduleByWeekType(
