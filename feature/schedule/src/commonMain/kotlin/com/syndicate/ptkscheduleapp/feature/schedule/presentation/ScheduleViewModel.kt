@@ -8,7 +8,7 @@ import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
-import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalReplacementCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalScheduleCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalWeekTypeCase

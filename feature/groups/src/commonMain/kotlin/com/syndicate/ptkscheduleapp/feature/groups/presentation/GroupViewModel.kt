@@ -2,12 +2,9 @@ package com.syndicate.ptkscheduleapp.feature.groups.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skydoves.sandwich.ktor.statusCode
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
-import com.syndicate.ptkscheduleapp.feature.groups.domain.repository.GroupRepository
+import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.feature.groups.domain.use_case.GetGroupListCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,8 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class GroupViewModel(
-    private val groupRepository: GroupRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val getGroupListCase: GetGroupListCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GroupState())
@@ -43,29 +40,23 @@ internal class GroupViewModel(
 
         _state.update { it.copy(isLoading = true) }
 
-        delay(2000)
+        delay(500)
 
-        groupRepository.getGroupList(_state.value.selectedCourseIndex + 1)
-            .onSuccess {
+        when (val result = getGroupListCase(_state.value.selectedCourseIndex + 1)) {
+
+            is CaseResult.Error ->
                 _state.update { it.copy(
                     isLoading = false,
-                    groupList = data
-                ) }
-            }
-            .onError {
-                _state.update { it.copy(
-                    isLoading = false,
-                    errorMessage = "Ошибка ${statusCode.code} при получении групп",
+                    errorMessage = result.message,
                     groupList = emptyList()
                 ) }
-            }
-            .onException {
+
+            is CaseResult.Success<List<String>> ->
                 _state.update { it.copy(
                     isLoading = false,
-                    errorMessage = "Ошибка при попытке получения групп",
-                    groupList = emptyList()
+                    groupList = result.data
                 ) }
-            }
+        }
     }
 
     private fun selectGroup(group: String) = viewModelScope.launch {

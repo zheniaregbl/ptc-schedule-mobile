@@ -3,6 +3,7 @@ package com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case
 import com.skydoves.sandwich.ApiResponse
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
+import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 
 internal class GetScheduleInfoCase(
     private val scheduleRepository: ScheduleRepository

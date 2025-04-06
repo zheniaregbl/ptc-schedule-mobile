@@ -5,6 +5,7 @@ import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
+import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.JsonObject
 

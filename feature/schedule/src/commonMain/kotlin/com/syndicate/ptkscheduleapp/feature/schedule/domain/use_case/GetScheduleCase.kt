@@ -6,6 +6,7 @@ import com.syndicate.ptkscheduleapp.core.data.mapper.toDTO
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
+import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
