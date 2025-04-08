@@ -64,7 +64,7 @@ internal fun CourseSection(
 }
 
 @Composable
-fun CourseItem(
+internal fun CourseItem(
     modifier: Modifier = Modifier,
     label: String,
     isSelected: Boolean,

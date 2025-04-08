@@ -50,7 +50,7 @@ class SplashScreen : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
-        val groupScreen = rememberScreen(SharedScreen.GroupScreen)
+        val roleScreen = rememberScreen(SharedScreen.RoleScreen)
         val scheduleScreen = rememberScreen(SharedScreen.ScheduleScreen)
 
         val viewModel = koinViewModel<LaunchViewModel>()
@@ -61,7 +61,7 @@ class SplashScreen : Screen {
                 .fillMaxSize()
                 .systemBarsPadding(),
             onLaunchApp = {
-                if (selectedUserGroup.isEmpty()) navigator.replace(groupScreen)
+                if (selectedUserGroup.isEmpty()) navigator.replace(roleScreen)
                 else navigator.replace(scheduleScreen)
             }
         )
