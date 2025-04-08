@@ -1,5 +1,6 @@
 package com.syndicate.ptkscheduleapp.feature.teacher.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -22,63 +23,41 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.registry.rememberScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CircleLoading
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.teacher.presentation.components.SearchBar
+import com.syndicate.ptkscheduleapp.feature.teacher.resources.Res
+import com.syndicate.ptkscheduleapp.feature.teacher.resources.error_svg
+import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 internal class TeacherScreen : Screen {
 
     @Composable
     override fun Content() {
 
-        val state = remember {
-            mutableStateOf(
-                TeacherListState(
-                    teacherList = listOf(
-                        "Преподаватель 1",
-                        "Преподаватель 2",
-                        "Преподаватель 3",
-                        "Преподаватель 4",
-                        "Преподаватель 5",
-                        "Преподаватель 6",
-                        "Преподаватель 7",
-                        "Преподаватель 8",
-                        "Преподаватель 9",
-                        "Преподаватель 10",
-                        "Преподаватель 11",
-                        "Преподаватель 12",
-                        "Преподаватель 13",
-                        "Преподаватель 14",
-                        "Преподаватель 15",
-                        "Преподаватель 16",
-                        "Преподаватель 17"
-                    )
-                )
-            )
-        }
+        val viewModel = koinViewModel<TeacherListViewModel>()
+        val state = viewModel.state.collectAsStateWithLifecycle()
 
         TeacherScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
             state = state,
-            onAction = { }
+            onAction = { action -> viewModel.onAction(action) }
         )
     }
 }
@@ -91,7 +70,6 @@ internal fun TeacherScreenContent(
 ) {
 
     val currentThemeMode = MaterialTheme.colorPalette.themeMode
-    var text by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -112,8 +90,8 @@ internal fun TeacherScreenContent(
 
         SearchBar(
             modifier = Modifier.fillMaxWidth(),
-            value = text,
-            onValueChange = { text = it },
+            value = state.value.searchTeacherText,
+            onValueChange = { onAction(TeacherListAction.OnSearchTeacherChange(it)) },
             onImeSearch = {}
         )
 
@@ -123,6 +101,8 @@ internal fun TeacherScreenContent(
             modifier = Modifier.fillMaxSize(),
             onLoading = {
                 CircleLoading(
+                    modifier = Modifier
+                        .padding(bottom = 50.dp),
                     size = 60.dp,
                     color = if (currentThemeMode == ThemeMode.LIGHT) Color(0xFF4B71FF)
                     else Color.White
@@ -194,7 +174,30 @@ internal fun TeacherScreenContent(
                         )
                 )
             },
-            onError = { }
+            onError = { screenState ->
+
+                Column(
+                    modifier = Modifier.padding(bottom = 50.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+
+                    Image(
+                        painter = painterResource(Res.drawable.error_svg),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.contentColor)
+                    )
+
+                    Text(
+                        text = screenState.errorMessage,
+                        style = LocalTextStyle.current,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorPalette.contentColor
+                    )
+                }
+            }
         )
     }
 }
