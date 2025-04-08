@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.groups.presentation.components
+package com.syndicate.ptkscheduleapp.core.presentation.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
@@ -10,11 +10,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.syndicate.ptkscheduleapp.feature.groups.presentation.util.fractionTransition
+import com.syndicate.ptkscheduleapp.core.presentation.util.fractionTransition
 import kotlin.math.*
 
 @Composable
-internal fun CircleLoading(
+fun CircleLoading(
     modifier: Modifier = Modifier,
     size: Dp = 40.dp,
     durationMillis: Int = 1200,

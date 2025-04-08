@@ -7,6 +7,7 @@ import com.syndicate.ptkscheduleapp.di.initKoin
 import com.syndicate.ptkscheduleapp.feature.groups.di.featureGroupsScreenModule
 import com.syndicate.ptkscheduleapp.feature.role.di.featureRoleScreenModule
 import com.syndicate.ptkscheduleapp.feature.schedule.di.featureScheduleScreenModule
+import com.syndicate.ptkscheduleapp.feature.teacher.di.featureTeacherScreenModule
 import org.koin.android.ext.koin.androidContext
 
 class ScheduleApplication : Application() {
@@ -16,6 +17,7 @@ class ScheduleApplication : Application() {
 
         ScreenRegistry {
             featureRoleScreenModule()
+            featureTeacherScreenModule()
             featureGroupsScreenModule()
             featureScheduleScreenModule()
         }

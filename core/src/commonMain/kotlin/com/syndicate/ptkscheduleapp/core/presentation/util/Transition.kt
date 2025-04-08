@@ -1,4 +1,4 @@
-package com.syndicate.ptkscheduleapp.feature.groups.presentation.util
+package com.syndicate.ptkscheduleapp.core.presentation.util
 
 import androidx.annotation.IntRange
 import androidx.compose.animation.core.*

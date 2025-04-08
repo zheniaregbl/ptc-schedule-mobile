@@ -42,6 +42,7 @@ internal class RoleScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
 
+        val teacherScreen = rememberScreen(SharedScreen.TeacherScreen)
         val groupScreen = rememberScreen(SharedScreen.GroupScreen)
 
         RoleScreenContent(
@@ -51,6 +52,7 @@ internal class RoleScreen : Screen {
             onAction = { action ->
                 when (action) {
                     RoleAction.NavigateToGroupSelection -> navigator.push(groupScreen)
+                    RoleAction.NavigateToTeacherSelection -> navigator.push(teacherScreen)
                 }
             }
         )
@@ -115,7 +117,10 @@ internal fun RoleScreenContent(
                 inactiveColor = Color(0xFF4B71FF),
                 pressedColor = Color(0xFF95ACFF)
             ),
-            onClick = { onAction(RoleAction.NavigateToGroupSelection) }
+            onClick = {
+                if (selectedRoleIndex == 0) onAction(RoleAction.NavigateToGroupSelection)
+                else onAction(RoleAction.NavigateToTeacherSelection)
+            }
         )
     }
 }

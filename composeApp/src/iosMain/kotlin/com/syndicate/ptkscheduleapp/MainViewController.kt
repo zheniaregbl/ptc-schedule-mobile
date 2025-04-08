@@ -7,12 +7,14 @@ import com.syndicate.ptkscheduleapp.di.iosPlatformModules
 import com.syndicate.ptkscheduleapp.feature.groups.di.featureGroupsScreenModule
 import com.syndicate.ptkscheduleapp.feature.role.di.featureRoleScreenModule
 import com.syndicate.ptkscheduleapp.feature.schedule.di.featureScheduleScreenModule
+import com.syndicate.ptkscheduleapp.feature.teacher.di.featureTeacherScreenModule
 
 fun MainViewController() = ComposeUIViewController(
     configure = {
 
         ScreenRegistry {
             featureRoleScreenModule()
+            featureTeacherScreenModule()
             featureGroupsScreenModule()
             featureScheduleScreenModule()
         }

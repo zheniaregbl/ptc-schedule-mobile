@@ -47,6 +47,7 @@ kotlin {
             implementation(projects.widget)
             implementation(projects.feature.splash)
             implementation(projects.feature.role)
+            implementation(projects.feature.teacher)
             implementation(projects.feature.groups)
             implementation(projects.feature.schedule)
         }
