@@ -55,13 +55,14 @@ internal data class TeacherListState(
     val errorMessage: String? = null,
     val searchTeacherText: String = "",
     val teacherList: List<String> = emptyList(),
+    val filterTeacherList: List<String> = emptyList(),
     val selectedTeacher: String? = null
 ) {
 
     fun toUiState(): TeacherListScreenState {
         return when {
             isLoading -> TeacherListScreenState.Loading
-            teacherList.isNotEmpty() -> TeacherListScreenState.Success(teacherList)
+            teacherList.isNotEmpty() -> TeacherListScreenState.Success(filterTeacherList)
             errorMessage != null -> TeacherListScreenState.Error(errorMessage)
             else -> TeacherListScreenState.Idle
         }

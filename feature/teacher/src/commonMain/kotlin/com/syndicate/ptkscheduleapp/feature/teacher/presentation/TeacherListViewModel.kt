@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
-import com.syndicate.ptkscheduleapp.feature.teacher.domain.use_case.GetTeacherListByNameCase
+import com.syndicate.ptkscheduleapp.feature.teacher.domain.use_case.FilterTeacherListCase
+import com.syndicate.ptkscheduleapp.feature.teacher.domain.use_case.GetTeacherListCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +22,18 @@ import kotlinx.coroutines.launch
 
 internal class TeacherListViewModel(
     private val preferencesRepository: PreferencesRepository,
-    private val getTeacherListByNameCase: GetTeacherListByNameCase
+    private val getTeacherListCase: GetTeacherListCase,
+    private val filterTeacherListCase: FilterTeacherListCase
 ) : ViewModel() {
 
     private var searchJob: Job? = null
 
     private val _state = MutableStateFlow(TeacherListState())
     val state = _state
-        .onStart { observeSearchTeacher() }
+        .onStart {
+            getTeacherList()
+            observeSearchTeacher()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(30_000L),
@@ -38,6 +43,8 @@ internal class TeacherListViewModel(
     fun onAction(action: TeacherListAction) {
 
         when (action) {
+
+            TeacherListAction.OnUpdateTeacherList -> getTeacherList()
 
             is TeacherListAction.OnSearchTeacherChange ->
                 _state.update { it.copy(
@@ -52,38 +59,44 @@ internal class TeacherListViewModel(
         state
             .map { it.searchTeacherText }
             .distinctUntilChanged()
-            .debounce(300L)
+            .debounce(200L)
             .onEach { text ->
-                if (text.length >= 2) {
-                    searchJob?.cancel()
-                    searchJob = searchTeacher(text)
-                }
+                searchJob?.cancel()
+                searchJob = filterTeacherList(text)
             }
             .launchIn(viewModelScope)
     }
 
-    private fun searchTeacher(teacherName: String) = viewModelScope.launch {
+    private fun filterTeacherList(teacherName: String) = viewModelScope.launch {
+        _state.update { it.copy(
+            filterTeacherList = filterTeacherListCase(
+                it.teacherList,
+                teacherName
+            )
+        ) }
+    }
+
+    private fun getTeacherList() = viewModelScope.launch {
 
         _state.update { it.copy(
             isLoading = true,
             errorMessage = null
         ) }
 
-        delay(1500)
+        delay(300)
 
-        when (val result = getTeacherListByNameCase(teacherName)) {
-
+        when (val result = getTeacherListCase()) {
             is CaseResult.Error ->
                 _state.update { it.copy(
                     isLoading = false,
-                    errorMessage = result.message,
-                    teacherList = emptyList()
+                    errorMessage = result.message
                 ) }
-
             is CaseResult.Success<List<String>> ->
                 _state.update { it.copy(
                     isLoading = false,
-                    teacherList = result.data
+                    errorMessage = null,
+                    teacherList = result.data,
+                    filterTeacherList = result.data
                 ) }
         }
     }
