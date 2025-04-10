@@ -15,7 +15,11 @@ internal class GetTeacherListCase(
             is ApiResponse.Failure.Exception ->
                 CaseResult.Error("Ошибка при получении списка преподавателей")
             is ApiResponse.Success<List<String>> ->
-                CaseResult.Success(response.data)
+                CaseResult.Success(
+                    response.data
+                        .sortedBy { it }
+                        .filter { !it.startsWith("не указан", true) }
+                )
         }
     }
 }
