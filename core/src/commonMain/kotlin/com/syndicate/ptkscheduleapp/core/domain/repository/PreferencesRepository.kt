@@ -7,10 +7,12 @@ import kotlinx.datetime.LocalDateTime
 
 interface PreferencesRepository {
     val userGroup: Flow<String>
+    val userTeacher: Flow<String>
     val userThemeMode: Flow<ThemeMode>
     suspend fun saveThemeMode(themeMode: ThemeMode)
-    suspend fun saveGroup(group: String)
     suspend fun saveRole(role: UserRole)
+    suspend fun saveGroup(group: String)
+    suspend fun saveTeacher(teacher: String)
     suspend fun saveLocalWeekType(isUpperWeek: Boolean)
     suspend fun saveLocalSchedule(scheduleString: String)
     suspend fun saveLocalReplacement(replacementString: String)
@@ -18,8 +20,9 @@ interface PreferencesRepository {
     suspend fun saveLastUpdateReplacementTime(time: LocalDateTime)
     suspend fun saveLastUpdateWidgetTime(time: String)
     suspend fun saveWidgetSchedule(schedule: String)
-    suspend fun getUserGroup(): String
     suspend fun getUserRole(): UserRole?
+    suspend fun getUserGroup(): String
+    suspend fun getUserTeacher(): String
     suspend fun getLocalWeekType(): Boolean
     suspend fun getLocalSchedule(): String?
     suspend fun getLocalReplacement(): String?

@@ -19,7 +19,9 @@ class DefaultPreferencesRepository(
 
     private object PreferencesKeys {
         val userThemeModeKey = stringPreferencesKey("user_theme_mode")
+        val userRoleKey = stringPreferencesKey("user_role")
         val userGroupKey = stringPreferencesKey("user_group")
+        val userTeacherKey = stringPreferencesKey("user_teacher")
         val localWeekType = booleanPreferencesKey("week_type")
         val localScheduleKey = stringPreferencesKey("local_schedule")
         val localReplacementKey = stringPreferencesKey("local_replacement")
@@ -27,12 +29,15 @@ class DefaultPreferencesRepository(
         val lastUpdateReplacementTimeKey = stringPreferencesKey("last_update_replacement_time")
         val lastUpdateWidgetTimeKey = stringPreferencesKey("last_update_widget_time")
         val widgetScheduleKey = stringPreferencesKey("widget_schedule")
-        val userRoleKey = stringPreferencesKey("user_role")
     }
 
     override val userGroup: Flow<String> = dataStore
         .data
         .map { it[PreferencesKeys.userGroupKey] ?: "" }
+
+    override val userTeacher: Flow<String> = dataStore
+        .data
+        .map { it[PreferencesKeys.userTeacherKey] ?: "" }
 
     override val userThemeMode: Flow<ThemeMode> = dataStore
         .data
@@ -44,6 +49,10 @@ class DefaultPreferencesRepository(
 
     override suspend fun saveGroup(group: String) {
         dataStore.edit { it[PreferencesKeys.userGroupKey] = group }
+    }
+
+    override suspend fun saveTeacher(teacher: String) {
+        dataStore.edit { it[PreferencesKeys.userTeacherKey] = teacher }
     }
 
     override suspend fun saveRole(role: UserRole) {
@@ -80,6 +89,9 @@ class DefaultPreferencesRepository(
 
     override suspend fun getUserGroup(): String =
         dataStore.data.map { it[PreferencesKeys.userGroupKey] }.first() ?: ""
+
+    override suspend fun getUserTeacher(): String =
+        dataStore.data.map { it[PreferencesKeys.userTeacherKey] }.first() ?: ""
 
     override suspend fun getUserRole(): UserRole? = dataStore.data
         .map {

@@ -12,12 +12,16 @@ internal class LaunchViewModel(
     preferencesRepository: PreferencesRepository
 ): ViewModel() {
 
+    private val _selectedUserTeacher = MutableStateFlow("")
+    val selectedUserTeacher = _selectedUserTeacher.asStateFlow()
+
     private val _selectedUserGroup = MutableStateFlow("")
     val selectedUserGroup = _selectedUserGroup.asStateFlow()
 
     init {
         viewModelScope.launch {
             _selectedUserGroup.update { preferencesRepository.getUserGroup() }
+            _selectedUserTeacher.update { preferencesRepository.getUserTeacher() }
         }
     }
 }

@@ -3,7 +3,6 @@ package com.syndicate.ptkscheduleapp.feature.teacher.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,14 +17,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -34,7 +35,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CircleLoading
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
@@ -46,11 +52,22 @@ import org.koin.compose.viewmodel.koinViewModel
 
 internal class TeacherScreen : Screen {
 
+    @OptIn(InternalVoyagerApi::class)
     @Composable
     override fun Content() {
 
+        val navigator = LocalNavigator.currentOrThrow
+        val scheduleScreen = rememberScreen(SharedScreen.ScheduleScreen)
+
         val viewModel = koinViewModel<TeacherListViewModel>()
         val state = viewModel.state.collectAsStateWithLifecycle()
+
+        LaunchedEffect(state.value.selectedTeacher) {
+            if (state.value.selectedTeacher != null) {
+                navigator.dispose(scheduleScreen)
+                navigator.replace(scheduleScreen)
+            }
+        }
 
         TeacherScreenContent(
             modifier = Modifier
@@ -112,7 +129,7 @@ internal fun TeacherScreenContent(
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(18.dp)
+                    verticalArrangement = Arrangement.spacedBy(9.dp)
                 ) {
 
                     item { Spacer(modifier = Modifier.height(2.dp)) }
@@ -120,23 +137,26 @@ internal fun TeacherScreenContent(
                     itemsIndexed(screenState.teacherList) { index, teacher ->
 
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(
-                                    indication = null,
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    onClick = { onAction(TeacherListAction.OnSelectTeacherList(teacher)) }
-                                ),
-                            verticalArrangement = Arrangement.spacedBy(18.dp)
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(9.dp)
                         ) {
 
-                            Text(
-                                text = teacher,
-                                style = LocalTextStyle.current,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colorPalette.contentColor
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .fillMaxWidth()
+                                    .clickable { onAction(TeacherListAction.OnSelectTeacherList(teacher)) }
+                                    .padding(horizontal = 6.dp)
+                                    .padding(vertical = 9.dp)
+                            ) {
+                                Text(
+                                    text = teacher,
+                                    style = LocalTextStyle.current,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorPalette.contentColor
+                                )
+                            }
 
                             if (index != screenState.teacherList.lastIndex)
                                 Spacer(

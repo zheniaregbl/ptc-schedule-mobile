@@ -51,7 +51,7 @@ internal class TeacherListViewModel(
                     searchTeacherText = action.teacherName
                 ) }
 
-            is TeacherListAction.OnSelectTeacherList -> Unit
+            is TeacherListAction.OnSelectTeacherList -> selectTeacher(action.teacher)
         }
     }
 
@@ -99,5 +99,13 @@ internal class TeacherListViewModel(
                     filterTeacherList = result.data
                 ) }
         }
+    }
+
+    private fun selectTeacher(teacher: String) = viewModelScope.launch {
+        preferencesRepository.saveTeacher(teacher)
+        preferencesRepository.userTeacher
+            .collect { userTeacher ->
+                _state.update { it.copy(selectedTeacher = userTeacher) }
+            }
     }
 }

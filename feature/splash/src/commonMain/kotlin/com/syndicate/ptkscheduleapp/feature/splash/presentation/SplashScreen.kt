@@ -55,13 +55,14 @@ class SplashScreen : Screen {
 
         val viewModel = koinViewModel<LaunchViewModel>()
         val selectedUserGroup by viewModel.selectedUserGroup.collectAsState()
+        val selectedUserTeacher by viewModel.selectedUserTeacher.collectAsState()
 
         SplashScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
             onLaunchApp = {
-                if (selectedUserGroup.isEmpty()) navigator.replace(roleScreen)
+                if (selectedUserGroup.isEmpty() && selectedUserTeacher.isEmpty()) navigator.replace(roleScreen)
                 else navigator.replace(scheduleScreen)
             }
         )
