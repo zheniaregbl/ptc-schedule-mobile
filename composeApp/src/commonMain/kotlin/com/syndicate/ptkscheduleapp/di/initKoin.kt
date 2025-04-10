@@ -3,6 +3,7 @@ package com.syndicate.ptkscheduleapp.di
 import com.syndicate.ptkscheduleapp.core.di.coreModule
 import com.syndicate.ptkscheduleapp.core.di.networkModule
 import com.syndicate.ptkscheduleapp.feature.groups.di.featureGroupsModule
+import com.syndicate.ptkscheduleapp.feature.role.di.featureRoleModule
 import com.syndicate.ptkscheduleapp.feature.schedule.di.featureScheduleModule
 import com.syndicate.ptkscheduleapp.feature.splash.di.featureSplashModule
 import com.syndicate.ptkscheduleapp.feature.teacher.di.featureTeacherModule
@@ -20,6 +21,7 @@ fun initKoin(
             coreModule,
             networkModule,
             featureSplashModule,
+            featureRoleModule,
             featureGroupsModule,
             featureTeacherModule,
             featureScheduleModule

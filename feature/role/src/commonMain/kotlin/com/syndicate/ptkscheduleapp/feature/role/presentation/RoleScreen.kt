@@ -14,10 +14,9 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
@@ -34,6 +33,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.role.presentation.components.RoleItem
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
+import org.koin.compose.viewmodel.koinViewModel
 
 internal class RoleScreen : Screen {
 
@@ -45,14 +45,19 @@ internal class RoleScreen : Screen {
         val teacherScreen = rememberScreen(SharedScreen.TeacherScreen)
         val groupScreen = rememberScreen(SharedScreen.GroupScreen)
 
+        val viewModel = koinViewModel<RoleViewModel>()
+        val selectedRoleIndex by viewModel.selectedRoleIndex.collectAsState()
+
         RoleScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
+            selectedRoleIndex = selectedRoleIndex,
             onAction = { action ->
                 when (action) {
                     RoleAction.NavigateToGroupSelection -> navigator.push(groupScreen)
                     RoleAction.NavigateToTeacherSelection -> navigator.push(teacherScreen)
+                    else -> viewModel.onAction(action)
                 }
             }
         )
@@ -62,12 +67,11 @@ internal class RoleScreen : Screen {
 @Composable
 internal fun RoleScreenContent(
     modifier: Modifier = Modifier,
+    selectedRoleIndex: Int = 0,
     onAction: (RoleAction) -> Unit
 ) {
 
     val roleList = listOf("Студент", "Преподаватель")
-
-    var selectedRoleIndex by remember { mutableStateOf(0) }
 
     Box(modifier = modifier) {
 
@@ -97,10 +101,10 @@ internal fun RoleScreenContent(
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { selectedRoleIndex = index },
+                            ) { onAction(RoleAction.OnSelectRole(index)) },
                         label = label,
                         isSelected = index == selectedRoleIndex,
-                        onClick = { selectedRoleIndex = index }
+                        onClick = { onAction(RoleAction.OnSelectRole(index)) }
                     )
                 }
             }

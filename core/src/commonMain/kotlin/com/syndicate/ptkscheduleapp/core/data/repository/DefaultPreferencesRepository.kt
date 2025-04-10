@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,7 @@ class DefaultPreferencesRepository(
         val lastUpdateReplacementTimeKey = stringPreferencesKey("last_update_replacement_time")
         val lastUpdateWidgetTimeKey = stringPreferencesKey("last_update_widget_time")
         val widgetScheduleKey = stringPreferencesKey("widget_schedule")
+        val userRoleKey = stringPreferencesKey("user_role")
     }
 
     override val userGroup: Flow<String> = dataStore
@@ -42,6 +44,10 @@ class DefaultPreferencesRepository(
 
     override suspend fun saveGroup(group: String) {
         dataStore.edit { it[PreferencesKeys.userGroupKey] = group }
+    }
+
+    override suspend fun saveRole(role: UserRole) {
+        dataStore.edit { it[PreferencesKeys.userRoleKey] = role.toString() }
     }
 
     override suspend fun saveLocalWeekType(isUpperWeek: Boolean) {
@@ -74,6 +80,13 @@ class DefaultPreferencesRepository(
 
     override suspend fun getUserGroup(): String =
         dataStore.data.map { it[PreferencesKeys.userGroupKey] }.first() ?: ""
+
+    override suspend fun getUserRole(): UserRole? = dataStore.data
+        .map {
+            if (it[PreferencesKeys.userRoleKey].isNullOrBlank()) null
+            else UserRole.valueOf(it[PreferencesKeys.userRoleKey]!!)
+        }
+        .first()
 
     override suspend fun getLocalWeekType(): Boolean =
         dataStore.data.map { it[PreferencesKeys.localWeekType] ?: false }.first()
