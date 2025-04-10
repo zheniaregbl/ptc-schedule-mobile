@@ -7,6 +7,7 @@ data class PairItem(
     val isUpper: Boolean? = false,
     val pairNumber: Int = 1,
     val subject: String = "Математика",
+    val group: String = "1991",
     val place: String = "ПТК",
     val room: String = "410",
     val teacher: String = "Ширина",

@@ -1,5 +1,6 @@
 package com.syndicate.ptkscheduleapp.core.data.mapper
 
+import com.syndicate.ptkscheduleapp.core.data.dto.GroupDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.PairDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.ReplacementInfoDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.RoomDTO
@@ -12,6 +13,7 @@ fun PairDTO.toModel() = PairItem(
     isUpper = isUpper,
     pairNumber = pairNumber,
     subject = subject.name,
+    group = group.name,
     place = room.place,
     room = room.number,
     teacher = teacher.fullName,
@@ -28,6 +30,7 @@ fun PairItem.toDTO() = PairDTO(
     isUpper = isUpper,
     pairNumber = pairNumber,
     subject = SubjectDTO(subject),
+    group = GroupDTO(group),
     room = RoomDTO(room, place),
     teacher = TeacherDTO(teacher),
     subgroupNumber = subgroupNumber,
@@ -39,6 +42,7 @@ fun PairItem.toLocalDTO() = PairDTO(
     isUpper = isUpper,
     pairNumber = pairNumber,
     subject = SubjectDTO(subject),
+    group = GroupDTO(group),
     room = RoomDTO(room, place),
     teacher = TeacherDTO(teacher),
     subgroupNumber = subgroupNumber,
