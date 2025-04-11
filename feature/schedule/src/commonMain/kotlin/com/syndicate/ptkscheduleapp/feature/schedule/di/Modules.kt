@@ -1,8 +1,5 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.di
 
-import cafe.adriel.voyager.core.registry.screenModule
-import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
-import com.syndicate.ptkscheduleapp.feature.schedule.presentation.ScheduleScreen
 import org.koin.dsl.module
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetWeekTypeBySelectedDateCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetScheduleInfoCase
@@ -24,8 +21,4 @@ val featureScheduleModule = module {
     singleOf(::GetLocalScheduleCase)
     singleOf(::GetWeekTypeBySelectedDateCase)
     factoryOf(::ScheduleViewModel)
-}
-
-val featureScheduleScreenModule = screenModule {
-    register<SharedScreen.ScheduleScreen> { ScheduleScreen() }
 }
