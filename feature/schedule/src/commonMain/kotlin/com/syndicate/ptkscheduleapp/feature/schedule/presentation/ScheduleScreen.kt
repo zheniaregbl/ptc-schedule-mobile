@@ -350,6 +350,7 @@ internal fun ScheduleScreenContent(
                                                 PairCard(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     pairList = pair,
+                                                    role = state.value.userRole,
                                                     enabled = panelState.value != PanelState.CalendarPanel,
                                                     onClick = {
 
@@ -393,6 +394,7 @@ internal fun ScheduleScreenContent(
                                                 PairCard(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     pair = pair.first(),
+                                                    role = state.value.userRole,
                                                     enabled = panelState.value != PanelState.CalendarPanel,
                                                     onClick = {
 

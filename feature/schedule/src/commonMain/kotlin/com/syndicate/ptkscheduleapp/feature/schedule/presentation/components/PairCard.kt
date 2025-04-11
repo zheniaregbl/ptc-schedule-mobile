@@ -31,6 +31,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.core.domain.model.HslColor
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.replacement_svg
 import org.jetbrains.compose.resources.painterResource
@@ -39,6 +40,7 @@ import org.jetbrains.compose.resources.painterResource
 internal fun PairCard(
     modifier: Modifier = Modifier,
     pair: PairItem = PairItem(),
+    role: UserRole = UserRole.STUDENT,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -74,7 +76,8 @@ internal fun PairCard(
 
             PairInfo(
                 pairItem = pair,
-                isLast = true,
+                role = role,
+                isLast = true
             )
         }
 
@@ -103,6 +106,7 @@ internal fun PairCard(
         PairItem(),
         PairItem()
     ),
+    role: UserRole = UserRole.STUDENT,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -143,7 +147,8 @@ internal fun PairCard(
                 pairList.forEachIndexed { index, lessonItem ->
                     PairInfo(
                         pairItem = lessonItem,
-                        isLast = index == pairList.lastIndex,
+                        role = role,
+                        isLast = index == pairList.lastIndex
                     )
                 }
             }
@@ -170,6 +175,7 @@ internal fun PairCard(
 @Composable
 internal fun PairInfo(
     pairItem: PairItem = PairItem(),
+    role: UserRole = UserRole.STUDENT,
     isLast: Boolean = false,
 ) {
 
@@ -202,10 +208,15 @@ internal fun PairInfo(
         if (pairItem.subject != ""
             && pairItem.subject.lowercase() != "не будет") {
 
+            val infoByRole = when (role) {
+                UserRole.STUDENT -> pairItem.teacher
+                UserRole.TEACHER -> "группа ${pairItem.group}"
+            }
+
             var text = if (pairItem.room.lowercase() != "дистанционно")
-                "${pairItem.teacher}, кабинет ${pairItem.room.lowercase()}"
+                "$infoByRole, кабинет ${pairItem.room.lowercase()}"
             else
-                "${pairItem.teacher}, ${pairItem.room.lowercase()}"
+                "$$infoByRole, ${pairItem.room.lowercase()}"
 
             if (pairItem.place.lowercase() != "птк" && pairItem.room.lowercase() != "дистанционно")
                 text += ", ${pairItem.place}"

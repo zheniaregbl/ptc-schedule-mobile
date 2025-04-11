@@ -56,6 +56,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.calendar_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.expand_arrow_svg
@@ -255,7 +256,10 @@ internal fun DatePanel(
                     )
 
                     Text(
-                        text = "Группа: ${state.value.currentGroupNumber}",
+                        text = when (state.value.userRole) {
+                            UserRole.STUDENT -> "Группа: ${state.value.currentGroupNumber}"
+                            UserRole.TEACHER -> state.value.currentTeacherName
+                        },
                         style = LocalTextStyle.current,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
