@@ -44,10 +44,8 @@ internal class GetReplacementCase(
                             userIdentifier.group
                         )
                     is UserIdentifier.Teacher ->
-                        ScheduleUtil.getReplacementFromJsonForStudent(
-                            response.data,
-                            userIdentifier.name
-                        )
+                        // TODO: add fetching replacement for teacher after refactor on backend
+                        emptyList()
                 }
 
                 CaseResult.Success(replacement)

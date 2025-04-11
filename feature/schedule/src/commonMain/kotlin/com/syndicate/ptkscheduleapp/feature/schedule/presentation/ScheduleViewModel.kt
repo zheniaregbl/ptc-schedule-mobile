@@ -8,6 +8,7 @@ import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalReplacementCase
@@ -97,9 +98,18 @@ internal class ScheduleViewModel(
             }
 
             ScheduleAction.OnUpdateScheduleInfo -> {
+
                 viewModelScope.launch {
+
                     _errorMessage.emit(null)
-                    getUserGroup()
+
+                    getUserRole()
+
+                    when (_state.value.userRole) {
+                        UserRole.STUDENT -> getUserGroup()
+                        UserRole.TEACHER -> getUserTeacher()
+                    }
+
                     getScheduleInfo()
                     getReplacement()
                     getSchedule()
@@ -113,8 +123,14 @@ internal class ScheduleViewModel(
         }
     }
 
+    private suspend fun getUserRole() =
+        _state.update { it.copy(userRole = preferencesRepository.getUserRole()!!) }
+
     private suspend fun getUserGroup() =
         _state.update { it.copy(currentGroupNumber = preferencesRepository.getUserGroup()) }
+
+    private suspend fun getUserTeacher() =
+        _state.update { it.copy(currentTeacherName = preferencesRepository.getUserTeacher()) }
 
     private suspend fun getScheduleInfo() {
 
@@ -169,15 +185,18 @@ internal class ScheduleViewModel(
 
     private suspend fun getReplacement() {
 
-        val userGroup = _state.value.currentGroupNumber
+        val userIdentifier = when (_state.value.userRole) {
+            UserRole.STUDENT -> UserIdentifier.Student(_state.value.currentGroupNumber)
+            UserRole.TEACHER -> UserIdentifier.Teacher(_state.value.currentTeacherName)
+        }
 
         val lastUpdateTime = _scheduleInfo.value?.lastReplacementUpdateTime
 
-        when (val result = getReplacementCase(UserIdentifier.Student(userGroup), lastUpdateTime)) {
+        when (val result = getReplacementCase(userIdentifier, lastUpdateTime)) {
 
             is CaseResult.Error -> {
                 _errorMessage.emit(result.message)
-                getLocalReplacementCase(UserIdentifier.Student(userGroup))?.let { replacement ->
+                getLocalReplacementCase(userIdentifier)?.let { replacement ->
                     _state.update { it.copy(replacement = replacement) }
                 }
             }
@@ -190,15 +209,23 @@ internal class ScheduleViewModel(
 
     private suspend fun getSchedule() {
 
-        val userGroup = _state.value.currentGroupNumber
+        val userIdentifier = when (_state.value.userRole) {
+            UserRole.STUDENT -> UserIdentifier.Student(_state.value.currentGroupNumber)
+            UserRole.TEACHER -> UserIdentifier.Teacher(_state.value.currentTeacherName)
+        }
 
-        val lastUpdateTime = _scheduleInfo
-            .value
-            ?.groupInfo
-            ?.find { it.group == userGroup }
-            ?.lastUpdateTime
+        val lastUpdateTime = when (_state.value.userRole) {
+            UserRole.STUDENT ->
+                _scheduleInfo
+                    .value
+                    ?.lastScheduleUpdateTime
+            UserRole.TEACHER ->
+                _scheduleInfo
+                    .value
+                    ?.lastScheduleUpdateTime
+        }
 
-        when (val result = getScheduleCase(UserIdentifier.Student(userGroup), lastUpdateTime)) {
+        when (val result = getScheduleCase(userIdentifier, lastUpdateTime)) {
 
             is CaseResult.Error -> {
                 _errorMessage.emit(result.message)
