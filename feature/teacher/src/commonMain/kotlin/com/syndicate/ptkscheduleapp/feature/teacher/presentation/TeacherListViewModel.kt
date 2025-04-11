@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp.feature.teacher.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.feature.teacher.domain.use_case.FilterTeacherListCase
@@ -102,7 +103,10 @@ internal class TeacherListViewModel(
     }
 
     private fun selectTeacher(teacher: String) = viewModelScope.launch {
+
+        preferencesRepository.saveRole(UserRole.TEACHER)
         preferencesRepository.saveTeacher(teacher)
+
         preferencesRepository.userTeacher
             .collect { userTeacher ->
                 _state.update { it.copy(selectedTeacher = userTeacher) }

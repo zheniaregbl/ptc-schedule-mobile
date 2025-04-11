@@ -1,17 +1,11 @@
 package com.syndicate.ptkscheduleapp.feature.role.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
-import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-internal class RoleViewModel(
-    private val preferencesRepository: PreferencesRepository
-): ViewModel() {
+internal class RoleViewModel(): ViewModel() {
 
     private val _selectedRoleIndex = MutableStateFlow(0)
     val selectedRoleIndex = _selectedRoleIndex.asStateFlow()
@@ -23,8 +17,6 @@ internal class RoleViewModel(
         }
     }
 
-    private fun selectUserRole(roleIndex: Int) = viewModelScope.launch {
-        preferencesRepository.saveRole(UserRole.entries[roleIndex])
+    private fun selectUserRole(roleIndex: Int) =
         _selectedRoleIndex.update { roleIndex }
-    }
 }

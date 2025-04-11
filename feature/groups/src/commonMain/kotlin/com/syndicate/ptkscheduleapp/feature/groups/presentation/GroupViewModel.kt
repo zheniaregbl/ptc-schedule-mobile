@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp.feature.groups.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.feature.groups.domain.use_case.GetGroupListCase
@@ -60,7 +61,10 @@ internal class GroupViewModel(
     }
 
     private fun selectGroup(group: String) = viewModelScope.launch {
+
         _state.update { it.copy(isLoading = true) }
+
+        preferencesRepository.saveRole(UserRole.STUDENT)
         preferencesRepository.saveGroup(group)
 
         preferencesRepository.userGroup
