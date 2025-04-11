@@ -90,7 +90,9 @@ internal class ScheduleScreen : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
+        val roleScreen = rememberScreen(SharedScreen.RoleScreen)
         val groupScreen = rememberScreen(SharedScreen.GroupScreen)
+        val teacherScreen = rememberScreen(SharedScreen.TeacherScreen)
 
         val viewModel = koinViewModel<ScheduleViewModel>()
         val state = viewModel.state.collectAsStateWithLifecycle()
@@ -103,8 +105,12 @@ internal class ScheduleScreen : Screen {
             initPage = initPage,
             onAction = { action ->
                 when (action) {
+                    is ScheduleAction.NavigateToRoleSelection ->
+                        navigator.push(roleScreen)
                     is ScheduleAction.NavigateToGroupSelection ->
                         navigator.push(groupScreen)
+                    is ScheduleAction.NavigateToTeacherSelection ->
+                        navigator.push(teacherScreen)
                     else -> viewModel.onAction(action)
                 }
             }
@@ -240,7 +246,10 @@ internal fun ScheduleScreenContent(
                 onDismiss = { scope.launch { bottomSheetState.collapse() } },
                 sheetContent = {
                     Box {
-                        OptionSheetContent(onAction = onAction)
+                        OptionSheetContent(
+                            role = state.value.userRole,
+                            onAction = onAction
+                        )
                         ScrimSpacer(
                             color = Color.Black.copy(alpha = 0.42f),
                             height = 50.dp,

@@ -9,5 +9,7 @@ internal sealed interface ScheduleAction {
     data class OnUpdateDailyWeekState(val currentDate: LocalDate) : ScheduleAction
     data class OnChangeTheme(val themeMode: ThemeMode) : ScheduleAction
     data object OnUpdateScheduleInfo : ScheduleAction
+    data object NavigateToRoleSelection : ScheduleAction
     data object NavigateToGroupSelection : ScheduleAction
+    data object NavigateToTeacherSelection : ScheduleAction
 }

@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.presentation.theme.DarkColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
@@ -49,10 +50,14 @@ import com.syndicate.ptkscheduleapp.feature.schedule.resources.Res
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.group_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.telegram_svg
 import com.syndicate.ptkscheduleapp.feature.schedule.resources.theme_svg
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
+internal fun OptionSheetContent(
+    role: UserRole = UserRole.STUDENT,
+    onAction: (ScheduleAction) -> Unit = { }
+) {
 
     val colorBorder = MaterialTheme.colorPalette.contentColor.copy(alpha = 0.3f)
 
@@ -138,7 +143,33 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
 
-                ChangeGroupSection(onClick = { onAction(ScheduleAction.NavigateToGroupSelection) })
+                NavigateSection(
+                    text = "Сменить роль",
+                    image = Res.drawable.group_svg,
+                    onClick = { onAction(ScheduleAction.NavigateToRoleSelection) }
+                )
+
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .height(1.dp)
+                        .background(MaterialTheme.colorPalette.otherColor.copy(0.2f))
+                )
+
+                NavigateSection(
+                    text = when (role) {
+                        UserRole.STUDENT -> "Сменить группу"
+                        UserRole.TEACHER -> "Сменить преподавателя"
+                    },
+                    image = Res.drawable.group_svg,
+                    onClick = {
+                        when (role) {
+                            UserRole.STUDENT -> onAction(ScheduleAction.NavigateToGroupSelection)
+                            UserRole.TEACHER -> onAction(ScheduleAction.NavigateToTeacherSelection)
+                        }
+                    }
+                )
 
                 Spacer(
                     modifier = Modifier
@@ -159,7 +190,11 @@ internal fun OptionSheetContent(onAction: (ScheduleAction) -> Unit = { }) {
 }
 
 @Composable
-private fun ChangeGroupSection(onClick: () -> Unit) {
+private fun NavigateSection(
+    text: String,
+    image: DrawableResource,
+    onClick: () -> Unit
+) {
 
     Row(
         modifier = Modifier
@@ -173,13 +208,13 @@ private fun ChangeGroupSection(onClick: () -> Unit) {
 
         Image(
             modifier = Modifier.size(28.dp),
-            painter = painterResource(Res.drawable.group_svg),
+            painter = painterResource(image),
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.otherColor)
         )
 
         Text(
-            text = "Изменить группу",
+            text = text,
             style = LocalTextStyle.current,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
