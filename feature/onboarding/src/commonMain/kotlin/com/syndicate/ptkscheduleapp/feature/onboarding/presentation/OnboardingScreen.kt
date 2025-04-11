@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
@@ -39,6 +42,7 @@ import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page5
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
 import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 internal class OnboardingScreen : Screen {
 
@@ -48,15 +52,20 @@ internal class OnboardingScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val roleScreen = rememberScreen(SharedScreen.RoleScreen)
 
+        val viewModel = koinViewModel<OnboardingViewModel>()
+        val isBackgroundPermissionGranted by viewModel.isBackgroundPermissionGranted.collectAsState()
+
         OnboardingScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFFEFDF8))
                 .systemBarsPadding(),
+            isBackgroundPermissionGranted = isBackgroundPermissionGranted,
             onAction = { action ->
                 when (action) {
                     OnboardingAction.NavigateToRoleSelection ->
                         navigator.replace(roleScreen)
+                    else -> viewModel.onAction(action)
                 }
             }
         )
@@ -66,6 +75,7 @@ internal class OnboardingScreen : Screen {
 @Composable
 internal fun OnboardingScreenContent(
     modifier: Modifier = Modifier,
+    isBackgroundPermissionGranted: Boolean? = null,
     onAction: (OnboardingAction) -> Unit
 ) {
 
@@ -98,6 +108,16 @@ internal fun OnboardingScreenContent(
         initialPage = 0,
         pageCount = { 5 }
     )
+
+    LaunchedEffect(isBackgroundPermissionGranted) {
+        if (pagerState.currentPage == 4 && isBackgroundPermissionGranted != null) {
+            if (isBackgroundPermissionGranted) {
+                onAction(OnboardingAction.NavigateToRoleSelection)
+            } else {
+                onAction(OnboardingAction.OnRequestBackgroundPermission)
+            }
+        }
+    }
 
     Box(modifier = modifier) {
 
@@ -147,6 +167,11 @@ internal fun OnboardingScreenContent(
                     return@AnimatedButton
                 }
 
+                if (pagerState.currentPage == 4) {
+                    onAction(OnboardingAction.CheckBackgroundPermission)
+                    return@AnimatedButton
+                }
+
                 if (pagerState.currentPage != onboardingPageContent.lastIndex) {
                     scope.launch {
                         pagerState.animateScrollToPage(
@@ -156,7 +181,7 @@ internal fun OnboardingScreenContent(
                             )
                         )
                     }
-                } else { onAction(OnboardingAction.NavigateToRoleSelection) }
+                }
             }
         )
     }
