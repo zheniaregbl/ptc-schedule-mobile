@@ -312,7 +312,7 @@ object ScheduleUtil {
         currentPage: Int
     ) = if (prevPage % 2 == currentPage % 2) typeWeekNow else !typeWeekNow
 
-    fun getReplacementFromJson(
+    fun getReplacementFromJsonForStudent(
         jsonReplacement: JsonObject,
         group: String
     ): List<ReplacementItem> {
@@ -373,6 +373,86 @@ object ScheduleUtil {
 
             } catch (_: Exception) {
 
+            }
+
+            if (dailyReplacementList.isNotEmpty()) {
+
+                listReplacement.add(
+                    ReplacementItem(
+                        date = formatter.parse(date),
+                        listReplacement = dailyReplacementList
+                    )
+                )
+
+                dailyReplacementList = ArrayList()
+            }
+        }
+
+        return listReplacement
+    }
+
+    fun getReplacementFromJsonForTeacher(
+        jsonReplacement: JsonObject,
+        teacherName: String
+    ): List<ReplacementItem> {
+
+        if (jsonReplacement.toString() == "")
+            return emptyList()
+
+        val listReplacement = ArrayList<ReplacementItem>()
+        val listDate = jsonObjectToMap(jsonReplacement).keys.toList()
+        val formatter = LocalDate.Format {
+            dayOfMonth()
+            char('.')
+            monthNumber()
+            char('.')
+            year()
+        }
+
+        val parser = Json { ignoreUnknownKeys = true }
+
+        listDate.forEach { date ->
+
+            var dailyReplacementList = ArrayList<List<PairItem>>()
+            var pairReplacement = ArrayList<PairItem>()
+            var lastPairNumber = 0
+
+            val listGroupByDate = jsonObjectToMap(jsonReplacement[date] as JsonObject).keys.toList()
+
+            listGroupByDate.forEach { group ->
+
+                val dailyReplacementJson = jsonReplacement[date]!!.jsonObject[group]!!.jsonArray
+
+                for (jsonElement in dailyReplacementJson) {
+
+                    val pairItem = parser
+                        .decodeFromJsonElement<PairDTO>(jsonElement)
+                        .toModel()
+
+                    if (pairItem.teacher != teacherName) continue
+
+                    if (pairItem.pairNumber == -1) {
+                        dailyReplacementList.add(listOf(pairItem))
+                        continue
+                    }
+
+                    if (lastPairNumber == 0) {
+                        lastPairNumber = pairItem.pairNumber
+                    }
+
+                    if (lastPairNumber != pairItem.pairNumber) {
+                        dailyReplacementList.add(pairReplacement)
+                        lastPairNumber = pairItem.pairNumber
+                        pairReplacement = ArrayList()
+                    }
+
+                    lastPairNumber = pairItem.pairNumber
+                    pairReplacement.add(pairItem)
+                }
+
+                if (pairReplacement.isNotEmpty()) {
+                    dailyReplacementList.add(pairReplacement)
+                }
             }
 
             if (dailyReplacementList.isNotEmpty()) {

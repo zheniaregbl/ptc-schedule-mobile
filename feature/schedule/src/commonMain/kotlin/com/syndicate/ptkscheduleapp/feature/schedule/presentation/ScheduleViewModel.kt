@@ -9,6 +9,7 @@ import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalReplacementCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalScheduleCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalWeekTypeCase
@@ -172,11 +173,11 @@ internal class ScheduleViewModel(
 
         val lastUpdateTime = _scheduleInfo.value?.lastReplacementUpdateTime
 
-        when (val result = getReplacementCase(userGroup, lastUpdateTime)) {
+        when (val result = getReplacementCase(UserIdentifier.Student(userGroup), lastUpdateTime)) {
 
             is CaseResult.Error -> {
                 _errorMessage.emit(result.message)
-                getLocalReplacementCase(userGroup)?.let { replacement ->
+                getLocalReplacementCase(UserIdentifier.Student(userGroup))?.let { replacement ->
                     _state.update { it.copy(replacement = replacement) }
                 }
             }
@@ -197,7 +198,7 @@ internal class ScheduleViewModel(
             ?.find { it.group == userGroup }
             ?.lastUpdateTime
 
-        when (val result = getScheduleCase(userGroup, lastUpdateTime)) {
+        when (val result = getScheduleCase(UserIdentifier.Student(userGroup), lastUpdateTime)) {
 
             is CaseResult.Error -> {
                 _errorMessage.emit(result.message)

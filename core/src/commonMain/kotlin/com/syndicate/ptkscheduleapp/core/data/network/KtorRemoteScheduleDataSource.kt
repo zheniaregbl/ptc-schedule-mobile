@@ -5,6 +5,7 @@ import com.skydoves.sandwich.ktor.getApiResponse
 import com.syndicate.ptkscheduleapp.core.data.dto.ReplacementResponseDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.ScheduleInfoResponseDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.ScheduleResponseDTO
+import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import io.ktor.client.HttpClient
 import io.ktor.client.request.parameter
 
@@ -12,11 +13,18 @@ class KtorRemoteScheduleDataSource(
     private val httpClient: HttpClient
 ): RemoteScheduleDataSource {
 
-    override suspend fun getSchedule(group: String): ApiResponse<ScheduleResponseDTO> {
-        return httpClient.getApiResponse("schedule/get") {
-            parameter("group", group)
-            parameter("scheduleType", "week")
-            parameter("withReplacement", false)
+    override suspend fun getSchedule(userIdentifier: UserIdentifier): ApiResponse<ScheduleResponseDTO> {
+        return when (userIdentifier) {
+            is UserIdentifier.Student ->
+                httpClient.getApiResponse("schedule/get") {
+                    parameter("group", userIdentifier.group)
+                    parameter("scheduleType", "week")
+                    parameter("withReplacement", false)
+                }
+            is UserIdentifier.Teacher ->
+                httpClient.getApiResponse("schedule/teacher/get/all") {
+                    parameter("teacherSurname", userIdentifier.name)
+                }
         }
     }
 

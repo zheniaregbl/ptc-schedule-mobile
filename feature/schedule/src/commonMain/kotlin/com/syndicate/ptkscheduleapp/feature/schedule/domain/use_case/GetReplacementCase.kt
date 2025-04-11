@@ -6,6 +6,7 @@ import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.JsonObject
 
@@ -15,7 +16,7 @@ internal class GetReplacementCase(
 ) {
 
     suspend operator fun invoke(
-        userGroup: String,
+        userIdentifier: UserIdentifier,
         lastUpdateTime: LocalDateTime?,
         dateStart: String = "",
         dateEnd: String = "",
@@ -36,7 +37,20 @@ internal class GetReplacementCase(
                     }
                 }
 
-                CaseResult.Success(ScheduleUtil.getReplacementFromJson(response.data, userGroup))
+                val replacement = when (userIdentifier) {
+                    is UserIdentifier.Student ->
+                        ScheduleUtil.getReplacementFromJsonForStudent(
+                            response.data,
+                            userIdentifier.group
+                        )
+                    is UserIdentifier.Teacher ->
+                        ScheduleUtil.getReplacementFromJsonForStudent(
+                            response.data,
+                            userIdentifier.name
+                        )
+                }
+
+                CaseResult.Success(replacement)
             }
         }
     }

@@ -7,6 +7,7 @@ import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -17,11 +18,11 @@ internal class GetScheduleCase(
 ) {
 
     suspend operator fun invoke(
-        userGroup: String,
+        userIdentifier: UserIdentifier,
         lastUpdateTime: LocalDateTime?
     ): CaseResult<List<List<PairItem>>> {
 
-        return when (val response = scheduleRepository.getSchedule(userGroup)) {
+        return when (val response = scheduleRepository.getSchedule(userIdentifier)) {
 
             is ApiResponse.Failure.Error -> CaseResult.Error("Error getSchedule")
 

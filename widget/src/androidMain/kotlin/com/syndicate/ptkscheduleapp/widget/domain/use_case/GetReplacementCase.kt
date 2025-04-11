@@ -24,12 +24,12 @@ class GetReplacementCase(
 
             is ApiResponse.Success<JsonObject> -> {
                 preferencesRepository.saveLocalReplacement(response.data.toString())
-                ScheduleUtil.getReplacementFromJson(response.data, userGroup)
+                ScheduleUtil.getReplacementFromJsonForStudent(response.data, userGroup)
             }
 
             else -> {
                 preferencesRepository.getLocalReplacement()?.let { replacementString ->
-                    return ScheduleUtil.getReplacementFromJson(
+                    return ScheduleUtil.getReplacementFromJsonForStudent(
                         Json.decodeFromString<JsonObject>(replacementString),
                         userGroup
                     )
