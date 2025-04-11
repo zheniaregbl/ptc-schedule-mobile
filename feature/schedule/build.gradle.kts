@@ -69,6 +69,9 @@ kotlin {
             api(libs.sandwich)
             api(libs.sandwich.ktor)
 
+            api(libs.kotlin.logging)
+            api(libs.slf4j)
+
             api(projects.core)
             api(projects.uiKit.foundations)
         }

@@ -11,6 +11,7 @@ import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
+import com.syndicate.ptkscheduleapp.feature.schedule.common.util.Logger
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalReplacementCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalScheduleCase
 import com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case.GetLocalWeekTypeCase
@@ -158,6 +159,8 @@ internal class ScheduleViewModel(
                 }
 
                 _state.update { it.copy(isUpperWeek = getLocalWeekTypeCase()) }
+
+                Logger.warn("fetching week type from local")
             }
 
             is CaseResult.Success<ScheduleInfo> -> {
@@ -179,6 +182,8 @@ internal class ScheduleViewModel(
                 _scheduleInfo.update { result.data }
 
                 preferencesRepository.saveLocalWeekType(result.data.isUpperWeek!!)
+
+                Logger.warn("fetching week type from remote")
             }
         }
     }
@@ -199,10 +204,12 @@ internal class ScheduleViewModel(
                 getLocalReplacementCase(userIdentifier)?.let { replacement ->
                     _state.update { it.copy(replacement = replacement) }
                 }
+                Logger.warn("fetching replacements from local")
             }
 
             is CaseResult.Success<List<ReplacementItem>> -> {
                 _state.update { it.copy(replacement = result.data) }
+                Logger.info("fetching replacements from remote")
             }
         }
     }
@@ -237,6 +244,7 @@ internal class ScheduleViewModel(
                         schedule = schedule
                     ) }
                 }
+                Logger.warn("fetching schedule from local")
             }
 
             is CaseResult.Success<List<List<PairItem>>> -> {
@@ -244,6 +252,7 @@ internal class ScheduleViewModel(
                     isLoading = false,
                     schedule = result.data
                 ) }
+                Logger.warn("fetching schedule from local")
             }
         }
     }

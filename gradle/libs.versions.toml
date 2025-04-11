@@ -30,6 +30,8 @@ ui-tooling = "1.7.8"
 ui-tooling-preview = "1.7.0"
 glance = "1.1.1"
 work-runtime-ktx = "2.10.0"
+kotlin-logging = "7.0.3"
+slf4j = "2.0.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -95,6 +97,9 @@ connectivity-compose = { module = "dev.jordond.connectivity:connectivity-compose
 connectivity-compose-device = { module = "dev.jordond.connectivity:connectivity-compose-device", version.ref = "connectivity" }
 
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+
+kotlin-logging = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging" }
+slf4j = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -21,6 +21,7 @@ import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
 import com.syndicate.ptkscheduleapp.core.data.network.KtorRemoteScheduleDataSource
 import com.syndicate.ptkscheduleapp.core.data.network.RemoteScheduleDataSource
 import com.syndicate.ptkscheduleapp.core.presentation.AppViewModel
+import io.ktor.client.plugins.logging.EMPTY
 import io.ktor.client.plugins.logging.SIMPLE
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -38,7 +39,7 @@ val networkModule = module {
                 )
             }
             install(Logging) {
-                logger = Logger.SIMPLE
+                logger = Logger.EMPTY
                 level = LogLevel.ALL
             }
             defaultRequest {
