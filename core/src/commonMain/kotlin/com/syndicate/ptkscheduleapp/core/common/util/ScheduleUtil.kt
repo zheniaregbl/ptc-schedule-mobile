@@ -391,6 +391,7 @@ object ScheduleUtil {
         return listReplacement
     }
 
+    // TODO: fix error by getting listGroupByDate
     fun getReplacementFromJsonForTeacher(
         jsonReplacement: JsonObject,
         teacherName: String

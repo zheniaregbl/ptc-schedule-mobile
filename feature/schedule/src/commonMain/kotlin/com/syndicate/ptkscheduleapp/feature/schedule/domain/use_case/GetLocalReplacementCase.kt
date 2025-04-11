@@ -21,10 +21,8 @@ internal class GetLocalReplacementCase(
                         userIdentifier.group
                     )
                 is UserIdentifier.Teacher ->
-                    ScheduleUtil.getReplacementFromJsonForStudent(
-                        Json.decodeFromString<JsonObject>(replacementString),
-                        userIdentifier.name
-                    )
+                    // TODO: add fetching replacement for teacher after refactor on backend
+                    emptyList()
             }
         }
 

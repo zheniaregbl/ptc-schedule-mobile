@@ -218,7 +218,9 @@ internal class ScheduleViewModel(
             UserRole.STUDENT ->
                 _scheduleInfo
                     .value
-                    ?.lastScheduleUpdateTime
+                    ?.groupInfo
+                    ?.find { it.group == (userIdentifier as UserIdentifier.Student).group }
+                    ?.lastUpdateTime
             UserRole.TEACHER ->
                 _scheduleInfo
                     .value
