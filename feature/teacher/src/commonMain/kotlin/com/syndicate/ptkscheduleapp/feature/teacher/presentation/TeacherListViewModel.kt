@@ -7,6 +7,7 @@ import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.feature.teacher.domain.use_case.FilterTeacherListCase
 import com.syndicate.ptkscheduleapp.feature.teacher.domain.use_case.GetTeacherListCase
+import com.syndicate.ptkscheduleapp.widget.presentation.WidgetManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 
 internal class TeacherListViewModel(
     private val preferencesRepository: PreferencesRepository,
+    private val widgetManager: WidgetManager,
     private val getTeacherListCase: GetTeacherListCase,
     private val filterTeacherListCase: FilterTeacherListCase
 ) : ViewModel() {
@@ -106,6 +108,8 @@ internal class TeacherListViewModel(
 
         preferencesRepository.saveRole(UserRole.TEACHER)
         preferencesRepository.saveTeacher(teacher)
+
+        widgetManager.updateWidget()
 
         preferencesRepository.userTeacher
             .collect { userTeacher ->

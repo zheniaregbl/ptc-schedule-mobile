@@ -6,6 +6,7 @@ import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.domain.repository.PreferencesRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
 import com.syndicate.ptkscheduleapp.feature.groups.domain.use_case.GetGroupListCase
+import com.syndicate.ptkscheduleapp.widget.presentation.WidgetManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 
 internal class GroupViewModel(
     private val preferencesRepository: PreferencesRepository,
+    private val widgetManager: WidgetManager,
     private val getGroupListCase: GetGroupListCase
 ) : ViewModel() {
 
@@ -66,6 +68,8 @@ internal class GroupViewModel(
 
         preferencesRepository.saveRole(UserRole.STUDENT)
         preferencesRepository.saveGroup(group)
+
+        widgetManager.updateWidget()
 
         preferencesRepository.userGroup
             .collect { userGroup ->

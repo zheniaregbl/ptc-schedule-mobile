@@ -58,6 +58,7 @@ kotlin {
             api(libs.sandwich.ktor)
 
             api(projects.core)
+            api(projects.widget)
             api(projects.uiKit.foundations)
         }
     }
