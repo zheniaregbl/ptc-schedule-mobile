@@ -21,6 +21,7 @@ import androidx.glance.unit.ColorProvider
 import com.syndicate.ptkscheduleapp.core.common.util.randomHsl
 import com.syndicate.ptkscheduleapp.core.domain.model.HslColor
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.widget.R
 import com.syndicate.ptkscheduleapp.widget.presentation.util.extension.scaledSp
@@ -29,6 +30,7 @@ import com.syndicate.ptkscheduleapp.widget.presentation.util.extension.scaledSp
 internal fun GlancePairCard(
     modifier: GlanceModifier = GlanceModifier,
     pairItem: PairItem = PairItem(),
+    role: UserRole = UserRole.STUDENT,
     isDarkText: Boolean = true
 ) {
 
@@ -52,6 +54,7 @@ internal fun GlancePairCard(
 
             GlancePairInfo(
                 pairItem = pairItem,
+                role = role,
                 isDarkText = isDarkText,
                 isLast = true
             )
@@ -66,6 +69,7 @@ internal fun GlancePairCard(
         PairItem(),
         PairItem()
     ),
+    role: UserRole = UserRole.STUDENT,
     isDarkText: Boolean = true
 ) {
 
@@ -89,6 +93,7 @@ internal fun GlancePairCard(
                 pairList.forEachIndexed { index, pairItem ->
                     GlancePairInfo(
                         pairItem = pairItem,
+                        role = role,
                         isDarkText = isDarkText,
                         isLast = index == pairList.lastIndex
                     )
@@ -101,6 +106,7 @@ internal fun GlancePairCard(
 @Composable
 private fun GlancePairInfo(
     pairItem: PairItem = PairItem(),
+    role: UserRole = UserRole.STUDENT,
     isDarkText: Boolean = true,
     isLast: Boolean = false
 ) {
@@ -137,8 +143,13 @@ private fun GlancePairInfo(
         if (pairItem.subject != ""
             && pairItem.subject.lowercase() != "не будет") {
 
+            val infoByRole = when (role) {
+                UserRole.STUDENT -> pairItem.teacher
+                UserRole.TEACHER -> "группа ${pairItem.group}"
+            }
+
             var text = if (pairItem.room.lowercase() != "дистанционно")
-                "${pairItem.teacher}, кабинет ${pairItem.room.lowercase()}"
+                "$infoByRole, кабинет ${pairItem.room.lowercase()}"
             else
                 "${pairItem.teacher}, ${pairItem.room.lowercase()}"
 

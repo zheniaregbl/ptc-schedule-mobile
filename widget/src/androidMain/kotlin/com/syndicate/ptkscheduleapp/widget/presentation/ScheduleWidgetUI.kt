@@ -25,6 +25,7 @@ import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.unit.ColorProvider
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayColorPalette
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightColorPalette
@@ -41,7 +42,9 @@ internal fun ScheduleWidgetUI(
     isAlternativeTheme: Boolean = false,
     isLoading: Boolean = false,
     updateTime: String = "",
-    groupNumber: String = ""
+    userRole: UserRole = UserRole.STUDENT,
+    groupNumber: String = "",
+    teacherName: String = ""
 ) {
 
     Column(modifier = GlanceModifier.fillMaxWidth()) {
@@ -84,7 +87,10 @@ internal fun ScheduleWidgetUI(
                 ) {
 
                     GlanceText(
-                        text = groupNumber,
+                        text = when (userRole) {
+                            UserRole.STUDENT -> groupNumber
+                            UserRole.TEACHER -> teacherName
+                        },
                         font = R.font.montserrat_medium,
                         fontSize = 14.scaledSp(),
                         color = if (isAlternativeTheme) Color.Black else Color.White
@@ -119,6 +125,7 @@ internal fun ScheduleWidgetUI(
                                                 )
                                             ),
                                         pairList = pair,
+                                        role = userRole,
                                         isDarkText = !isAlternativeTheme
                                     )
 
@@ -137,6 +144,7 @@ internal fun ScheduleWidgetUI(
                                                 )
                                             ),
                                         pairItem = pair.first(),
+                                        role = userRole,
                                         isDarkText = !isAlternativeTheme
                                     )
 

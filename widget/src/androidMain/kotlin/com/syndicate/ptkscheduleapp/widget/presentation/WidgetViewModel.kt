@@ -7,7 +7,7 @@ import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetDailyScheduleCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetReplacementCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetScheduleCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetWeekTypeCase
-import com.syndicate.ptkscheduleapp.widget.domain.use_case.SaveWidgetData
+import com.syndicate.ptkscheduleapp.widget.domain.use_case.SaveWidgetSchedule
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -16,7 +16,7 @@ internal class WidgetViewModel(
     private val getReplacementCase: GetReplacementCase,
     private val getScheduleCase: GetScheduleCase,
     private val getDailyScheduleCase: GetDailyScheduleCase,
-    private val saveWidgetData: SaveWidgetData
+    private val saveWidgetSchedule: SaveWidgetSchedule
 ) : ViewModel() {
 
     private val _weekType: MutableStateFlow<Boolean?>  = MutableStateFlow(null)
@@ -30,12 +30,10 @@ internal class WidgetViewModel(
     }
 
     private suspend fun updateWidgetSchedule() {
-
         getScheduleInfo()
         getReplacement()
         getSchedule()
-
-        saveWidgetData(getDailySchedule())
+        saveWidgetSchedule(getDailySchedule())
     }
 
     private fun getDailySchedule(): List<List<PairItem>> {

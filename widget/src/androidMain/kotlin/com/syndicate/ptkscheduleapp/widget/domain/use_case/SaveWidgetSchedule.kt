@@ -13,7 +13,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.format.DateTimeFormatter
 
-class SaveWidgetData(
+class SaveWidgetSchedule(
     private val preferencesRepository: PreferencesRepository
 ) {
 

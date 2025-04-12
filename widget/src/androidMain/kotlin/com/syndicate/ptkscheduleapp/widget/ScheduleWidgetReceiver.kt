@@ -70,7 +70,9 @@ internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver(), KoinComponent
             updateAppWidgetState(context, id) { state ->
                 state[WidgetSchedule] = preferencesRepository.getWidgetSchedule() ?: ""
                 state[UpdateTime] = preferencesRepository.getLastUpdateWidgetTime() ?: ""
+                state[UserRole] = preferencesRepository.getUserRole()?.toString() ?: ""
                 state[GroupNumber] = preferencesRepository.getUserGroup()
+                state[TeacherName] = preferencesRepository.getUserTeacher()
                 state[IsLoading] = false
             }
 
@@ -110,6 +112,8 @@ internal class ScheduleWidgetReceiver : GlanceAppWidgetReceiver(), KoinComponent
 
     companion object {
         val UpdateTime = stringPreferencesKey("update_time")
+        val UserRole = stringPreferencesKey("user_role")
+        val TeacherName = stringPreferencesKey("teacher_name")
         val GroupNumber = stringPreferencesKey("group_number")
         val WidgetSchedule = stringPreferencesKey("widget_schedule")
         val IsLoading = booleanPreferencesKey("is_loading")
