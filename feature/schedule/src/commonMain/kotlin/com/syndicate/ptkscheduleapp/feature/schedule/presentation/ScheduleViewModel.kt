@@ -252,7 +252,7 @@ internal class ScheduleViewModel(
                     isLoading = false,
                     schedule = result.data
                 ) }
-                Logger.warn("fetching schedule from local")
+                Logger.warn("fetching schedule from remote")
             }
         }
     }

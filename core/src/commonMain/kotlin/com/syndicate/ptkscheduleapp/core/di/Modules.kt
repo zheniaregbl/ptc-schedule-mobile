@@ -21,6 +21,7 @@ import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
 import com.syndicate.ptkscheduleapp.core.data.network.KtorRemoteScheduleDataSource
 import com.syndicate.ptkscheduleapp.core.data.network.RemoteScheduleDataSource
 import com.syndicate.ptkscheduleapp.core.presentation.AppViewModel
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.logging.EMPTY
 import io.ktor.client.plugins.logging.SIMPLE
 import org.koin.core.module.dsl.singleOf
@@ -41,6 +42,10 @@ val networkModule = module {
             install(Logging) {
                 logger = Logger.EMPTY
                 level = LogLevel.ALL
+            }
+            install(HttpTimeout) {
+                socketTimeoutMillis = 30000
+                requestTimeoutMillis = 30000
             }
             defaultRequest {
                 host = BuildConfig.BASE_URL
