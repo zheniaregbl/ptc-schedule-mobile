@@ -14,7 +14,8 @@ data class PairDTO(
     @SerialName("teacher") val teacher: TeacherDTO,
     @SerialName("subgroupNumber") val subgroupNumber: Int,
     @SerialName("time") val time: String,
-    @SerialName("replacement_info") val replacementInfoDTO: ReplacementInfoDTO? = null
+    @SerialName("replacement_info") val replacementInfoDTO: ReplacementInfoDTO? = null,
+    @SerialName("originalPair") val originalPair: PairDTO? = null
 )
 
 @Serializable

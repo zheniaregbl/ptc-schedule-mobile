@@ -15,6 +15,7 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonArray
@@ -52,7 +53,8 @@ object ScheduleUtil {
 
     fun scheduleWithReplacement(
         currentSchedule: List<List<PairItem>>,
-        replacementItem: ReplacementItem?
+        replacementItem: ReplacementItem?,
+        teacherName: String? = null
     ): List<List<PairItem>> {
 
         if (replacementItem == null)
@@ -60,11 +62,73 @@ object ScheduleUtil {
 
         val newSchedule = currentSchedule.toMutableList()
 
-        swapReplacement(newSchedule, replacementItem)
-        subgroupReplacement(newSchedule, replacementItem)
-        ordinaryReplacement(newSchedule, replacementItem)
+        if (teacherName == null) {
+            swapReplacement(newSchedule, replacementItem)
+            subgroupReplacement(newSchedule, replacementItem)
+            ordinaryReplacement(newSchedule, replacementItem)
+        } else {
+            teacherReplacement(newSchedule, replacementItem, teacherName)
+        }
 
         return newSchedule
+    }
+
+    @OptIn(FormatStringsInDatetimeFormats::class)
+    private fun teacherReplacement(
+        schedule: MutableList<List<PairItem>>,
+        replacementItem: ReplacementItem,
+        teacherName: String
+    ) {
+
+        val newPairList = ArrayList<List<PairItem>>()
+
+        val changePairMap = hashMapOf<String, List<Int>>()
+        val changePairList = ArrayList<List<PairItem>>()
+
+        val cancelPairMap = hashMapOf<String, List<Int>>()
+        val cancelPairList = ArrayList<List<PairItem>>()
+
+        replacementItem.listReplacement.forEach { replacement ->
+            if (replacement.first().previousPairInfo == null) {
+                newPairList.add(replacement.map { it.copy(isReplacement = true, isNewPair = true) })
+            } else {
+                if (replacement.first().previousPairInfo!!.teacher == teacherName) {
+
+                    val group = replacement.first().previousPairInfo!!.group
+
+                    if (replacement.first().teacher == teacherName) {
+                        changePairMap[group] = changePairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
+                        changePairList.add(replacement.map { it.copy(isReplacement = true) })
+                    } else {
+                        cancelPairMap[group] = cancelPairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
+                        cancelPairList.add(replacement.map { it.copy(isReplacement = true) })
+                    }
+                } else {
+                    if (replacement.first().teacher == teacherName) {
+                        newPairList.add(replacement.map { it.copy(isReplacement = true, isNewPair = true) })
+                    }
+                }
+            }
+        }
+
+        schedule.removeAll { pair -> pair.first().group in changePairMap.keys && changePairMap[pair.first().group]?.contains(pair.first().pairNumber) != false }
+        schedule.removeAll { pair -> pair.first().group in cancelPairMap.keys && cancelPairMap[pair.first().group]?.contains(pair.first().pairNumber) != false }
+
+        schedule.addAll(changePairList)
+        schedule.addAll(cancelPairList)
+        schedule.addAll(newPairList)
+
+        val timeFormatPattern = "HH:mm"
+        val timeFormat = LocalTime.Format { byUnicodePattern(timeFormatPattern) }
+
+        schedule.sortBy {
+            timeFormat.parse(
+                it.first().time
+                    .substringBefore("-")
+                    .replace(".", ":")
+                    .normalizeTime()
+            )
+        }
     }
 
     private fun swapReplacement(
@@ -183,7 +247,7 @@ object ScheduleUtil {
 
         newSchedule.addAll(
             replacementPairList.map {
-                    pairList -> pairList.map { it.copy(isReplacement = true, isNewPair = true) }
+                pairList -> pairList.map { it.copy(isReplacement = true, isNewPair = true) }
             }
         )
 
@@ -371,8 +435,8 @@ object ScheduleUtil {
                     dailyReplacementList.add(pairReplacement)
                 }
 
-            } catch (_: Exception) {
-
+            } catch (e: Exception) {
+                println(e)
             }
 
             if (dailyReplacementList.isNotEmpty()) {
@@ -391,7 +455,6 @@ object ScheduleUtil {
         return listReplacement
     }
 
-    // TODO: fix error by getting listGroupByDate
     fun getReplacementFromJsonForTeacher(
         jsonReplacement: JsonObject,
         teacherName: String
@@ -418,42 +481,60 @@ object ScheduleUtil {
             var pairReplacement = ArrayList<PairItem>()
             var lastPairNumber = 0
 
-            val listGroupByDate = jsonObjectToMap(jsonReplacement[date] as JsonObject).keys.toList()
+            val listGroupByDate = jsonObjectToMapArrayValues(jsonReplacement[date]!!.jsonObject).keys.toList()
 
             listGroupByDate.forEach { group ->
 
                 val dailyReplacementJson = jsonReplacement[date]!!.jsonObject[group]!!.jsonArray
 
-                for (jsonElement in dailyReplacementJson) {
+                try {
 
-                    val pairItem = parser
-                        .decodeFromJsonElement<PairDTO>(jsonElement)
-                        .toModel()
+                    for (jsonElement in dailyReplacementJson) {
 
-                    if (pairItem.teacher != teacherName) continue
+                        if (group == "-") continue
 
-                    if (pairItem.pairNumber == -1) {
-                        dailyReplacementList.add(listOf(pairItem))
-                        continue
-                    }
+                        val pairItem = parser
+                            .decodeFromJsonElement<PairDTO>(jsonElement)
+                            .toModel()
 
-                    if (lastPairNumber == 0) {
+                        if (pairItem.previousPairInfo?.teacher != teacherName
+                            && pairItem.teacher != teacherName) continue
+
+                        if (pairItem.pairNumber == -1) {
+                            dailyReplacementList.add(listOf(pairItem))
+                            continue
+                        }
+
+                        if (lastPairNumber == 0) {
+                            lastPairNumber = pairItem.pairNumber
+                        }
+
+                        if (lastPairNumber != pairItem.pairNumber) {
+                            if (pairReplacement.isEmpty()) {
+                                pairReplacement.add(pairItem)
+                                continue
+                            }
+                            dailyReplacementList.add(pairReplacement)
+                            lastPairNumber = pairItem.pairNumber
+                            pairReplacement = ArrayList()
+                            pairReplacement.add(pairItem)
+                            continue
+                        }
+
                         lastPairNumber = pairItem.pairNumber
+                        pairReplacement.add(pairItem)
                     }
 
-                    if (lastPairNumber != pairItem.pairNumber) {
-                        dailyReplacementList.add(pairReplacement)
-                        lastPairNumber = pairItem.pairNumber
-                        pairReplacement = ArrayList()
-                    }
-
-                    lastPairNumber = pairItem.pairNumber
-                    pairReplacement.add(pairItem)
+                } catch (e: Exception) {
+                    println(e)
                 }
 
                 if (pairReplacement.isNotEmpty()) {
                     dailyReplacementList.add(pairReplacement)
+                    pairReplacement = ArrayList()
                 }
+
+                lastPairNumber = 0
             }
 
             if (dailyReplacementList.isNotEmpty()) {
@@ -474,5 +555,9 @@ object ScheduleUtil {
 
     private fun jsonObjectToMap(jsonObject: JsonObject): Map<String, JsonObject> {
         return jsonObject.mapValues { it.value.jsonObject }
+    }
+
+    private fun jsonObjectToMapArrayValues(jsonObject: JsonObject): Map<String, JsonArray> {
+        return jsonObject.mapValues { it.value.jsonArray }
     }
 }

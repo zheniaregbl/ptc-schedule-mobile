@@ -28,6 +28,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayText
 import com.syndicate.ptkscheduleapp.core.presentation.theme.SecondThemeBackground
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayThirdTheme
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThirdThemeBackground
@@ -42,6 +43,7 @@ internal fun ReplacementPopup(
     pair: List<PairItem>,
     replacement: List<PairItem>,
     newPair: Boolean,
+    role: UserRole,
     onDismissRequest: () -> Unit
 ) {
 
@@ -65,7 +67,8 @@ internal fun ReplacementPopup(
                 ),
             pair = pair,
             replacement = replacement,
-            newPair = newPair
+            newPair = newPair,
+            role = role
         )
     }
 }
@@ -76,6 +79,7 @@ internal fun ReplacementPopupContent(
     pair: List<PairItem>,
     replacement: List<PairItem>,
     newPair: Boolean,
+    role: UserRole,
 ) {
 
     val themeMode = MaterialTheme.colorPalette.themeMode
@@ -119,7 +123,8 @@ internal fun ReplacementPopupContent(
                                 modifier = Modifier
                                     .padding(top = 20.dp)
                                     .fillMaxWidth(),
-                                pairList = pair,
+                                pairList = pair.map { it.copy(isReplacement = false) },
+                                role = role,
                                 enabled = false,
                                 onClick = { }
                             )
@@ -130,7 +135,8 @@ internal fun ReplacementPopupContent(
                                 modifier = Modifier
                                     .padding(top = 20.dp)
                                     .fillMaxWidth(),
-                                pair = pair.first(),
+                                pair = pair.first().copy(isReplacement = false),
+                                role = role,
                                 enabled = false,
                                 onClick = { }
                             )
@@ -161,10 +167,8 @@ internal fun ReplacementPopupContent(
                             modifier = Modifier
                                 .padding(bottom = 20.dp)
                                 .fillMaxWidth(),
-                            pairList = listOf(
-                                replacement.first().copy(isReplacement = false),
-                                replacement.last()
-                            ),
+                            pairList = replacement.map { it.copy(isReplacement = false) },
+                            role = role,
                             enabled = false,
                             onClick = { }
                         )
@@ -176,6 +180,7 @@ internal fun ReplacementPopupContent(
                                 .padding(bottom = 20.dp)
                                 .fillMaxWidth(),
                             pair = replacement.first().copy(isReplacement = false),
+                            role = role,
                             enabled = false,
                             onClick = { }
                         )

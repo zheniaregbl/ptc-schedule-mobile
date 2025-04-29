@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.AppTheme
 import com.syndicate.ptkscheduleapp.core.presentation.theme.FirstThemeBackground
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ReplacementPopupContent
 
 @Preview
@@ -34,7 +35,8 @@ private fun ReplacementPopupPreview() {
                     .background(FirstThemeBackground),
                 pair = listOf(PairItem(), PairItem()),
                 replacement = listOf(PairItem(), PairItem()),
-                newPair = false
+                newPair = false,
+                role = UserRole.STUDENT
             )
         }
     }

@@ -7,6 +7,7 @@ import com.syndicate.ptkscheduleapp.core.data.dto.RoomDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.SubjectDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.TeacherDTO
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.PreviousPairInfo
 
 fun PairDTO.toModel() = PairItem(
     dayOfWeek = dayOfWeek,
@@ -22,7 +23,18 @@ fun PairDTO.toModel() = PairItem(
     previousPairNumber = replacementInfoDTO?.previousPairNumber ?: -1,
     isNewPair = replacementInfoDTO?.isNewPair ?: false,
     swapPair = replacementInfoDTO?.swapPair ?: false,
-    isReplacement = replacementInfoDTO?.isReplacement ?: false
+    isReplacement = replacementInfoDTO?.isReplacement ?: false,
+    previousPairInfo = if (originalPair != null)
+        PreviousPairInfo(
+            subject = originalPair.subject.name,
+            group = originalPair.group.name,
+            place = originalPair.room.place,
+            room = originalPair.room.number,
+            teacher = originalPair.teacher.fullName,
+            subgroupNumber = originalPair.subgroupNumber,
+            time = originalPair.time
+        )
+    else null
 )
 
 fun PairItem.toDTO() = PairDTO(

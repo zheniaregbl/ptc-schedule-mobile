@@ -64,6 +64,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
+import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.ConnectivityString
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.DatePanel
 import com.syndicate.ptkscheduleapp.feature.schedule.presentation.components.OptionSheetContent
@@ -335,7 +336,10 @@ internal fun ScheduleScreenContent(
                                 val currentSchedule = ScheduleUtil
                                     .scheduleWithReplacement(
                                         ordinarySchedule,
-                                        dailyReplacement
+                                        dailyReplacement,
+                                        if (state.value.userRole == UserRole.TEACHER)
+                                            state.value.currentTeacherName
+                                        else null
                                     )
 
                                 if (dailySchedule.isNotEmpty()) {
@@ -536,6 +540,7 @@ internal fun ScheduleScreenContent(
         pair = selectedPair,
         replacement = selectedReplacement,
         newPair = newPair,
+        role = state.value.userRole,
         onDismissRequest = { showReplacementDialog = false }
     )
 }
