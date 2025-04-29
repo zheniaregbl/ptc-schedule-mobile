@@ -75,7 +75,12 @@ kotlin {
             api(projects.core)
             api(projects.uiKit.foundations)
         }
-
+        commonTest.dependencies {
+            implementation(libs.ktor.client.cio)
+            implementation(libs.bundles.ktor)
+            implementation(libs.kotlin.test)
+            implementation(libs.koin.test)
+        }
         val deviceMain by creating {
             dependsOn(commonMain.get())
             androidMain.get().dependsOn(this)
