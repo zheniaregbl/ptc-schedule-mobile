@@ -183,7 +183,7 @@ internal class ScheduleViewModel(
 
                 preferencesRepository.saveLocalWeekType(result.data.isUpperWeek!!)
 
-                Logger.warn("fetching week type from remote")
+                Logger.info("fetching week type from remote")
             }
         }
     }
@@ -252,7 +252,7 @@ internal class ScheduleViewModel(
                     isLoading = false,
                     schedule = result.data
                 ) }
-                Logger.warn("fetching schedule from remote")
+                Logger.info("fetching schedule from remote")
             }
         }
     }
