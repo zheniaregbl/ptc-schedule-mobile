@@ -101,7 +101,15 @@ object ScheduleUtil {
                         changePairList.add(replacement.map { it.copy(isReplacement = true) })
                     } else {
                         cancelPairMap[group] = cancelPairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
-                        cancelPairList.add(replacement.map { it.copy(isReplacement = true) })
+                        cancelPairList.add(
+                            replacement.map {
+                                it.copy(
+                                    isReplacement = true,
+                                    subject = if (it.subject.lowercase() != "дистанционное обучение")
+                                    "Не будет" else it.subject
+                                )
+                            }
+                        )
                     }
                 } else {
                     if (replacement.first().teacher == teacherName) {

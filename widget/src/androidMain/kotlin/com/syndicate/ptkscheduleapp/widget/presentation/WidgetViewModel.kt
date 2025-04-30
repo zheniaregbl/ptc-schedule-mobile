@@ -3,15 +3,19 @@ package com.syndicate.ptkscheduleapp.widget.presentation
 import androidx.lifecycle.ViewModel
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
+import com.syndicate.ptkscheduleapp.core.domain.use_case.CaseResult
+import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetDailyScheduleCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetReplacementCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetScheduleCase
+import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetUserIdentifierCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.GetWeekTypeCase
 import com.syndicate.ptkscheduleapp.widget.domain.use_case.SaveWidgetSchedule
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 internal class WidgetViewModel(
+    private val getUserIdentifierCase: GetUserIdentifierCase,
     private val getWeekTypeCase: GetWeekTypeCase,
     private val getReplacementCase: GetReplacementCase,
     private val getScheduleCase: GetScheduleCase,
@@ -30,14 +34,22 @@ internal class WidgetViewModel(
     }
 
     private suspend fun updateWidgetSchedule() {
+
         getScheduleInfo()
         getReplacement()
         getSchedule()
-        saveWidgetSchedule(getDailySchedule())
+
+        val dailySchedule = when (val result = getUserIdentifierCase()) {
+            is CaseResult.Error -> emptyList<List<PairItem>>()
+            is CaseResult.Success<UserIdentifier> -> getDailySchedule(result.data)
+        }
+
+        saveWidgetSchedule(dailySchedule)
     }
 
-    private fun getDailySchedule(): List<List<PairItem>> {
+    private fun getDailySchedule(userIdentifier: UserIdentifier): List<List<PairItem>> {
         return getDailyScheduleCase(
+            userIdentifier,
             _weekType.value,
             _schedule.value,
             _replacement.value

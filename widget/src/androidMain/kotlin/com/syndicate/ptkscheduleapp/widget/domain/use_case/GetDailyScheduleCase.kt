@@ -4,13 +4,15 @@ import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.core.common.util.extension.nowDate
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
+import com.syndicate.ptkscheduleapp.core.domain.use_case.UserIdentifier
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 
-class GetDailyScheduleCase() {
+internal class GetDailyScheduleCase() {
 
     operator fun invoke(
+        userIdentifier: UserIdentifier,
         weekType: Boolean?,
         schedule: List<List<PairItem>>,
         replacement: List<ReplacementItem>
@@ -51,7 +53,9 @@ class GetDailyScheduleCase() {
 
         return ScheduleUtil.scheduleWithReplacement(
             ScheduleUtil.groupDailyScheduleBySubgroup(dailySchedule),
-            dailyReplacement
+            dailyReplacement,
+            if (userIdentifier is UserIdentifier.Teacher) userIdentifier.name
+            else null
         )
     }
 }
