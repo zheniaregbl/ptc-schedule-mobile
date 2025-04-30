@@ -18,6 +18,7 @@ import cafe.adriel.voyager.transitions.FadeTransition
 import com.syndicate.ptkscheduleapp.core.presentation.AppViewModel
 import com.syndicate.ptkscheduleapp.core.presentation.theme.AppTheme
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
+import com.syndicate.ptkscheduleapp.presentation.util.changeSystemBarsColor
 import com.syndicate.ptkscheduleapp.feature.splash.presentation.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -33,6 +34,8 @@ fun App() {
         val state by appViewModel.state.collectAsState()
 
         AppTheme(themeMode = state.themeMode) {
+
+            changeSystemBarsColor(MaterialTheme.colorPalette.themeMode)
 
             Box(
                 modifier = Modifier
