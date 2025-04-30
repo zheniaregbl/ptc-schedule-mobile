@@ -30,15 +30,23 @@ internal class GetScheduleCase(
 
             is ApiResponse.Success<List<PairItem>> -> {
 
-                if (preferencesRepository.getLastUpdateScheduleTime() != lastUpdateTime) {
-
+                if (userIdentifier is UserIdentifier.Teacher) {
                     preferencesRepository
                         .saveLocalSchedule(
                             Json.encodeToString(response.data.map { it.toDTO() })
                         )
+                } else {
 
-                    lastUpdateTime?.let {
-                        preferencesRepository.saveLastUpdateScheduleTime(it)
+                    if (preferencesRepository.getLastUpdateScheduleTime() != lastUpdateTime) {
+
+                        preferencesRepository
+                            .saveLocalSchedule(
+                                Json.encodeToString(response.data.map { it.toDTO() })
+                            )
+
+                        lastUpdateTime?.let {
+                            preferencesRepository.saveLastUpdateScheduleTime(it)
+                        }
                     }
                 }
 
