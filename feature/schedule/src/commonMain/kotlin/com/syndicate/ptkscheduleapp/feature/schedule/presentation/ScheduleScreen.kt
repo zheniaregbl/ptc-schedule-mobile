@@ -337,6 +337,7 @@ internal fun ScheduleScreenContent(
                                     .scheduleWithReplacement(
                                         ordinarySchedule,
                                         dailyReplacement,
+                                        state.value.selectedDateWeekType,
                                         if (state.value.userRole == UserRole.TEACHER)
                                             state.value.currentTeacherName
                                         else null

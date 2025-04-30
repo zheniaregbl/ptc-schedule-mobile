@@ -26,6 +26,7 @@ fun PairDTO.toModel() = PairItem(
     isReplacement = replacementInfoDTO?.isReplacement ?: false,
     previousPairInfo = if (originalPair != null)
         PreviousPairInfo(
+            isUpper = originalPair.isUpper,
             subject = originalPair.subject.name,
             group = originalPair.group.name,
             place = originalPair.room.place,

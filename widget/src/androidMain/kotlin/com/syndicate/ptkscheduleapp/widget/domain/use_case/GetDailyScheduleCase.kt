@@ -54,6 +54,7 @@ internal class GetDailyScheduleCase() {
         return ScheduleUtil.scheduleWithReplacement(
             ScheduleUtil.groupDailyScheduleBySubgroup(dailySchedule),
             dailyReplacement,
+            weekType == true,
             if (userIdentifier is UserIdentifier.Teacher) userIdentifier.name
             else null
         )

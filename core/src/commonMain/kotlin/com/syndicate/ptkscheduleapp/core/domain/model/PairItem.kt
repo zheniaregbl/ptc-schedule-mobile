@@ -22,6 +22,7 @@ data class PairItem(
 )
 
 data class PreviousPairInfo(
+    val isUpper: Boolean? = false,
     val subject: String = "Математика",
     val group: String = "1991",
     val place: String = "ПТК",

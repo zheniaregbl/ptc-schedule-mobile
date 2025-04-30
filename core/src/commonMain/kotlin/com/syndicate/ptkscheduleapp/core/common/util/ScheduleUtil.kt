@@ -54,6 +54,7 @@ object ScheduleUtil {
     fun scheduleWithReplacement(
         currentSchedule: List<List<PairItem>>,
         replacementItem: ReplacementItem?,
+        weekType: Boolean,
         teacherName: String? = null
     ): List<List<PairItem>> {
 
@@ -63,11 +64,11 @@ object ScheduleUtil {
         val newSchedule = currentSchedule.toMutableList()
 
         if (teacherName == null) {
-            swapReplacement(newSchedule, replacementItem)
-            subgroupReplacement(newSchedule, replacementItem)
-            ordinaryReplacement(newSchedule, replacementItem)
+            swapReplacement(newSchedule, replacementItem, weekType)
+            subgroupReplacement(newSchedule, replacementItem, weekType)
+            ordinaryReplacement(newSchedule, replacementItem, weekType)
         } else {
-            teacherReplacement(newSchedule, replacementItem, teacherName)
+            teacherReplacement(newSchedule, replacementItem, weekType, teacherName)
         }
 
         return newSchedule
@@ -77,6 +78,7 @@ object ScheduleUtil {
     private fun teacherReplacement(
         schedule: MutableList<List<PairItem>>,
         replacementItem: ReplacementItem,
+        weekType: Boolean,
         teacherName: String
     ) {
 
@@ -92,28 +94,28 @@ object ScheduleUtil {
             if (replacement.first().previousPairInfo == null) {
                 newPairList.add(replacement.map { it.copy(isReplacement = true, isNewPair = true) })
             } else {
-                if (replacement.first().previousPairInfo!!.teacher == teacherName) {
-
-                    val group = replacement.first().previousPairInfo!!.group
-
-                    if (replacement.first().teacher == teacherName) {
-                        changePairMap[group] = changePairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
-                        changePairList.add(replacement.map { it.copy(isReplacement = true) })
+                if (replacement.first().previousPairInfo!!.isUpper == null || replacement.first().previousPairInfo!!.isUpper == weekType) {
+                    if (replacement.first().previousPairInfo!!.teacher == teacherName) {
+                        val group = replacement.first().previousPairInfo!!.group
+                        if (replacement.first().teacher == teacherName) {
+                            changePairMap[group] = changePairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
+                            changePairList.add(replacement.map { it.copy(isReplacement = true) })
+                        } else {
+                            cancelPairMap[group] = cancelPairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
+                            cancelPairList.add(
+                                replacement.map {
+                                    it.copy(
+                                        isReplacement = true,
+                                        subject = if (it.subject.lowercase() != "дистанционное обучение")
+                                            "Не будет" else it.subject
+                                    )
+                                }
+                            )
+                        }
                     } else {
-                        cancelPairMap[group] = cancelPairMap[group]?.plus(replacement.first().pairNumber) ?: listOf(replacement.first().pairNumber)
-                        cancelPairList.add(
-                            replacement.map {
-                                it.copy(
-                                    isReplacement = true,
-                                    subject = if (it.subject.lowercase() != "дистанционное обучение")
-                                    "Не будет" else it.subject
-                                )
-                            }
-                        )
-                    }
-                } else {
-                    if (replacement.first().teacher == teacherName) {
-                        newPairList.add(replacement.map { it.copy(isReplacement = true, isNewPair = true) })
+                        if (replacement.first().teacher == teacherName) {
+                            newPairList.add(replacement.map { it.copy(isReplacement = true, isNewPair = true) })
+                        }
                     }
                 }
             }
@@ -141,7 +143,8 @@ object ScheduleUtil {
 
     private fun swapReplacement(
         schedule: MutableList<List<PairItem>>,
-        replacementItem: ReplacementItem
+        replacementItem: ReplacementItem,
+        weekType: Boolean
     ) {
 
         val swapNumberPairList = ArrayList<Int>()
@@ -149,15 +152,17 @@ object ScheduleUtil {
 
         replacementItem.listReplacement.forEach { replacement ->
             if (replacement.first().previousPairNumber != -1) {
-                swapPairList.add(
-                    replacement.map {
-                        it.copy(
-                            swapPair = true,
-                            isReplacement = true
-                        )
-                    }
-                )
-                swapNumberPairList.add(replacement.first().previousPairNumber)
+                if (replacement.first().previousPairInfo?.isUpper == null || replacement.first().previousPairInfo?.isUpper == weekType) {
+                    swapPairList.add(
+                        replacement.map {
+                            it.copy(
+                                swapPair = true,
+                                isReplacement = true
+                            )
+                        }
+                    )
+                    swapNumberPairList.add(replacement.first().previousPairNumber)
+                }
             }
         }
 
@@ -170,7 +175,8 @@ object ScheduleUtil {
 
     private fun subgroupReplacement(
         schedule: MutableList<List<PairItem>>,
-        replacementItem: ReplacementItem
+        replacementItem: ReplacementItem,
+        weekType: Boolean
     ) {
 
         val replacementNumberPairList = ArrayList<Int>()
@@ -179,8 +185,10 @@ object ScheduleUtil {
 
         replacementItem.listReplacement.forEach { replacement ->
             if (replacement.first().subgroupNumber != 0) {
-                replacementPairList.add(replacement)
-                replacementNumberPairList.add(replacement.first().pairNumber)
+                if (replacement.first().previousPairInfo?.isUpper == null || replacement.first().previousPairInfo?.isUpper == weekType) {
+                    replacementPairList.add(replacement)
+                    replacementNumberPairList.add(replacement.first().pairNumber)
+                }
             }
         }
 
@@ -219,7 +227,8 @@ object ScheduleUtil {
     @OptIn(FormatStringsInDatetimeFormats::class)
     private fun ordinaryReplacement(
         schedule: MutableList<List<PairItem>>,
-        replacementItem: ReplacementItem
+        replacementItem: ReplacementItem,
+        weekType: Boolean
     ) {
 
         val replacementNumberPairList = ArrayList<Int>()
@@ -228,8 +237,10 @@ object ScheduleUtil {
 
         replacementItem.listReplacement.forEach { replacement ->
             if (replacement.first().subgroupNumber == 0) {
-                replacementPairList.add(replacement)
-                replacementNumberPairList.add(replacement.first().pairNumber)
+                if (replacement.first().previousPairInfo?.isUpper == null || replacement.first().previousPairInfo?.isUpper == weekType) {
+                    replacementPairList.add(replacement)
+                    replacementNumberPairList.add(replacement.first().pairNumber)
+                }
             }
         }
 
