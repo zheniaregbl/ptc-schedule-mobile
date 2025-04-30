@@ -215,9 +215,9 @@ internal fun PairInfo(
             var text = if (pairItem.room.lowercase() != "не указан")
                 "$infoByRole, кабинет ${pairItem.room.lowercase()}"
             else
-                "$$infoByRole, ${pairItem.room.lowercase()}"
+                "$infoByRole, ${pairItem.room.lowercase()}"
 
-            if (pairItem.place.lowercase() != "птк" && pairItem.room.lowercase() != "не указано")
+            if (pairItem.place.lowercase() != "птк" && pairItem.room.lowercase() != "не указан" && pairItem.place.lowercase() != "не указано")
                 text += ", ${pairItem.place}"
 
             Spacer(Modifier.height(3.dp))
