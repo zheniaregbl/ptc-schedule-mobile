@@ -35,7 +35,7 @@ class GetReplacementCase(
                     is UserIdentifier.Student ->
                         ScheduleUtil.getReplacementFromJsonForStudent(response.data, userIdentifier.group)
                     is UserIdentifier.Teacher ->
-                        emptyList()
+                        ScheduleUtil.getReplacementFromJsonForTeacher(response.data, userIdentifier.name)
                 }
             }
 
@@ -47,7 +47,11 @@ class GetReplacementCase(
                                 Json.decodeFromString<JsonObject>(replacementString),
                                 userIdentifier.group
                             )
-                        is UserIdentifier.Teacher -> emptyList()
+                        is UserIdentifier.Teacher ->
+                            ScheduleUtil.getReplacementFromJsonForTeacher(
+                                Json.decodeFromString<JsonObject>(replacementString),
+                                userIdentifier.name
+                            )
                     }
                 }
                 return null

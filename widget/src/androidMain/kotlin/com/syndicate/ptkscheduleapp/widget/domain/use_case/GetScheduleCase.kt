@@ -27,9 +27,8 @@ class GetScheduleCase(
 
         return when (val response = scheduleRepository.getSchedule(userIdentifier)) {
 
-            is ApiResponse.Success<List<PairItem>> -> {
+            is ApiResponse.Success<List<PairItem>> ->
                 ScheduleUtil.getWeekSchedule(response.data)
-            }
 
             else -> {
 
