@@ -203,23 +203,24 @@ internal fun PairInfo(
             color = GrayText
         )
 
-        Spacer(Modifier.height(3.dp))
-
         if (pairItem.subject != ""
-            && pairItem.subject.lowercase() != "не будет") {
+            && pairItem.subject.lowercase() != "не будет"
+            && pairItem.subject.lowercase() != "дистанционное обучение") {
 
             val infoByRole = when (role) {
                 UserRole.STUDENT -> pairItem.teacher
                 UserRole.TEACHER -> "группа ${pairItem.group}"
             }
 
-            var text = if (pairItem.room.lowercase() != "дистанционно")
+            var text = if (pairItem.room.lowercase() != "не указан")
                 "$infoByRole, кабинет ${pairItem.room.lowercase()}"
             else
                 "$$infoByRole, ${pairItem.room.lowercase()}"
 
-            if (pairItem.place.lowercase() != "птк" && pairItem.room.lowercase() != "дистанционно")
+            if (pairItem.place.lowercase() != "птк" && pairItem.room.lowercase() != "не указано")
                 text += ", ${pairItem.place}"
+
+            Spacer(Modifier.height(3.dp))
 
             Text(
                 text = text,
