@@ -1,12 +1,13 @@
 package com.syndicate.ptkscheduleapp.core.domain.use_case
 
 import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.messageOrNull
 import com.syndicate.ptkscheduleapp.core.domain.model.AppVersionDataModel
 import com.syndicate.ptkscheduleapp.core.domain.model.TokenBodyModel
 import com.syndicate.ptkscheduleapp.core.domain.repository.RuStoreRepository
 import com.syndicate.ptkscheduleapp.core.update.UpdateInfo
 
-internal class GetLastAppVersion(
+class GetLastAppVersion(
     private val ruStoreRepository: RuStoreRepository
 ) {
 
@@ -37,7 +38,12 @@ internal class GetLastAppVersion(
                 }
             }
 
-            else -> null
+            else -> {
+
+                println("[main] update error : ${tempTokenResponse.messageOrNull}")
+
+                return null
+            }
         }
     }
 }

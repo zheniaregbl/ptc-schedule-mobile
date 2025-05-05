@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Base64
 import java.util.Date
 
-internal actual class UpdateChecker(
+actual class UpdateChecker(
     private val context: Context,
     private val getLastAppVersion: GetLastAppVersion
 ) {

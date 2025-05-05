@@ -6,11 +6,13 @@ import com.syndicate.ptkscheduleapp.core.data.network.RemoteRuStoreDataSource
 import com.syndicate.ptkscheduleapp.core.domain.repository.RuStoreRepository
 import com.syndicate.ptkscheduleapp.core.data.repository.DefaultRuStoreRepository
 import com.syndicate.ptkscheduleapp.core.domain.use_case.GetLastAppVersion
+import com.syndicate.ptkscheduleapp.core.update.UpdateChecker
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 
 val androidCoreModule = module {
     singleOf(::KtorRemoteRuStoreDataSource).bind<RemoteRuStoreDataSource>()
     singleOf(::DefaultRuStoreRepository).bind<RuStoreRepository>()
+    singleOf(::UpdateChecker)
     singleOf(::GetLastAppVersion)
 }

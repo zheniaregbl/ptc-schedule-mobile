@@ -1,6 +1,6 @@
 package com.syndicate.ptkscheduleapp.core.domain.model
 
-internal data class AppVersionDataModel(
+data class AppVersionDataModel(
     val versionName: String,
     val versionCode: Int,
     val status: String,
