@@ -48,11 +48,6 @@ val networkModule = module {
                 requestTimeoutMillis = 30000
             }
             defaultRequest {
-                host = BuildConfig.BASE_URL
-                url {
-                    protocol = URLProtocol.HTTPS
-                    path("api/v2/")
-                }
                 contentType(ContentType.Application.Json)
             }
         }

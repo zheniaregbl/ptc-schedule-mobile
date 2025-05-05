@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.syndicate.ptkscheduleapp.core.datastore.createDataStore
+import com.syndicate.ptkscheduleapp.core.di.androidCoreModule
 import com.syndicate.ptkscheduleapp.core.presentation.PlatformBatterySettings
 import com.syndicate.ptkscheduleapp.widget.di.widgetModule
 import com.syndicate.ptkscheduleapp.widget.presentation.WidgetManager
@@ -15,4 +16,9 @@ fun androidModule(context: Context) = module {
     single<WidgetManager> { WidgetManager(context) }
 }
 
-fun androidPlatformModules(context: Context) = listOf(androidModule(context), widgetModule)
+fun androidPlatformModules(context: Context) =
+    listOf(
+        androidModule(context),
+        androidCoreModule,
+        widgetModule
+    )

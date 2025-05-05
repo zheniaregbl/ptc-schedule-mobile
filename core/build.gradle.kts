@@ -73,9 +73,17 @@ if (localProperties.exists()) {
 }
 
 val baseUrl = properties.getProperty("BASE_URL") ?: ""
+val ruStoreApiUrl = properties.getProperty("RUSTORE_API_URL") ?: ""
+val ruStoreAppUrl = properties.getProperty("RUSTORE_APP_URL") ?: ""
+val keyId = properties.getProperty("KEY_ID") ?: ""
+val keyContent = properties.getProperty("KEY_CONTENT") ?: ""
 
 buildConfig {
     buildConfigField("BASE_URL", baseUrl)
+    buildConfigField("RUSTORE_API_URL", ruStoreApiUrl)
+    buildConfigField("RUSTORE_APP_URL", ruStoreAppUrl)
+    buildConfigField("KEY_ID", keyId)
+    buildConfigField("KEY_CONTENT", keyContent)
 }
 
 android {
