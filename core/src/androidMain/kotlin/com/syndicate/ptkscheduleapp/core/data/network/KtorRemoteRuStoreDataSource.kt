@@ -2,6 +2,7 @@ package com.syndicate.ptkscheduleapp.core.data.network
 
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.ktor.getApiResponse
+import com.skydoves.sandwich.ktor.postApiResponse
 import com.syndicate.ptkscheduleapp.core.data.dto.AppVersionsResponseDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.TokenBodyDTO
 import com.syndicate.ptkscheduleapp.core.data.dto.TokenResponseDTO
@@ -15,7 +16,7 @@ internal class KtorRemoteRuStoreDataSource(
 ): RemoteRuStoreDataSource {
 
     override suspend fun getTempToken(tokenBody: TokenBodyDTO): ApiResponse<TokenResponseDTO> {
-        return httpClient.getApiResponse("${BuildConfig.RUSTORE_API_URL}auth") {
+        return httpClient.postApiResponse("${BuildConfig.RUSTORE_API_URL}auth") {
             setBody(tokenBody)
         }
     }
