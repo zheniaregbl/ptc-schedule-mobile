@@ -1,6 +1,7 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case
 
 import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.ktor.statusCode
 import com.skydoves.sandwich.message
 import com.syndicate.ptkscheduleapp.core.domain.model.ScheduleInfo
 import com.syndicate.ptkscheduleapp.core.domain.repository.ScheduleRepository
@@ -14,11 +15,11 @@ internal class GetScheduleInfoCase(
         return when (val response = scheduleRepository.getScheduleInfo()) {
             is ApiResponse.Failure.Error -> {
                 Logger.error(response.message())
-                CaseResult.Error("Error getScheduleInfo")
+                CaseResult.Error("Ошибка ${response.statusCode} при получения типа недели")
             }
             is ApiResponse.Failure.Exception -> {
                 Logger.error(response.message())
-                CaseResult.Error("Exception getScheduleInfo")
+                CaseResult.Error("Ошибка при получения типа недели")
             }
             is ApiResponse.Success<ScheduleInfo> -> CaseResult.Success(response.data)
         }

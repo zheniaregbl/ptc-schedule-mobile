@@ -1,6 +1,7 @@
 package com.syndicate.ptkscheduleapp.feature.schedule.domain.use_case
 
 import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.ktor.statusCode
 import com.skydoves.sandwich.message
 import com.syndicate.ptkscheduleapp.core.common.util.ScheduleUtil
 import com.syndicate.ptkscheduleapp.core.domain.model.ReplacementItem
@@ -28,12 +29,12 @@ internal class GetReplacementCase(
 
             is ApiResponse.Failure.Error -> {
                 Logger.error(response.message())
-                CaseResult.Error("Error getReplacement")
+                CaseResult.Error("Ошибка ${response.statusCode} при попытке получения замен")
             }
 
             is ApiResponse.Failure.Exception -> {
                 Logger.error(response.message())
-                CaseResult.Error("Exception getReplacement")
+                CaseResult.Error("Ошибка при попытке получения замен")
             }
 
             is ApiResponse.Success<JsonObject> -> {
