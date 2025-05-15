@@ -30,6 +30,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +54,8 @@ import com.syndicate.ptkscheduleapp.feature.schedule.resources.theme_svg
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+const val TELEGRAM_URL = "https://t.me/PTKScheduleChannel"
+
 @Composable
 internal fun OptionSheetContent(
     role: UserRole = UserRole.STUDENT,
@@ -60,6 +63,7 @@ internal fun OptionSheetContent(
 ) {
 
     val colorBorder = MaterialTheme.colorPalette.contentColor.copy(alpha = 0.3f)
+    val uriHandler = LocalUriHandler.current
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -182,7 +186,7 @@ internal fun OptionSheetContent(
                 ChangeThemeSection(onClickItem = { onAction(ScheduleAction.OnChangeTheme(it)) })
             }
 
-            TelegramButton(onClick = { })
+            TelegramButton(onClick = { uriHandler.openUri(TELEGRAM_URL) })
 
             Spacer(modifier = Modifier.height(20.dp))
         }
