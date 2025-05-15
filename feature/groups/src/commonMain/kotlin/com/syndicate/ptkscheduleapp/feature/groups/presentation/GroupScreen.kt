@@ -230,7 +230,7 @@ internal fun GroupScreenContent(
                     when {
                         pagerState.currentPage == 0 -> onAction(GroupAction.GetGroupList)
                         else -> {
-                            if (!state.isLoading && state.selectedGroup.isNullOrBlank())
+                            if (!state.isLoading && state.selectedGroup.isNullOrBlank() && state.groupList.isNotEmpty())
                                 onAction(GroupAction.OnSelectGroup(groupPickerState.selectedItem))
                         }
                     }
