@@ -65,7 +65,7 @@ internal class TeacherScreen : Screen {
         LaunchedEffect(state.value.selectedTeacher) {
             if (state.value.selectedTeacher != null) {
                 navigator.dispose(scheduleScreen)
-                navigator.replace(scheduleScreen)
+                navigator.replaceAll(scheduleScreen)
             }
         }
 

@@ -69,7 +69,7 @@ internal class GroupScreen : Screen {
         LaunchedEffect(state.selectedGroup) {
             if (state.selectedGroup != null) {
                 navigator.dispose(scheduleScreen)
-                navigator.replace(scheduleScreen)
+                navigator.replaceAll(scheduleScreen)
             }
         }
 
