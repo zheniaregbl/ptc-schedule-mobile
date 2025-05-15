@@ -48,7 +48,7 @@ internal class ScheduleViewModel(
         .onStart { onAction(ScheduleAction.OnUpdateScheduleInfo) }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(30_000L),
+            SharingStarted.WhileSubscribed(300_000L),
             _state.value
         )
 
@@ -243,8 +243,9 @@ internal class ScheduleViewModel(
                         isLoading = false,
                         schedule = schedule
                     ) }
+                    Logger.warn("fetching schedule from local")
                 }
-                Logger.warn("fetching schedule from local")
+                Logger.warn("error on fetch schedule")
             }
 
             is CaseResult.Success<List<List<PairItem>>> -> {
