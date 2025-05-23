@@ -1,13 +1,7 @@
-# PTC Schedule App
+# [PTC Schedule App](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp)
 The PTC NovSU mobile app: convenient schedule, information about classes.
 
 [Readme on Russian](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/ru-README.md)
-
->[!IMPORTANT]
->**🚨 Notice: The app is still in development. 🚨**
->
->At the moment, the functionality is being transferred from an active native android project.
-You can download and try it using the link on [RuStore](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp).
 
 ### 📚 About the project
 This application allows you to easily view the class schedule for any of all groups and teachers of the Polytechnic College of NovSU.
@@ -33,9 +27,12 @@ If you have any questions about the license or would like to get permission to u
 ### 🛠️ Technologies
 - **Development language**: [Kotlin](https://kotlinlang.org/).
 - **Frameworks**: [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html), [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/).
+- **UIKit**: [Zephyr UI](https://github.com/ZephyrUI/zephyr-compose-multiplatfrom).
+- **Widget**: [Glance](https://developer.android.com/develop/ui/compose/glance?hl=ru) (Android).
 - **Navigation**: [Voyager](https://voyager.adriel.cafe).
-- **Network**: [Ktor](https://ktor.io).
+- **Network**: [Ktor](https://ktor.io), [Sandwich](https://skydoves.github.io/sandwich/).
 - **Dependency Injection**: [Koin](https://insert-koin.io).
+- **Others**: [Shimmer](https://github.com/valentinilk/compose-shimmer),
 
 ### 👥 Syndicate (the project team)
 We are a small but passionate team working to create a user—friendly and modern timetable viewing app. Each of us contributes to make the project better:
