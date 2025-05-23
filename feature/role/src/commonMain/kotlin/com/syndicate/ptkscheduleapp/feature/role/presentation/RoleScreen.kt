@@ -31,8 +31,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.role.presentation.components.RoleItem
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
+import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import org.koin.compose.viewmodel.koinViewModel
 
 internal class RoleScreen : Screen {

@@ -48,8 +48,8 @@ import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.Group
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.rememberPickerState
 import com.syndicate.ptkscheduleapp.feature.groups.resources.Res
 import com.syndicate.ptkscheduleapp.feature.groups.resources.back_svg
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
+import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel

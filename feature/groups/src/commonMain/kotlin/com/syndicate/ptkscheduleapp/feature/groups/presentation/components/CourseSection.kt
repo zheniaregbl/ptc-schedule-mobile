@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.choice_control.AnimatedRadioButton
+import io.github.zheniaregbl.zephyr.foundation.choice_control.AnimatedRadioButton
 
 @Composable
 internal fun CourseSection(

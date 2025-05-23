@@ -39,8 +39,8 @@ import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page2
 import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page3
 import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page4
 import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page5
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
+import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 

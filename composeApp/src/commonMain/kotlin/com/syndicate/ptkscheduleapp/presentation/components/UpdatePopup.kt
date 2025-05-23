@@ -30,8 +30,8 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThirdThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.core.update.UpdateInfo
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.AnimatedButton
-import com.syndicate.ptkscheduleapp.ui_kit.foundations.element.button.ZephyrButtonColor
+import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 
 @Composable
 internal fun UpdatePopup(

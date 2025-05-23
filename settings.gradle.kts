@@ -31,7 +31,6 @@ dependencyResolutionManagement {
 include(":composeApp")
 include(":core")
 include(":widget")
-include(":ui-kit:foundations")
 include(":feature:schedule")
 include(":feature:role")
 include(":feature:onboarding")

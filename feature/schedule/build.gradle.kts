@@ -32,48 +32,47 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
-            api(libs.ui.tooling.preview)
+            implementation(libs.ui.tooling.preview)
         }
         commonMain.dependencies {
-            api(libs.androidx.lifecycle.viewmodel)
-            api(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
 
-            api(compose.runtime)
-            api(compose.foundation)
-            api(compose.material3)
-            api(compose.material)
-            api(compose.ui)
-            api(compose.components.resources)
-            api(compose.components.uiToolingPreview)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.material)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
 
-            api(libs.shimmer)
+            implementation(libs.shimmer)
 
-            api(libs.voyager.navigator)
-            api(libs.voyager.screenmodel)
-            api(libs.voyager.transitions)
-            api(libs.voyager.lifecycle.kmp)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.lifecycle.kmp)
 
-            api(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.json)
 
-            api(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.datetime)
 
-            api(libs.koin.compose)
-            api(libs.koin.compose.viewmodel)
-            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.core)
 
-            api(libs.bundles.ktor)
+            implementation(libs.bundles.ktor)
 
-            api(libs.connectivity.core)
-            api(libs.connectivity.compose)
+            implementation(libs.connectivity.core)
+            implementation(libs.connectivity.compose)
 
-            api(libs.sandwich)
-            api(libs.sandwich.ktor)
+            implementation(libs.sandwich)
+            implementation(libs.sandwich.ktor)
 
-            api(libs.kotlin.logging)
-            api(libs.slf4j)
+            implementation(libs.kotlin.logging)
+            implementation(libs.slf4j)
 
-            api(projects.core)
-            api(projects.uiKit.foundations)
+            implementation(projects.core)
         }
         commonTest.dependencies {
             implementation(libs.ktor.client.cio)
@@ -86,8 +85,8 @@ kotlin {
             androidMain.get().dependsOn(this)
             iosMain.get().dependsOn(this)
             dependencies {
-                api(libs.connectivity.device)
-                api(libs.connectivity.compose.device)
+                implementation(libs.connectivity.device)
+                implementation(libs.connectivity.compose.device)
             }
         }
 

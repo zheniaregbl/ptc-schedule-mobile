@@ -38,8 +38,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
+            implementation(libs.zephyr.core)
+            implementation(libs.zephyr.foundation)
+
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
+            implementation(libs.voyager.lifecycle.kmp)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -76,8 +80,8 @@ android {
         applicationId = "com.syndicate.ptkscheduleapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 14
-        versionName = "2.0.0"
+        versionCode = 15
+        versionName = "2.0.1-beta"
     }
     packaging {
         resources {

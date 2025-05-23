@@ -28,29 +28,31 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
-            api(compose.preview)
-            api(libs.androidx.activity.compose)
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
-            api(libs.androidx.lifecycle.viewmodel)
-            api(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
 
-            api(compose.runtime)
-            api(compose.foundation)
-            api(compose.material3)
-            api(compose.ui)
-            api(compose.components.resources)
-            api(compose.components.uiToolingPreview)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
 
-            api(libs.voyager.navigator)
-            api(libs.voyager.transitions)
+            implementation(libs.zephyr.core)
+            implementation(libs.zephyr.foundation)
 
-            api(libs.koin.compose)
-            api(libs.koin.compose.viewmodel)
-            api(libs.koin.core)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
 
-            api(projects.core)
-            api(projects.uiKit.foundations)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.core)
+
+            implementation(projects.core)
         }
     }
 }
