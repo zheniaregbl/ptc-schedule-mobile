@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
-import io.github.zheniaregbl.zephyr.foundation.choice_control.AnimatedRadioButton
+import io.github.zheniaregbl.zephyr.foundation.choice_control.ZephyrRadioButton
 
 @Composable
 internal fun RoleItem(
@@ -31,7 +31,7 @@ internal fun RoleItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        AnimatedRadioButton(
+        ZephyrRadioButton(
             selected = isSelected,
             isOutline = false,
             size = 30.dp,

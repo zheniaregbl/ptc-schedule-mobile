@@ -31,7 +31,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.role.presentation.components.RoleItem
-import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButton
 import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -110,7 +110,7 @@ internal fun RoleScreenContent(
             }
         }
 
-        AnimatedButton(
+        ZephyrButton(
             modifier = Modifier
                 .align(BottomCenter)
                 .padding(bottom = 40.dp)

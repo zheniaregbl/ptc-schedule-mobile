@@ -48,7 +48,7 @@ import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.Group
 import com.syndicate.ptkscheduleapp.feature.groups.presentation.components.rememberPickerState
 import com.syndicate.ptkscheduleapp.feature.groups.resources.Res
 import com.syndicate.ptkscheduleapp.feature.groups.resources.back_svg
-import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButton
 import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -212,7 +212,7 @@ internal fun GroupScreenContent(
             }
         }
 
-        AnimatedButton(
+        ZephyrButton(
             modifier = Modifier
                 .align(BottomCenter)
                 .padding(bottom = 40.dp)

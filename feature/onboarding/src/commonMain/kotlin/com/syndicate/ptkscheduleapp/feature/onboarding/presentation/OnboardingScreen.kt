@@ -39,7 +39,7 @@ import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page2
 import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page3
 import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page4
 import com.syndicate.ptkscheduleapp.feature.onboarding.resources.page5
-import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButton
 import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -149,7 +149,7 @@ internal fun OnboardingScreenContent(
             PageIndicator(currentPage = pagerState.currentPage)
         }
 
-        AnimatedButton(
+        ZephyrButton(
             modifier = Modifier
                 .align(BottomCenter)
                 .padding(bottom = 40.dp)
@@ -164,12 +164,12 @@ internal fun OnboardingScreenContent(
 
                 if (pagerState.currentPage == 3 && platformName == PlatformName.IOS) {
                     onAction(OnboardingAction.NavigateToRoleSelection)
-                    return@AnimatedButton
+                    return@ZephyrButton
                 }
 
                 if (pagerState.currentPage == 4) {
                     onAction(OnboardingAction.CheckBackgroundPermission)
-                    return@AnimatedButton
+                    return@ZephyrButton
                 }
 
                 if (pagerState.currentPage != onboardingPageContent.lastIndex) {

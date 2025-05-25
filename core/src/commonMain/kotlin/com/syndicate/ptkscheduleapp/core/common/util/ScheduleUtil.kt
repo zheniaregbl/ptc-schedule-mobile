@@ -455,7 +455,6 @@ object ScheduleUtil {
                 }
 
             } catch (e: Exception) {
-                println(e)
             }
 
             if (dailyReplacementList.isNotEmpty()) {
@@ -545,7 +544,6 @@ object ScheduleUtil {
                     }
 
                 } catch (e: Exception) {
-                    println(e)
                 }
 
                 if (pairReplacement.isNotEmpty()) {

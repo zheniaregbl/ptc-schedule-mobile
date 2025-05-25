@@ -30,7 +30,7 @@ import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThirdThemeBackground
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.core.update.UpdateInfo
-import io.github.zheniaregbl.zephyr.foundation.button.AnimatedButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButton
 import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 
 @Composable
@@ -107,7 +107,7 @@ internal fun UpdatePopupContent(
 
             Row(modifier = Modifier.fillMaxWidth()) {
 
-                AnimatedButton(
+                ZephyrButton(
                     modifier = Modifier.weight(1f),
                     text = "Позже",
                     colors = ZephyrButtonColor().copy(
@@ -121,7 +121,7 @@ internal fun UpdatePopupContent(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                AnimatedButton(
+                ZephyrButton(
                     modifier = Modifier.weight(1f),
                     text = "Перейти",
                     colors = ZephyrButtonColor().copy(
