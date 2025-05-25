@@ -45,6 +45,8 @@ kotlin {
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
 
+            implementation(libs.material.icons.core)
+
             api(libs.datastore)
             api(libs.datastore.preferences)
 
