@@ -390,12 +390,11 @@ private fun ExpandedButton(
     expanded: Boolean,
     onClick: () -> Unit
 ) {
-    IconButton(
-        modifier = Modifier.rotate(if (expanded) 180f else 0f),
-        onClick = onClick
-    ) {
+    IconButton(onClick = onClick) {
         Image(
-            modifier = Modifier.size(26.dp),
+            modifier = Modifier
+                .size(26.dp)
+                .rotate(if (expanded) 180f else 0f),
             painter = painterResource(Res.drawable.expand_arrow_svg),
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.contentColor)
