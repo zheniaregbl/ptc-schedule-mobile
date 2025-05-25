@@ -43,6 +43,9 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
+            implementation(libs.zephyr.core)
+            implementation(libs.zephyr.foundation)
+
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
 

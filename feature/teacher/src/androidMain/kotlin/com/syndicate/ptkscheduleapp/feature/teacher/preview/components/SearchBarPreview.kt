@@ -27,8 +27,7 @@ private fun SearchBarPreview() {
             SearchBar(
                 modifier = Modifier.fillMaxWidth(),
                 value = "",
-                onValueChange = {},
-                onImeSearch = {}
+                onValueChange = {}
             )
         }
     }

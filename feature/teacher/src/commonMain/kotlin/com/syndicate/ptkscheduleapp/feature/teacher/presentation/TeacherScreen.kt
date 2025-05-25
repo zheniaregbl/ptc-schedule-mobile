@@ -108,8 +108,7 @@ internal fun TeacherScreenContent(
         SearchBar(
             modifier = Modifier.fillMaxWidth(),
             value = state.value.searchTeacherText,
-            onValueChange = { onAction(TeacherListAction.OnSearchTeacherChange(it)) },
-            onImeSearch = {}
+            onValueChange = { onAction(TeacherListAction.OnSearchTeacherChange(it)) }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
