@@ -65,6 +65,31 @@ private fun TeacherScreenLightPreview() {
 
 @Preview
 @Composable
+private fun TeacherScreenLightWithErrorPreview() {
+
+    val state = remember {
+        mutableStateOf(
+            TeacherListState(errorMessage = "Some error message")
+        )
+    }
+
+    AppTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorPalette.backgroundColor)
+        ) {
+            TeacherScreenContent(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                onAction = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 private fun TeacherScreenGrayPreview() {
 
     val state = remember {
@@ -93,6 +118,31 @@ private fun TeacherScreenGrayPreview() {
 
 @Preview
 @Composable
+private fun TeacherScreenGrayWithErrorPreview() {
+
+    val state = remember {
+        mutableStateOf(
+            TeacherListState(errorMessage = "Some error message")
+        )
+    }
+
+    AppTheme(themeMode = ThemeMode.GRAY) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorPalette.backgroundColor)
+        ) {
+            TeacherScreenContent(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                onAction = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 private fun TeacherScreenDarkPreview() {
 
     val state = remember {
@@ -101,6 +151,31 @@ private fun TeacherScreenDarkPreview() {
                 teacherList = teacherList,
                 filterTeacherList = teacherList
             )
+        )
+    }
+
+    AppTheme(themeMode = ThemeMode.DARK) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorPalette.backgroundColor)
+        ) {
+            TeacherScreenContent(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                onAction = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TeacherScreenDarkWithErrorPreview() {
+
+    val state = remember {
+        mutableStateOf(
+            TeacherListState(errorMessage = "Some error message")
         )
     }
 
