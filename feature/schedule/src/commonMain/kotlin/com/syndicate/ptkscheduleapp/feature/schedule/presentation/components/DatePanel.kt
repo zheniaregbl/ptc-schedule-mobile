@@ -223,16 +223,6 @@ internal fun DatePanel(
 
                     state.value.toUiState().DisplayResult(
                         modifier = Modifier.fillMaxHeight(),
-                        onIdle = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(120.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .shimmer(shimmerInstance)
-                                    .background(Color.Gray)
-                            )
-                        },
                         onLoading = {
                             Box(
                                 modifier = Modifier
