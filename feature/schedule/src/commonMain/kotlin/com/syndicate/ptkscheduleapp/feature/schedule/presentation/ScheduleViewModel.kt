@@ -237,14 +237,21 @@ internal class ScheduleViewModel(
         when (val result = getScheduleCase(userIdentifier, lastUpdateTime)) {
 
             is CaseResult.Error -> {
+
                 _errorMessage.emit(result.message)
+
+                var localSchedule: List<List<PairItem>> = emptyList()
+
                 getLocalScheduleCase()?.let { schedule ->
-                    _state.update { it.copy(
-                        isLoading = false,
-                        schedule = schedule
-                    ) }
+                    localSchedule = schedule
                     Logger.warn("fetching schedule from local")
                 }
+
+                _state.update { it.copy(
+                    isLoading = false,
+                    schedule = localSchedule
+                ) }
+
                 Logger.warn("error on fetch schedule")
             }
 

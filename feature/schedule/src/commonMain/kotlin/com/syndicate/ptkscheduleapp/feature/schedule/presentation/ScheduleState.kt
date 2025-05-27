@@ -19,7 +19,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 internal sealed class ScheduleScreenState {
-    data object Idle : ScheduleScreenState()
     data object Loading : ScheduleScreenState()
     data class Success(
         val schedule: List<List<PairItem>>,
@@ -36,7 +35,6 @@ internal fun ScheduleScreenState.DisplayResult(
         fadeIn(tween(durationMillis = 200)) togetherWith
                 ExitTransition.None
     },
-    onIdle: (@Composable () -> Unit)? = null,
     onLoading: @Composable () -> Unit,
     onSuccess: @Composable (ScheduleScreenState.Success) -> Unit,
 ) {
@@ -52,8 +50,6 @@ internal fun ScheduleScreenState.DisplayResult(
         ) {
 
             when (state) {
-
-                ScheduleScreenState.Idle -> onIdle?.invoke()
 
                 ScheduleScreenState.Loading -> onLoading.invoke()
 
@@ -80,10 +76,9 @@ internal data class ScheduleState(
     fun toUiState(): ScheduleScreenState {
         return when {
             isLoading -> ScheduleScreenState.Loading
-            schedule.isNotEmpty() -> ScheduleScreenState.Success(
+            else -> ScheduleScreenState.Success(
                 schedule, replacement, isUpperWeek ?: false
             )
-            else -> ScheduleScreenState.Idle
         }
     }
 }

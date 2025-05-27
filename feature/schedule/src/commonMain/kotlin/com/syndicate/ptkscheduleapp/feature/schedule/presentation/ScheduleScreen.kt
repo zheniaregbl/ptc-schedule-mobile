@@ -268,7 +268,6 @@ internal fun ScheduleScreenContent(
 
                     state.value.toUiState().DisplayResult(
                         modifier = Modifier.fillMaxSize(),
-                        onIdle = { },
                         onLoading = {
                             LazyColumn(
                                 modifier = Modifier
