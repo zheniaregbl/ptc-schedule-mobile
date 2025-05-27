@@ -37,6 +37,9 @@ internal fun SearchBar(
             hoveredTextColor = MaterialTheme.colorPalette.contentColor,
             focusedTextColor = MaterialTheme.colorPalette.contentColor,
             unfocusedTextColor = MaterialTheme.colorPalette.contentColor,
+            hoveredBackgroundColor = MaterialTheme.colorPalette.backgroundColor,
+            focusedBackgroundColor = MaterialTheme.colorPalette.backgroundColor,
+            unfocusedBackgroundColor = MaterialTheme.colorPalette.backgroundColor,
             hoveredBorderColor = if (currentThemeMode == ThemeMode.DARK) LightBlue.copy(0.8f)
             else Color(0xFF4B71FF).copy(0.8f),
             focusedBorderColor = if (currentThemeMode == ThemeMode.DARK) LightBlue.copy(0.8f)
