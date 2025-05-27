@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -42,11 +43,16 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.syndicate.ptkscheduleapp.core.navigation.SharedScreen
 import com.syndicate.ptkscheduleapp.core.presentation.components.CircleLoading
+import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
+import com.syndicate.ptkscheduleapp.core.presentation.theme.SelectedBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.ThemeMode
 import com.syndicate.ptkscheduleapp.core.presentation.theme.colorPalette
 import com.syndicate.ptkscheduleapp.feature.teacher.presentation.components.SearchBar
 import com.syndicate.ptkscheduleapp.feature.teacher.resources.Res
 import com.syndicate.ptkscheduleapp.feature.teacher.resources.error_svg
+import com.syndicate.ptkscheduleapp.feature.teacher.resources.refresh_svg
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButton
+import io.github.zheniaregbl.zephyr.foundation.button.ZephyrButtonColor
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -198,22 +204,41 @@ internal fun TeacherScreenContent(
                 Column(
                     modifier = Modifier.padding(bottom = 50.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(30.dp)
                 ) {
 
-                    Image(
-                        painter = painterResource(Res.drawable.error_svg),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.contentColor)
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
 
-                    Text(
-                        text = screenState.errorMessage,
-                        style = LocalTextStyle.current,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorPalette.contentColor
+                        Image(
+                            painter = painterResource(Res.drawable.error_svg),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorPalette.contentColor)
+                        )
+
+                        Text(
+                            text = screenState.errorMessage,
+                            style = LocalTextStyle.current,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorPalette.contentColor
+                        )
+                    }
+
+                    ZephyrButton(
+                        text = "Обновить",
+                        colors = ZephyrButtonColor().copy(
+                            inactiveColor = if (currentThemeMode == ThemeMode.LIGHT) SelectedBlue.copy(0.4f)
+                            else LightBlue.copy(0.4f),
+                            pressedColor = if (currentThemeMode == ThemeMode.LIGHT) SelectedBlue.copy(0.25f)
+                            else LightBlue.copy(0.25f),
+                            textColor = if (currentThemeMode == ThemeMode.LIGHT) SelectedBlue
+                            else LightBlue
+                        ),
+                        onClick = { onAction(TeacherListAction.OnUpdateTeacherList) }
                     )
                 }
             }
