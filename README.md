@@ -30,9 +30,9 @@ If you have any questions about the license or would like to get permission to u
 - **UIKit**: [Zephyr UI](https://github.com/ZephyrUI/zephyr-compose-multiplatfrom).
 - **Widget**: [Glance](https://developer.android.com/develop/ui/compose/glance?hl=ru) (Android).
 - **Navigation**: [Voyager](https://voyager.adriel.cafe).
-- **Network**: [Ktor](https://ktor.io), [Sandwich](https://skydoves.github.io/sandwich/).
+- **Network**: [Ktor](https://ktor.io), [Sandwich](https://skydoves.github.io/sandwich/), [Connectivity](https://github.com/jordond/connectivity).
 - **Dependency Injection**: [Koin](https://insert-koin.io).
-- **Others**: [Shimmer](https://github.com/valentinilk/compose-shimmer),
+- **UI libraries**: [Shimmer](https://github.com/valentinilk/compose-shimmer) (loading placeholders), [Compottie](https://github.com/alexzhirkevich/compottie) (lottie).
 
 ### 👥 Syndicate (the project team)
 We are a small but passionate team working to create a user—friendly and modern timetable viewing app. Each of us contributes to make the project better:
