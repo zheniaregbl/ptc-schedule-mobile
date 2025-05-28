@@ -1,5 +1,6 @@
 package com.syndicate.ptkscheduleapp.widget.presentation
 
+import android.widget.RemoteViews
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -7,8 +8,9 @@ import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.clickable
-import androidx.glance.appwidget.CircularProgressIndicator
+import androidx.glance.appwidget.AndroidRemoteViews
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -27,7 +29,6 @@ import androidx.glance.unit.ColorProvider
 import com.syndicate.ptkscheduleapp.core.domain.model.PairItem
 import com.syndicate.ptkscheduleapp.core.domain.model.UserRole
 import com.syndicate.ptkscheduleapp.core.presentation.theme.GrayColorPalette
-import com.syndicate.ptkscheduleapp.core.presentation.theme.LightBlue
 import com.syndicate.ptkscheduleapp.core.presentation.theme.LightColorPalette
 import com.syndicate.ptkscheduleapp.widget.ChangeWidgetThemeAction
 import com.syndicate.ptkscheduleapp.widget.R
@@ -46,6 +47,16 @@ internal fun ScheduleWidgetUI(
     groupNumber: String = "",
     teacherName: String = ""
 ) {
+
+    val context = LocalContext.current
+    val lightProgressBar = RemoteViews(
+        context.packageName,
+        R.layout.widget_progressbar_light
+    )
+    val darkProgressBar = RemoteViews(
+        context.packageName,
+        R.layout.widget_progressbar_dark
+    )
 
     Column(modifier = GlanceModifier.fillMaxWidth()) {
 
@@ -239,9 +250,10 @@ internal fun ScheduleWidgetUI(
 
                     if (isLoading) {
 
-                        CircularProgressIndicator(
+                        AndroidRemoteViews(
                             modifier = GlanceModifier.size(25.dp),
-                            color = ColorProvider(color = LightBlue)
+                            remoteViews = if (isAlternativeTheme) lightProgressBar
+                            else darkProgressBar
                         )
 
                     } else {
