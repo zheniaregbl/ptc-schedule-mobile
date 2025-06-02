@@ -22,10 +22,11 @@ class DefaultScheduleRepository(
 
     override suspend fun getReplacement(
         dateStart: String,
-        dateEnd: String
+        dateEnd: String,
+        userIdentifier: UserIdentifier
     ): ApiResponse<JsonObject> {
         return remoteScheduleDataSource
-            .getReplacement(dateStart, dateEnd)
+            .getReplacement(dateStart, dateEnd, userIdentifier)
             .suspendMapSuccess { replacements!! }
     }
 

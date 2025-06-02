@@ -31,11 +31,16 @@ class KtorRemoteScheduleDataSource(
 
     override suspend fun getReplacement(
         dateStart: String,
-        dateEnd: String
+        dateEnd: String,
+        userIdentifier: UserIdentifier
     ): ApiResponse<ReplacementResponseDTO> {
         return httpClient.getApiResponse("${BuildConfig.BASE_URL}replacements/get") {
             parameter("dateStart", dateStart)
             parameter("dateEnd", dateEnd)
+            when (userIdentifier) {
+                is UserIdentifier.Student -> parameter("groupNumber", userIdentifier.group)
+                is UserIdentifier.Teacher -> parameter("teacherFullName", userIdentifier.name)
+            }
         }
     }
 

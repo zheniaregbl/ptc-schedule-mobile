@@ -27,7 +27,7 @@ class GetReplacementCase(
             UserRole.TEACHER -> UserIdentifier.Teacher(preferencesRepository.getUserTeacher())
         }
 
-        return when (val response = scheduleRepository.getReplacement(dateStart, dateEnd)) {
+        return when (val response = scheduleRepository.getReplacement(dateStart, dateEnd, userIdentifier)) {
 
             is ApiResponse.Success<JsonObject> -> {
                 preferencesRepository.saveLocalReplacement(response.data.toString())

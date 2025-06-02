@@ -25,7 +25,7 @@ internal class GetReplacementCase(
         dateEnd: String = "",
     ): CaseResult<List<ReplacementItem>> {
 
-        return when (val response = scheduleRepository.getReplacement(dateStart, dateEnd)) {
+        return when (val response = scheduleRepository.getReplacement(dateStart, dateEnd, userIdentifier)) {
 
             is ApiResponse.Failure.Error -> {
                 Logger.error(response.message())

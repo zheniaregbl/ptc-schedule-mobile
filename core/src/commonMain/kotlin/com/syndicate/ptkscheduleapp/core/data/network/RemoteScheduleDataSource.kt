@@ -10,7 +10,8 @@ interface RemoteScheduleDataSource {
     suspend fun getSchedule(userIdentifier: UserIdentifier): ApiResponse<ScheduleResponseDTO>
     suspend fun getReplacement(
         dateStart: String,
-        dateEnd: String
+        dateEnd: String,
+        userIdentifier: UserIdentifier
     ): ApiResponse<ReplacementResponseDTO>
     suspend fun getScheduleInfo(): ApiResponse<ScheduleInfoResponseDTO>
 }

@@ -11,6 +11,7 @@ interface ScheduleRepository {
     suspend fun getReplacement(
         dateStart: String = "",
         dateEnd: String = "",
+        userIdentifier: UserIdentifier
     ): ApiResponse<JsonObject>
     suspend fun getScheduleInfo(): ApiResponse<ScheduleInfo>
 }
