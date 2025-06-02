@@ -1,5 +1,5 @@
 # [PTC Schedule App](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp)
-The PTC NovSU mobile app: convenient schedule, information about classes.
+Convenient application for viewing the schedule of the Polytechnic College of NovSU for Android and iOS.
 
 [Readme on Russian](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/ru-README.md)
 
