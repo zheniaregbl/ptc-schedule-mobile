@@ -1,5 +1,10 @@
-# [Приложение Расписание ПТК](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp)
+# Приложение Расписание ПТК
+
+[Английский](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/README.md) | [Русский](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/ru-README.md)
+
 Удобное приложение для просмотра расписания Политехнического колледжа НовГУ для Android и iOS.
+
+[<img src="docs/images/rustore_badge.png" alt="RuStore page" width="100px" />](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp)
 
 ### 📚 О проекте
 Это приложение позволяет легко просматривать расписание занятий всех групп и преподавателей Политехнического колледжа НовГУ.

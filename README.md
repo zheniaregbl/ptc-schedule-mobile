@@ -1,7 +1,10 @@
-# [PTC Schedule App](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp)
+# PTC Schedule App
+
+[English](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/README.md) | [Russian](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/ru-README.md)
+
 Convenient application for viewing the schedule of the Polytechnic College of NovSU for Android and iOS.
 
-[Readme on Russian](https://github.com/zheniaregbl/ptk-schedule-mobile/blob/master/ru-README.md)
+[<img src="docs/images/rustore_badge.png" alt="RuStore page" width="100px" />](https://www.rustore.ru/catalog/app/com.syndicate.ptkscheduleapp)
 
 ### 📚 About the project
 This application allows you to easily view the class schedule for any of all groups and teachers of the Polytechnic College of NovSU.
